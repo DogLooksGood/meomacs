@@ -1,0 +1,14 @@
+#+title: A simple Emacs configuration with Meow
+
+Work in progress.
+
+* Installation
+
+- Download the repo and put it anywhere yo want.
+- Start Emacs with ~emacs -q -l /path/to/meomacs/init.el~.
+
+* Get Started
+
+Check [[file:meomacs.org][the configuration org file]].
+
+After changes made, press =F12= to reload.
