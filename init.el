@@ -1,5 +1,8 @@
 ;;; -*- lexical-binding: t -*-
 
+;; disabling GC during initialization
+(setq gc-cons-threshold most-positive-fixnum)
+
 ;; Ensure we have correct user-emacs-directory
 ;; The folder of meomacs can be placed anywhere, and started with
 ;;   emacs -q -l /path/to/meomacs/init.el
@@ -35,7 +38,11 @@
 
 ;; Detecting tangle output
 ;; Load existing tangle file if it exists.
-(let ((target (expand-file-name "tangle.el" user-emacs-directory)))
+(let ((inhibit-message t)
+      (target (expand-file-name "tangle.el" user-emacs-directory)))
   (if (file-exists-p target)
       (load-file target)
     (meomacs-refresh)))
+
+;; enable GC
+(setq gc-cons-threshold #x8000000)

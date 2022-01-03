@@ -12,3 +12,9 @@ Work in progress.
 Check [[file:meomacs.org][the configuration org file]].
 
 After changes made, press =F12= to reload.
+
+* Project targets
+- Simple, no framework, no magic.
+- Easy for modification, adding and removing stuffs should be trivial.
+- Ease on use, building for reasonable workflow.
+- Builtin friendly, avoid alternatives when the builtin way works well.

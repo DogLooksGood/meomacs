@@ -102,29 +102,35 @@ This configuration sticks with Meow for modal editing.
 
   (require 'meow)
 
-  (progn
-    (let ((parse-def (lambda (x) (cons (format "%s" (car x)) (intern (cadr x)))))
-          (parse-remap (lambda (x) (cons (format "%s" (car x)) (format "%s%s" meow-motion-remap-prefix (car x))))))
-      (apply #'meow-normal-define-key (mapcar parse-def normal-keybindings))
-      (apply #'meow-motion-overwrite-define-key (mapcar parse-def motion-keybindings))
-      (apply #'meow-leader-define-key (mapcar parse-def leader-keybindings))
-      (apply #'meow-leader-define-key (mapcar parse-remap motion-keybindings))))
+  (let ((parse-def (lambda (x) (cons (format "%s" (car x)) (intern (cadr x)))))
+        (parse-remap (lambda (x) (cons (format "%s" (car x)) (format "%s%s" meow-motion-remap-prefix (car x))))))
+    (apply #'meow-normal-define-key (mapcar parse-def normal-keybindings))
+    (apply #'meow-motion-overwrite-define-key (mapcar parse-def motion-keybindings))
+    (apply #'meow-leader-define-key (mapcar parse-def leader-keybindings))
+    (apply #'meow-leader-define-key (mapcar parse-remap motion-keybindings)))
 
   (meow-global-mode 1)
+  (meow-setup-indicator)
 #+end_src
 
 * Completions
 
-** Minibuffer completion reading with Vertico & Orderless
+** Minibuffer completion reading with Vertico & Orderless & Marginalia
+
+- Vertico provides a better UX for completion reading.
+- Orderless provides a completion style, which allows you to search with orderless segments.
+- Marginalia provides helpful messages in completion.
 
 #+begin_src emacs-lisp
   (straight-use-package 'vertico)
   (straight-use-package 'orderless)
+  (straight-use-package 'marginalia)
 
   (require 'vertico)
   (require 'orderless)
 
   (vertico-mode 1)
+  (marginalia-mode 1)
 #+end_src
 
 Enable orderless for minibuffer completion.
@@ -164,26 +170,96 @@ Do "delete" instead of "kill" when pressing =M-DEL=.
 
   (add-hook 'prog-mode-hook 'company-mode)
   (add-hook 'conf-mode-hook 'company-mode)
+#+end_src
 
+A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =RET= will do insertion even though the popup is available.
+
+| action                    | key |
+|---------------------------+-----|
+| completion at point       | TAB |
+| previous candidate        | C-p |
+| next candidate            | C-n |
+| next template placeholder | RET |
+
+#+begin_src emacs-lisp
   (with-eval-after-load "company"
     (require 'company-tng)
     (require 'company-template)
 
     (add-hook 'company-mode-hook 'company-tng-mode)
 
-    ;; (define-key company-mode-map [tab] '+complete)
-    ;; (define-key company-mode-map (kbd "TAB") '+complete)
     (define-key company-active-map [tab] 'company-complete-common-or-cycle)
     (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
+
+    ;; Free SPC and RET, popup will no longer interrupt typing.
     (define-key company-active-map [escape] nil)
     (define-key company-active-map [return] nil)
     (define-key company-active-map (kbd "RET") nil)
     (define-key company-active-map (kbd "SPC") nil)
-    (define-key company-active-map (kbd "C-n") 'company-select-next)
-    (define-key company-active-map (kbd "C-p") 'company-select-previous)
 
     (define-key company-template-nav-map (kbd "RET") 'company-template-forward-field)
     (define-key company-template-nav-map [return] 'company-template-forward-field)
     (define-key company-template-nav-map (kbd "TAB") nil)
     (define-key company-template-nav-map [tab] nil))
+#+end_src
+
+* Git integration with magit & diff-hl & smerge
+
+To manage the git repository, use builtin package ~vc~.
+
+#+begin_src emacs-lisp
+  (straight-use-package 'magit)
+  (straight-use-package 'diff-hl)
+  (straight-use-package 'smerge-mode)
+
+  (autoload 'magit "magit" nil t)
+  (autoload 'diff-hl-mode "diff-hl" nil t)
+  (autoload 'diff-hl-dired-mode "diff-hl" nil t)
+  (autoload 'smerge-mode "smerge-mode" nil t)
+#+end_src
+
+Enable diff-hl in some modes.
+
+#+begin_src emacs-lisp
+  (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+  (add-hook 'prog-mode-hook 'diff-hl-mode)
+  (add-hook 'conf-mode-hook 'diff-hl-mode)
+#+end_src
+
+Enable smerge mode after project-find-file.
+
+#+begin_src emacs-lisp
+  (add-hook 'find-file-hook 'smerge-mode)
+#+end_src
+
+* Project management
+
+To find files/buffers and apply commands on project, use builtin package ~project~.
+
+#+begin_src emacs-lisp
+  (setq project-switch-commands '((project-find-file "Find file")
+                                  (project-find-regexp "Find regexp")
+                                  (project-dired "Dired")
+                                  (project-eshell "Eshell")
+                                  (shell "Shell")
+                                  (magit "Magit")))
+
+  (with-eval-after-load "project"
+    (define-key project-prefix-map "s" 'shell)
+    (define-key project-prefix-map "m" 'magit))
+#+end_src
+
+
+* Look & Feel
+** Disable some UI components
+
+#+begin_src emacs-lisp
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+#+end_src
+
+** Colorthemes
+
+#+begin_src emacs-lisp
+  (load-theme 'modus-operandi)
 #+end_src
