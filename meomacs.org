@@ -1,11 +1,77 @@
 #+title: Meomacs - A simple Emacs configuration with modal editing
 
-* Modal editing with Meow
+#+begin_src emacs-lisp
+  ;;; -*- lexical-binding: t -*-
+#+end_src
+
+* Editor basics
+
+** Better defaults
+
+#+begin_src emacs-lisp
+  (setq-default
+   ;; Don't create lockfiles
+   create-lockfiles nil
+
+   ;; prefer UTF8
+   buffer-file-coding-system 'utf-8-unix
+   default-file-name-coding-system 'utf-8-unix
+   default-keyboard-coding-system 'utf-8-unix
+   default-process-coding-system '(utf-8-unix . utf-8-unix)
+   default-sendmail-coding-system 'utf-8-unix
+   default-terminal-coding-system 'utf-8-unix
+
+   ;; Add newline at bottom of file
+   require-final-newline t
+
+   ;; Backup setups
+   ;; We use temporary directory /tmp for backup files
+   ;; More versions should be saved
+   backup-directory-alist `((".*" . ,temporary-file-directory))
+   auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
+   backup-by-copying t
+   delete-old-versions t
+   kept-new-versions 6
+   kept-old-versions 2
+   version-control t
+
+   ;; Skip prompt for xref find definition
+   xref-prompt-for-identifier nil
+
+   ;; Don't wait for keystrokes display
+   echo-keystrokes 0.01
+
+   ;; Disable margin for overline and underline
+   overline-margin 0
+   underline-minimum-offset 0
+
+   ;; Allow resizing frame by pixels
+   frame-resize-pixelwise t
+
+   ;; Better scroll behavior
+   mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil))
+   mouse-wheel-progressive-speed nil
+
+   ;; Disable copy region blink
+   copy-region-blink-delay 0
+
+   ;; Use short answer when asking yes or no
+   read-answer-short t
+
+   ;; Always follow link
+   vc-follow-symlinks t
+
+   ;; Use custom.el as custom file
+   custom-file (expand-file-name "custom.el" user-emacs-directory))
+#+end_src
+
+** Modal editing with Meow
 
 This configuration sticks with Meow for modal editing.
 
-** Modal key bindings
 *** Normal
+Tweaking following table for key bindings in normal state.
+
 #+TBLNAME: normal-keybindings
 | key      | command                 |
 |----------+-------------------------|
@@ -72,6 +138,9 @@ This configuration sticks with Meow for modal editing.
 | <escape> | ignore                  |
 
 *** Motion
+
+Tweaking following table for key bindings in motion state.
+
 #+TBLNAME: motion-keybindings
 |      key | command             |
 |----------+---------------------|
@@ -80,7 +149,10 @@ This configuration sticks with Meow for modal editing.
 | <escape> | ignore              |
 
 *** Leader
-#+TBLNAME: leader-keybindings
+
+Tweaking following table for key bindings in leader keymap.
+
+#+tblname: leader-keybindings
 | key | command             |
 |-----+---------------------|
 |   e | eval-last-sexp      |
@@ -95,6 +167,8 @@ This configuration sticks with Meow for modal editing.
 |   9 | meow-digit-argument |
 |   0 | meow-digit-argument |
 |   ? | meow-cheatsheet     |
+
+*** Initialization
 
 #+header: :var normal-keybindings=normal-keybindings :var motion-keybindings=motion-keybindings :var leader-keybindings=leader-keybindings
 #+begin_src emacs-lisp
@@ -113,9 +187,8 @@ This configuration sticks with Meow for modal editing.
   (meow-setup-indicator)
 #+end_src
 
-* Completions
-
-** Minibuffer completion reading with Vertico & Orderless & Marginalia
+** Completions
+*** Minibuffer completion reading with Vertico & Orderless & Marginalia
 
 - Vertico provides a better UX for completion reading.
 - Orderless provides a completion style, which allows you to search with orderless segments.
@@ -161,7 +234,7 @@ Do "delete" instead of "kill" when pressing =M-DEL=.
   (define-key minibuffer-mode-map (kbd "M-DEL") #'meomacs-backward-delete-sexp)
 #+end_src
 
-** Completion at point with Company
+*** Completion at point with Company
 
 #+begin_src emacs-lisp
   (straight-use-package 'company)
@@ -203,7 +276,7 @@ A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =
     (define-key company-template-nav-map [tab] nil))
 #+end_src
 
-* Git integration with magit & diff-hl & smerge
+** Git integration with magit & diff-hl & smerge
 
 To manage the git repository, use builtin package ~vc~.
 
@@ -218,7 +291,7 @@ To manage the git repository, use builtin package ~vc~.
   (autoload 'smerge-mode "smerge-mode" nil t)
 #+end_src
 
-Enable diff-hl in some modes.
+Enable diff-hl in based on major modes.
 
 #+begin_src emacs-lisp
   (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
@@ -226,13 +299,13 @@ Enable diff-hl in some modes.
   (add-hook 'conf-mode-hook 'diff-hl-mode)
 #+end_src
 
-Enable smerge mode after project-find-file.
+Enable smerge mode after ~find-file~.
 
 #+begin_src emacs-lisp
   (add-hook 'find-file-hook 'smerge-mode)
 #+end_src
 
-* Project management
+** Project management with project.el
 
 To find files/buffers and apply commands on project, use builtin package ~project~.
 
@@ -249,17 +322,144 @@ To find files/buffers and apply commands on project, use builtin package ~projec
     (define-key project-prefix-map "m" 'magit))
 #+end_src
 
-
 * Look & Feel
-** Disable some UI components
-
+** Disabling some components
 #+begin_src emacs-lisp
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
+  (menu-bar-mode -1)
 #+end_src
 
-** Colorthemes
+** Themes
+#+name: themes
+- modus-operandi
+- modus-vivendi
+
+Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes between listed above.
+
+#+header: :var themes=themes
+#+begin_src emacs-lisp
+  (defvar meomacs-themes nil
+    "Themes to use.")
+
+  (setq meomacs-themes
+        (mapcar (lambda (x) (intern (car x))) themes))
+
+  (defun meomacs-next-theme ()
+    (interactive)
+    (mapc 'disable-theme custom-enabled-themes)
+    (when meomacs-themes
+      (setq meomacs-themes (append (cdr meomacs-themes) (list (car meomacs-themes))))
+      (message "Load theme: %s" (car meomacs-themes))
+      (load-theme (car meomacs-themes) t)))
+
+  (global-set-key (kbd "C-c t t") 'meomacs-next-theme)
+
+  (unless custom-enabled-themes
+    (meomacs-next-theme))
+#+end_src
+
+** Fonts
+*** Font resizing
+Increasing/decreasing font size with =M-+= / =M--=.
 
 #+begin_src emacs-lisp
-  (load-theme 'modus-operandi)
+  (require 'cl-lib)
+
+  (defvar meomacs-font-size 12
+    "Current font size.")
+
+  (defvar meomacs-resize-font-sizes
+    '(10 11 12 13 14 15 16)
+    "Font sizes for resizing.")
+
+  (defun meomacs-increase-font-size ()
+    (interactive)
+    (if-let ((size (cl-find-if (lambda (s)
+                                 (> s meomacs-font-size))
+                               meomacs-resize-font-sizes)))
+        (progn (setq meomacs-font-size size)
+               (meomacs-load-base-font)
+               (meomacs-load-face-font)
+               (meomacs-load-ext-font)
+               (message "Font size: %s" size))
+      (message "Using biggest font size.")))
+
+  (defun meomacs-decrease-font-size ()
+    (interactive)
+    (if-let ((size (cl-find-if (lambda (s)
+                                 (< s meomacs-font-size))
+                               (reverse meomacs-resize-font-sizes))))
+        (progn (setq meomacs-font-size size)
+               (meomacs-load-base-font)
+               (meomacs-load-face-font)
+               (meomacs-load-ext-font)
+               (message "Font size: %s" size))
+      (message "Using smallest font size.")))
+
+  (global-set-key (kbd "M-+") 'meomacs-increase-font-size)
+  (global-set-key (kbd "M--") 'meomacs-decrease-font-size)
+#+end_src
+
+*** Font Families
+#+tblname: fonts
+| key      | font                    | where to apply                        |
+|----------+-------------------------+---------------------------------------|
+| default  | MesloLGM Nerd Font Mono | default font for ascii characters     |
+| unicode  | LXGW WenKai             | default font for non-ascii characters |
+| modeline | MesloLGL Nerd Font Mono | modeline                              |
+| fixed    | Sarasa Mono SC          | code blocks and tables in markups     |
+| variable | ETBookOT                | texts in markups                      |
+
+#+header: :var fonts=fonts
+#+begin_src emacs-lisp
+  (defun meomacs--get-font-family (key)
+    (car (alist-get key fonts nil nil #'string-equal)))
+
+  (defun meomacs--get-font-spec (key)
+    (format "%s-%d"
+            (meomacs--get-font-family key)
+            meomacs-font-size))
+
+  (defun meomacs-load-base-font ()
+    "Load the default font for ascii characters."
+    (let* ((font-spec (meomacs--get-font-spec "default")))
+      (set-frame-parameter nil 'font font-spec)
+      (add-to-list 'default-frame-alist (cons 'font font-spec))))
+
+  (defun meomacs-load-face-font (&optional frame)
+    "Load fonts used in faces."
+    (let ((modeline-font-spec (meomacs--get-font-spec "modeline"))
+          (variable-font-spec (meomacs--get-font-spec "variable"))
+          (fixed-font-spec (meomacs--get-font-spec "fixed")))
+      (set-face-attribute 'variable-pitch frame :font variable-font-spec :height 1.2)
+      (set-face-attribute 'fixed-pitch frame :font fixed-font-spec)
+      (set-face-attribute 'fixed-pitch-serif frame :font fixed-font-spec)
+      (set-face-attribute 'mode-line frame :font modeline-font-spec)))
+
+  (defun meomacs-load-ext-font ()
+    "Load fonts used for non-ascii characters."
+    (let ((font (frame-parameter nil 'font))
+          (font-spec (font-spec :family (meomacs--get-font-family "unicode"))))
+      (dolist (charset '(kana han hangul cjk-misc bopomofo symbol))
+        (set-fontset-font font charset font-spec))))
+
+  ;; Only have font setup in GUI
+  (when window-system
+    (meomacs-load-base-font)
+    (meomacs-load-face-font)
+    (meomacs-load-ext-font)
+
+    ;; Setup faces after creating new frame
+    (add-hook 'after-make-frame-functions
+              (lambda ()
+                (meomacs-load-face-font)
+                (meomacs-load-ext-font))))
+#+end_src
+
+* Writting
+** Org
+*** Ricing
+#+begin_src emacs-lisp
+  (add-hook 'org-mode-hook 'variable-pitch-mode)
 #+end_src
