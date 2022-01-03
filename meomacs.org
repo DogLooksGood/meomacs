@@ -187,6 +187,15 @@ Tweaking following table for key bindings in leader keymap.
   (meow-setup-indicator)
 #+end_src
 
+** Auto pair with Smartparens
+#+begin_src emacs-lisp
+  (straight-use-package 'smartparens)
+
+  (require 'smartparens)
+
+  (add-hook 'prog-mode-hook 'smartparens-mode)
+  (add-hook 'conf-mode-hook 'smartparens-mode)
+#+end_src
 ** Completions
 *** Minibuffer completion reading with Vertico & Orderless & Marginalia
 
@@ -409,7 +418,7 @@ Increasing/decreasing font size with =M-+= / =M--=.
 | unicode  | LXGW WenKai             | default font for non-ascii characters |
 | modeline | MesloLGL Nerd Font Mono | modeline                              |
 | fixed    | Sarasa Mono SC          | code blocks and tables in markups     |
-| variable | ETBookOT                | texts in markups                      |
+| variable | ETBembo                 | texts in markups                      |
 
 #+header: :var fonts=fonts
 #+begin_src emacs-lisp
@@ -427,15 +436,15 @@ Increasing/decreasing font size with =M-+= / =M--=.
       (set-frame-parameter nil 'font font-spec)
       (add-to-list 'default-frame-alist (cons 'font font-spec))))
 
-  (defun meomacs-load-face-font (&optional frame)
+  (defun meomacs-load-face-font ()
     "Load fonts used in faces."
     (let ((modeline-font-spec (meomacs--get-font-spec "modeline"))
           (variable-font-spec (meomacs--get-font-spec "variable"))
           (fixed-font-spec (meomacs--get-font-spec "fixed")))
-      (set-face-attribute 'variable-pitch frame :font variable-font-spec :height 1.2)
-      (set-face-attribute 'fixed-pitch frame :font fixed-font-spec)
-      (set-face-attribute 'fixed-pitch-serif frame :font fixed-font-spec)
-      (set-face-attribute 'mode-line frame :font modeline-font-spec)))
+      (set-face-attribute 'variable-pitch nil :font variable-font-spec :height 1.1)
+      (set-face-attribute 'fixed-pitch nil :font fixed-font-spec)
+      (set-face-attribute 'fixed-pitch-serif nil :font fixed-font-spec)
+      (set-face-attribute 'mode-line nil :font modeline-font-spec)))
 
   (defun meomacs-load-ext-font ()
     "Load fonts used for non-ascii characters."
@@ -459,7 +468,54 @@ Increasing/decreasing font size with =M-+= / =M--=.
 
 * Writting
 ** Org
-*** Ricing
+*** Using variable pitch font
+
+Enable ~variable-pitch-mode~.
+
 #+begin_src emacs-lisp
   (add-hook 'org-mode-hook 'variable-pitch-mode)
+
+  ;; Use fixed pitch for table and code
+  (custom-set-faces
+     '(org-table ((t :inherit 'fixed-pitch)))
+     '(org-code ((t :inherit 'fixed-pitch)))
+     '(org-block ((t :inherit 'fixed-pitch)))
+     '(org-checkbox ((t :inherit 'fixed-pitch)))
+     '(org-latex-and-related ((t (:inherit 'fixed-pitch)))))
+#+end_src
+
+*** Better structure indication with org-bars
+
+~org-bars~ provides a better visual feedback for document structure.
+
+#+begin_src emacs-lisp
+  (straight-use-package '(org-bars :repo "tonyaldon/org-bars"
+                                   :host github
+                                   :type git))
+
+  (autoload 'org-bars-mode "org-bars" nil t)
+
+  (add-hook 'org-mode-hook 'org-bars-mode)
+#+end_src
+
+*** Improve emphasis effect
+
+#+begin_src emacs-lisp
+  (setq org-hide-emphasis-markers t)
+
+  (with-eval-after-load "org"
+    (add-to-list 'org-emphasis-alist '("=" (:box (:line-width -2 :color "gray50" :style released-button) :inherit org-verbatim))))
+#+end_src
+
+* Features
+** Telegram client with Telega
+
+Use Telega as Telegram client.
+
+#+begin_src emacs-lisp
+  (straight-use-package 'telega)
+
+  (autoload 'telega "telega" nil t)
+
+  (global-set-key (kbd "C-c a t") 'telega)
 #+end_src
