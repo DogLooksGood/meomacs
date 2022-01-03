@@ -73,69 +73,82 @@ This configuration sticks with Meow for modal editing.
 Tweaking following table for key bindings in normal state.
 
 #+TBLNAME: normal-keybindings
-| key      | command                 |
-|----------+-------------------------|
-| 0        | meow-expand-0           |
-| 9        | meow-expand-9           |
-| 8        | meow-expand-8           |
-| 7        | meow-expand-7           |
-| 6        | meow-expand-6           |
-| 5        | meow-expand-5           |
-| 4        | meow-expand-4           |
-| 3        | meow-expand-3           |
-| 2        | meow-expand-2           |
-| 1        | meow-expand-1           |
-| -        | negative-argument       |
-| ;        | meow-reverse            |
-| ,        | meow-inner-of-thing     |
-| .        | meow-bounds-of-thing    |
-| [        | meow-beginning-of-thing |
-| ]        | meow-end-of-thing       |
-| a        | meow-append             |
-| A        | meow-open-below         |
-| b        | meow-back-word          |
-| B        | meow-back-symbol        |
-| c        | meow-change             |
-| d        | meow-delete             |
-| D        | meow-backward-delete    |
-| e        | meow-next-word          |
-| E        | meow-next-symbol        |
-| f        | meow-find               |
-| g        | meow-cancel-selection   |
-| G        | meow-grab               |
-| h        | meow-left               |
-| H        | meow-left-expand        |
-| i        | meow-insert             |
-| I        | meow-open-above         |
-| j        | meow-next               |
-| J        | meow-next-expand        |
-| k        | meow-prev               |
-| K        | meow-prev-expand        |
-| l        | meow-right              |
-| L        | meow-right-expand       |
-| m        | meow-join               |
-| n        | meow-search             |
-| o        | meow-block              |
-| O        | meow-to-block           |
-| p        | meow-yank               |
-| q        | meow-quit               |
-| Q        | meow-goto-line          |
-| r        | meow-replace            |
-| R        | meow-swap-grab          |
-| s        | meow-kill               |
-| t        | meow-till               |
-| u        | meow-undo               |
-| U        | meow-undo-in-selection  |
-| v        | meow-visit              |
-| w        | meow-mark-word          |
-| W        | meow-mark-symbol        |
-| x        | meow-line               |
-| X        | meow-goto-line          |
-| y        | meow-save               |
-| Y        | meow-sync-grab          |
-| z        | meow-pop-selection      |
-| '        | repeat                  |
-| <escape> | ignore                  |
+| key      | command                   |
+|----------+---------------------------|
+| ?        | meow-keypad-describe-key  |
+| *        | meow-expand-0             |
+| =        | meow-expand-9             |
+| !        | meow-expand-8             |
+| [        | meow-expand-7             |
+| ]        | meow-expand-6             |
+| {        | meow-expand-5             |
+| +        | meow-expand-4             |
+| }        | meow-expand-3             |
+| )        | meow-expand-2             |
+| (        | meow-expand-1             |
+| 1        | select-window-1           |
+| 2        | select-window-2           |
+| 3        | select-window-3           |
+| 4        | select-window-4           |
+| 5        | select-window-5           |
+| 6        | select-window-6           |
+| 7        | select-window-7           |
+| 8        | select-window-8           |
+| 9        | select-window-9           |
+| 0        | select-window-0           |
+| -        | negative-argument         |
+| ;        | meow-reverse              |
+| ,        | meow-inner-of-thing       |
+| .        | meow-bounds-of-thing      |
+| <        | meow-beginning-of-thing   |
+| >        | meow-end-of-thing         |
+| a        | meow-append               |
+| A        | meow-open-below           |
+| b        | meow-back-word            |
+| B        | meow-back-symbol          |
+| c        | meow-change               |
+| d        | meow-delete               |
+| D        | meow-backward-delete      |
+| e        | meow-line                 |
+| E        | meow-goto-line            |
+| f        | meow-find                 |
+| g        | meow-cancel-selection     |
+| G        | meow-grab                 |
+| h        | meow-left                 |
+| H        | meow-left-expand          |
+| i        | meow-insert               |
+| I        | meow-open-above           |
+| j        | meow-join                 |
+| k        | meow-kill                 |
+| l        | meow-till                 |
+| m        | meow-mark-word            |
+| M        | meow-mark-symbol          |
+| n        | meow-next                 |
+| N        | meow-next-expand          |
+| o        | meow-block                |
+| O        | meow-to-block             |
+| p        | meow-prev                 |
+| P        | meow-prev-expand          |
+| q        | meow-quit                 |
+| r        | meow-replace              |
+| R        | meow-swap-grab            |
+| s        | meow-search               |
+| t        | meow-right                |
+| T        | meow-right-expand         |
+| u        | meow-undo                 |
+| U        | meow-undo-in-selection    |
+| v        | meow-visit                |
+| w        | meow-next-word            |
+| W        | meow-next-symbol          |
+| x        | meow-save                 |
+| X        | meow-sync-grab            |
+| y        | meow-yank                 |
+| z        | meow-pop-selection        |
+| $        | repeat                    |
+| '        | repeat                    |
+| &        | meow-query-replace-regexp |
+| %        | meow-query-replace        |
+| <escape> | ignore                    |
 
 *** Motion
 
@@ -144,8 +157,6 @@ Tweaking following table for key bindings in motion state.
 #+TBLNAME: motion-keybindings
 |      key | command             |
 |----------+---------------------|
-|        j | next-line           |
-|        k | previous-line       |
 | <escape> | ignore              |
 
 *** Leader
@@ -195,7 +206,12 @@ Tweaking following table for key bindings in leader keymap.
 
   (add-hook 'prog-mode-hook 'smartparens-mode)
   (add-hook 'conf-mode-hook 'smartparens-mode)
+
+  ;; setup for emacs-lisp
+  (sp-with-modes '(emacs-lisp-mode)
+    (sp-local-pair "'" nil :actions nil))
 #+end_src
+
 ** Completions
 *** Minibuffer completion reading with Vertico & Orderless & Marginalia
 
@@ -369,6 +385,7 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes between list
 #+end_src
 
 ** Fonts
+
 *** Font resizing
 Increasing/decreasing font size with =M-+= / =M--=.
 
@@ -466,8 +483,15 @@ Increasing/decreasing font size with =M-+= / =M--=.
                 (meomacs-load-ext-font))))
 #+end_src
 
-* Writting
+* Writing
 ** Org
+*** Good old template shortcut
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "org"
+    (require 'org-tempo))
+#+end_src
+
 *** Using variable pitch font
 
 Enable ~variable-pitch-mode~.
@@ -496,6 +520,24 @@ Enable ~variable-pitch-mode~.
   (autoload 'org-bars-mode "org-bars" nil t)
 
   (add-hook 'org-mode-hook 'org-bars-mode)
+#+end_src
+
+*** Ricing block markup with prettify symbols
+
+#+begin_src emacs-lisp
+  (defun meomacs--org-prettify-symbols ()
+    (setq-local prettify-symbols-alist
+                '(("#+begin_src" . "»")
+                  ("#+end_src" . "«")
+                  ("#+begin_example" . "»")
+                  ("#+end_example" . "«")
+                  ("#+begin_quote" . "‟")
+                  ("#+end_quote" . "‟")
+                  ("[X]" . "☑")
+                  ("[ ]" . "☐")))
+    (prettify-symbols-mode 1))
+
+  (add-hook 'org-mode-hook 'meomacs--org-prettify-symbols)
 #+end_src
 
 *** Improve emphasis effect
