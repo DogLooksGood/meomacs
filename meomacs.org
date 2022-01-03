@@ -288,6 +288,8 @@ A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =
 
     (define-key company-active-map [tab] 'company-complete-common-or-cycle)
     (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
+    (define-key company-active-map (kbd "C-n") 'company-select-next)
+    (define-key company-active-map (kbd "C-p") 'company-select-previous)
 
     ;; Free SPC and RET, popup will no longer interrupt typing.
     (define-key company-active-map [escape] nil)
@@ -345,6 +347,19 @@ To find files/buffers and apply commands on project, use builtin package ~projec
   (with-eval-after-load "project"
     (define-key project-prefix-map "s" 'shell)
     (define-key project-prefix-map "m" 'magit))
+#+end_src
+
+** Searching with rg
+#+begin_src emacs-lisp
+  (straight-use-package 'rg)
+
+  (autoload 'rg-project "wgrep" nil t)
+  (autoload 'rg-project "rg" nil t)
+
+  (with-eval-after-load "wgrep"
+    (define-key wgrep-mode-map (kbd "C-c C-c") #'wgrep-finish-edit))
+
+  (define-key project-prefix-map "r" 'rg-project)
 #+end_src
 
 * Look & Feel
@@ -499,13 +514,14 @@ Enable ~variable-pitch-mode~.
 #+begin_src emacs-lisp
   (add-hook 'org-mode-hook 'variable-pitch-mode)
 
-  ;; Use fixed pitch for table and code
-  (custom-set-faces
+  (with-eval-after-load "org"
+    ;; Use fixed pitch for table and code
+    (custom-set-faces
      '(org-table ((t :inherit 'fixed-pitch)))
      '(org-code ((t :inherit 'fixed-pitch)))
      '(org-block ((t :inherit 'fixed-pitch)))
-     '(org-checkbox ((t :inherit 'fixed-pitch)))
-     '(org-latex-and-related ((t (:inherit 'fixed-pitch)))))
+     '(org-checkbox ((t :inherit 'fixed-pitch :background nil :box nil)))
+     '(org-latex-and-related ((t (:inherit 'fixed-pitch))))))
 #+end_src
 
 *** Better structure indication with org-bars
