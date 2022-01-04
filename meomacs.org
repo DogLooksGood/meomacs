@@ -6,6 +6,26 @@
 
 * Editor basics
 
+** Pakcage management with Straight
+
+Straight.el is used for package management.
+Bind some keys for quick operations.
+
+#+begin_src emacs-lisp
+  (defvar straight-keymap
+    (let ((keymap (make-keymap)))
+      (define-key keymap "c" 'straight-check-package)
+      (define-key keymap "C" 'straight-check-all)
+      (define-key keymap "p" 'straight-pull-package)
+      (define-key keymap "P" 'straight-pull-all)
+      (define-key keymap "b" 'straight-rebuild-package)
+      (define-key keymap "B" 'straight-rebuild-all)
+      keymap))
+
+  (defalias 'straight-keymap straight-keymap)
+  (global-set-key (kbd "C-c p") 'straight-keymap)
+#+end_src
+
 ** Better defaults
 
 #+begin_src emacs-lisp
@@ -155,29 +175,47 @@ Tweaking following table for key bindings in normal state.
 Tweaking following table for key bindings in motion state.
 
 #+TBLNAME: motion-keybindings
-|      key | command             |
-|----------+---------------------|
-| <escape> | ignore              |
+|      key | command         |
+|----------+-----------------|
+| <escape> | ignore          |
+|        1 | select-window-1 |
+|        2 | select-window-2 |
+|        3 | select-window-3 |
+|        4 | select-window-4 |
+|        5 | select-window-5 |
+|        6 | select-window-6 |
+|        7 | select-window-7 |
+|        8 | select-window-8 |
+|        9 | select-window-9 |
+|        0 | select-window-0 |
 
 *** Leader
 
 Tweaking following table for key bindings in leader keymap.
 
 #+tblname: leader-keybindings
-| key | command             |
-|-----+---------------------|
-|   e | eval-last-sexp      |
-|   1 | meow-digit-argument |
-|   2 | meow-digit-argument |
-|   3 | meow-digit-argument |
-|   4 | meow-digit-argument |
-|   5 | meow-digit-argument |
-|   6 | meow-digit-argument |
-|   7 | meow-digit-argument |
-|   8 | meow-digit-argument |
-|   9 | meow-digit-argument |
-|   0 | meow-digit-argument |
-|   ? | meow-cheatsheet     |
+| key | command              | description |
+|-----+----------------------+-------------|
+| e   | eval-last-sexp       |             |
+| 1   | meow-digit-argument  |             |
+| 2   | meow-digit-argument  |             |
+| 3   | meow-digit-argument  |             |
+| 4   | meow-digit-argument  |             |
+| 5   | meow-digit-argument  |             |
+| 6   | meow-digit-argument  |             |
+| 7   | meow-digit-argument  |             |
+| 8   | meow-digit-argument  |             |
+| 9   | meow-digit-argument  |             |
+| 0   | meow-digit-argument  |             |
+| s   | split-window-right   |             |
+| -   | split-window-below   |             |
+| ?   | meow-cheatsheet      |             |
+| a   | dispatch: C-c a      | Addons      |
+| t   | dispatch: C-c t      | Toggles     |
+| p   | dispatch: C-x p      | Projects    |
+| P   | dispatch: C-c p      | Straight    |
+| o   | delete-other-windows |             |
+| k   | kill-current-buffer  |             |
 
 *** Initialization
 
@@ -187,7 +225,11 @@ Tweaking following table for key bindings in leader keymap.
 
   (require 'meow)
 
-  (let ((parse-def (lambda (x) (cons (format "%s" (car x)) (intern (cadr x)))))
+  (let ((parse-def (lambda (x)
+                     (cons (format "%s" (car x))
+                           (if (string-prefix-p "dispatch:" (cadr x))
+                               (string-trim (substring (cadr x) 9))
+                             (intern (cadr x))))))
         (parse-remap (lambda (x) (cons (format "%s" (car x)) (format "%s%s" meow-motion-remap-prefix (car x))))))
     (apply #'meow-normal-define-key (mapcar parse-def normal-keybindings))
     (apply #'meow-motion-overwrite-define-key (mapcar parse-def motion-keybindings))
@@ -198,7 +240,43 @@ Tweaking following table for key bindings in leader keymap.
   (meow-setup-indicator)
 #+end_src
 
-** Auto pair with Smartparens
+** Window management
+
+Switch window by pressing the number showned in the mode line.
+
+#+begin_src emacs-lisp
+  (straight-use-package '(window-numbering
+                          :repo "DogLooksGood/window-numbering.el"
+                          :host github
+                          :type git))
+
+
+  (require 'window-numbering)
+  (window-numbering-mode 1)
+
+  (defun meomacs-window-numbering-modeline ()
+    (concat " "
+            (let ((n (window-numbering-get-number)))
+              (alist-get
+               n
+               '((0 . "🄌")
+                 (1 . "❶")
+                 (2 . "❷")
+                 (3 . "❸")
+                 (4 . "❹")
+                 (5 . "❺")
+                 (6 . "❻")
+                 (7 . "❼")
+                 (8 . "❽")
+                 (9 . "❾"))))))
+
+  (let ((modeline-segment '(:eval (meomacs-window-numbering-modeline))))
+    (unless (member modeline-segment mode-line-format)
+      (setq-default mode-line-format (cons modeline-segment mode-line-format))))
+#+end_src
+
+** Auto pairs with Smartparens
+
 #+begin_src emacs-lisp
   (straight-use-package 'smartparens)
 
@@ -314,7 +392,7 @@ To manage the git repository, use builtin package ~vc~.
 
   (autoload 'magit "magit" nil t)
   (autoload 'diff-hl-mode "diff-hl" nil t)
-  (autoload 'diff-hl-dired-mode "diff-hl" nil t)
+  (autoload 'diff-hl-dired-mode "diff-hl-dired" nil t)
   (autoload 'smerge-mode "smerge-mode" nil t)
 #+end_src
 
@@ -372,26 +450,24 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 
 ** Themes
 #+name: themes
-- modus-operandi
-- modus-vivendi
+- [X] modus-operandi
+- [X] modus-vivendi
+- [ ] deeper-blue
 
 Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes between listed above.
 
 #+header: :var themes=themes
 #+begin_src emacs-lisp
+  (require 'cl-lib)
+
   (defvar meomacs-themes nil
     "Themes to use.")
 
-  (setq meomacs-themes
-        (mapcar (lambda (x) (intern (car x))) themes))
-
-  (defun meomacs-next-theme ()
-    (interactive)
     (mapc 'disable-theme custom-enabled-themes)
     (when meomacs-themes
-      (setq meomacs-themes (append (cdr meomacs-themes) (list (car meomacs-themes))))
       (message "Load theme: %s" (car meomacs-themes))
-      (load-theme (car meomacs-themes) t)))
+      (load-theme (car meomacs-themes) t)
+      (setq meomacs-themes (append (cdr meomacs-themes) (list (car meomacs-themes))))))
 
   (global-set-key (kbd "C-c t t") 'meomacs-next-theme)
 
@@ -407,7 +483,7 @@ Increasing/decreasing font size with =M-+= / =M--=.
 #+begin_src emacs-lisp
   (require 'cl-lib)
 
-  (defvar meomacs-font-size 12
+  (defvar meomacs-font-size 11
     "Current font size.")
 
   (defvar meomacs-resize-font-sizes
@@ -454,48 +530,49 @@ Increasing/decreasing font size with =M-+= / =M--=.
 
 #+header: :var fonts=fonts
 #+begin_src emacs-lisp
-  (defun meomacs--get-font-family (key)
-    (car (alist-get key fonts nil nil #'string-equal)))
+    (defun meomacs--get-font-family (key)
+      (car (alist-get key fonts nil nil #'string-equal)))
 
-  (defun meomacs--get-font-spec (key)
-    (format "%s-%d"
-            (meomacs--get-font-family key)
-            meomacs-font-size))
+    (defun meomacs--get-font-spec (key)
+      (format "%s-%d"
+              (meomacs--get-font-family key)
+              meomacs-font-size))
 
-  (defun meomacs-load-base-font ()
-    "Load the default font for ascii characters."
-    (let* ((font-spec (meomacs--get-font-spec "default")))
-      (set-frame-parameter nil 'font font-spec)
-      (add-to-list 'default-frame-alist (cons 'font font-spec))))
+    (defun meomacs-load-base-font ()
+      "Load the default font for ascii characters."
+      (let* ((font-spec (meomacs--get-font-spec "default")))
+        (set-frame-parameter nil 'font font-spec)
+        (add-to-list 'default-frame-alist (cons 'font font-spec))))
 
-  (defun meomacs-load-face-font ()
-    "Load fonts used in faces."
-    (let ((modeline-font-spec (meomacs--get-font-spec "modeline"))
-          (variable-font-spec (meomacs--get-font-spec "variable"))
-          (fixed-font-spec (meomacs--get-font-spec "fixed")))
-      (set-face-attribute 'variable-pitch nil :font variable-font-spec :height 1.1)
-      (set-face-attribute 'fixed-pitch nil :font fixed-font-spec)
-      (set-face-attribute 'fixed-pitch-serif nil :font fixed-font-spec)
-      (set-face-attribute 'mode-line nil :font modeline-font-spec)))
+    (defun meomacs-load-face-font ()
+      "Load fonts used in faces."
+      (let ((modeline-font-spec (meomacs--get-font-spec "modeline"))
+            (variable-font-spec (meomacs--get-font-spec "variable"))
+            (fixed-font-spec (meomacs--get-font-spec "fixed")))
+        (set-face-attribute 'variable-pitch nil :font variable-font-spec :height 1.1)
+        (set-face-attribute 'fixed-pitch nil :font fixed-font-spec)
+        (set-face-attribute 'fixed-pitch-serif nil :font fixed-font-spec)
+        (set-face-attribute 'mode-line nil :font modeline-font-spec)
+        (set-face-attribute 'mode-line-inactive nil :font modeline-font-spec)))
 
-  (defun meomacs-load-ext-font ()
-    "Load fonts used for non-ascii characters."
-    (let ((font (frame-parameter nil 'font))
-          (font-spec (font-spec :family (meomacs--get-font-family "unicode"))))
-      (dolist (charset '(kana han hangul cjk-misc bopomofo symbol))
-        (set-fontset-font font charset font-spec))))
+    (defun meomacs-load-ext-font ()
+      "Load fonts used for non-ascii characters."
+      (let ((font (frame-parameter nil 'font))
+            (font-spec (font-spec :family (meomacs--get-font-family "unicode"))))
+        (dolist (charset '(kana han hangul cjk-misc bopomofo symbol))
+          (set-fontset-font font charset font-spec))))
 
-  ;; Only have font setup in GUI
-  (when window-system
-    (meomacs-load-base-font)
-    (meomacs-load-face-font)
-    (meomacs-load-ext-font)
+    ;; Only have font setup in GUI
+    (when window-system
+      (meomacs-load-base-font)
+      (meomacs-load-face-font)
+      (meomacs-load-ext-font)
 
-    ;; Setup faces after creating new frame
-    (add-hook 'after-make-frame-functions
-              (lambda ()
-                (meomacs-load-face-font)
-                (meomacs-load-ext-font))))
+      ;; Setup faces after creating new frame
+      (add-hook 'after-make-frame-functions
+                (lambda ()
+                  (meomacs-load-face-font)
+                  (meomacs-load-ext-font))))
 #+end_src
 
 * Writing
@@ -565,7 +642,7 @@ Enable ~variable-pitch-mode~.
     (add-to-list 'org-emphasis-alist '("=" (:box (:line-width -2 :color "gray50" :style released-button) :inherit org-verbatim))))
 #+end_src
 
-* Features
+* Addons
 ** Telegram client with Telega
 
 Use Telega as Telegram client.
