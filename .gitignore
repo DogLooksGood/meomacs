@@ -2,3 +2,5 @@ tangle.el
 straight
 projects
 transient
+org-roam.db
+rime

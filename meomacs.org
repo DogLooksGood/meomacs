@@ -74,7 +74,7 @@ Bind some keys for quick operations.
 
    ;; Disable copy region blink
    copy-region-blink-delay 0
-
+ 
    ;; Use short answer when asking yes or no
    read-answer-short t
 
@@ -214,6 +214,8 @@ Tweaking following table for key bindings in leader keymap.
 | t   | dispatch: C-c t      | Toggles     |
 | p   | dispatch: C-x p      | Projects    |
 | P   | dispatch: C-c p      | Straight    |
+| r   | dispatch: C-c r      | Org Roam    |
+| i   | imenu                |             |
 | o   | delete-other-windows |             |
 | k   | kill-current-buffer  |             |
 
@@ -452,7 +454,7 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 #+name: themes
 - [X] modus-operandi
 - [X] modus-vivendi
-- [X] deeper-blue
+- [ ] deeper-blue
 
 Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes between listed above.
 
@@ -586,6 +588,30 @@ Increasing/decreasing font size with =M-+= / =M--=.
 
 * Writing
 ** Org
+*** Org Roam
+#+begin_src emacs-lisp
+  (straight-use-package 'org-roam)
+
+  (setq org-roam-directory (expand-file-name "~/Org"))
+
+  (defvar org-roam-keymap
+    (let ((keymap (make-keymap)))
+      (define-key keymap "l" 'org-roam-buffer-toggle)
+      (define-key keymap "f" 'org-roam-node-find)
+      (define-key keymap "g" 'org-roam-graph)
+      (define-key keymap "i" 'org-roam-node-insert)
+      (define-key keymap "c" 'org-roam-capture)
+      (define-key keymap "s" 'org-roam-db-sync)
+      keymap))
+
+  (defalias 'org-roam-keymap org-roam-keymap)
+
+  (global-set-key (kbd "C-c r") 'org-roam-keymap)
+
+  (with-eval-after-load "org-roam"
+    (org-roam-setup))
+#+end_src
+
 *** Good old template shortcut
 
 #+begin_src emacs-lisp
@@ -610,21 +636,22 @@ Enable ~variable-pitch-mode~.
      '(org-latex-and-related ((t (:inherit 'fixed-pitch))))))
 #+end_src
 
-*** Better structure indication with org-bars
+*** Better structure indication with org-visual-outline
 
-~org-bars~ provides a better visual feedback for document structure.
+~org-visual-outline~ provides a better visual feedback for document structure.
 
 #+begin_src emacs-lisp
-  (straight-use-package '(org-bars :repo "tonyaldon/org-bars"
-                                   :host github
-                                   :type git))
+  (straight-use-package '(org-visual-outline
+                          :repo "legalnonsense/org-visual-outline"
+                          :host github
+                          :type git))
 
-  (autoload 'org-bars-mode "org-bars" nil t)
+  (autoload 'org-visual-indent-mode "org-visual-indent")
 
-  (add-hook 'org-mode-hook 'org-bars-mode)
+  (add-hook 'org-mode-hook 'org-visual-indent-mode)
 #+end_src
 
-*** Ricing block markup with prettify symbols
+*** Ricing markups
 
 #+begin_src emacs-lisp
   (defun meomacs--org-prettify-symbols ()
@@ -640,11 +667,7 @@ Enable ~variable-pitch-mode~.
     (prettify-symbols-mode 1))
 
   (add-hook 'org-mode-hook 'meomacs--org-prettify-symbols)
-#+end_src
 
-*** Improve emphasis effect
-
-#+begin_src emacs-lisp
   (setq org-hide-emphasis-markers t)
 
   (with-eval-after-load "org"
@@ -652,7 +675,36 @@ Enable ~variable-pitch-mode~.
 #+end_src
 
 * Addons
+** Input method with emacs-rime
+
+~librime~ is required for this feature.
+
+~emacs-rime~ is the frontend of rime built with emacs input method API.
+
+#+begin_src emacs-lisp
+  (straight-use-package 'rime)
+
+  (setq default-input-method "rime")
+#+end_src
+
+Disable input method in non-insert state.
+
+#+begin_src emacs-lisp
+  (setq rime-disable-predicates '(meow-normal-mode-p
+                                  meow-keypad-mode-p
+                                  meow-motion-mode-p
+                                  meow-beacon-mode-p))
+#+end_src
+
+Auto switch to inline ascii state when after a space after a non-ascii character.
+
+#+begin_src emacs-lisp
+  (setq rime-inline-predicates '(rime-predicate-space-after-cc-p))
+#+end_src
+
 ** Telegram client with Telega
+
+~telegram-libtd~ is required for this feature.
 
 Use Telega as Telegram client.
 
