@@ -463,6 +463,8 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes between list
   (defvar meomacs-themes nil
     "Themes to use.")
 
+  (defun meomacs-next-theme ()
+    (interactive)
     (mapc 'disable-theme custom-enabled-themes)
     (when meomacs-themes
       (message "Load theme: %s" (car meomacs-themes))
