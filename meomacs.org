@@ -452,7 +452,7 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 #+name: themes
 - [X] modus-operandi
 - [X] modus-vivendi
-- [ ] deeper-blue
+- [X] deeper-blue
 
 Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes between listed above.
 
@@ -462,6 +462,13 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes between list
 
   (defvar meomacs-themes nil
     "Themes to use.")
+
+  (setq meomacs-themes
+        (thread-last
+          themes
+          (mapcar 'car)
+          (cl-remove-if-not (lambda (s) (string-prefix-p "[X] " s)))
+          (mapcar (lambda (s) (intern (substring s 4))))))
 
   (defun meomacs-next-theme ()
     (interactive)
