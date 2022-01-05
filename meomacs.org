@@ -214,32 +214,34 @@ Tweaking following table for key bindings in motion state.
 Tweaking following table for key bindings in leader keymap.
 
 #+tblname: leader-keybindings
-| key | command              | description |
-|-----+----------------------+-------------|
-| e   | eval-last-sexp       |             |
-| 1   | meow-digit-argument  |             |
-| 2   | meow-digit-argument  |             |
-| 3   | meow-digit-argument  |             |
-| 4   | meow-digit-argument  |             |
-| 5   | meow-digit-argument  |             |
-| 6   | meow-digit-argument  |             |
-| 7   | meow-digit-argument  |             |
-| 8   | meow-digit-argument  |             |
-| 9   | meow-digit-argument  |             |
-| 0   | meow-digit-argument  |             |
-| s   | split-window-right   |             |
-| -   | split-window-below   |             |
-| ?   | meow-cheatsheet      |             |
-| a   | dispatch: C-c a      | Addons      |
-| l   | dispatch: C-c l      | Lints       |
-| t   | dispatch: C-c t      | Toggles     |
-| p   | dispatch: C-x p      | Projects    |
-| P   | dispatch: C-c p      | Straight    |
-| r   | dispatch: C-c r      | Org Roam    |
-| i   | imenu                |             |
-| b   | switch-to-buffer     |             |
-| o   | delete-other-windows |             |
-| k   | kill-current-buffer  |             |
+| key | command               | description |
+|-----+-----------------------+-------------|
+| e   | eval-last-sexp        |             |
+| 1   | meow-digit-argument   |             |
+| 2   | meow-digit-argument   |             |
+| 3   | meow-digit-argument   |             |
+| 4   | meow-digit-argument   |             |
+| 5   | meow-digit-argument   |             |
+| 6   | meow-digit-argument   |             |
+| 7   | meow-digit-argument   |             |
+| 8   | meow-digit-argument   |             |
+| 9   | meow-digit-argument   |             |
+| 0   | meow-digit-argument   |             |
+| s   | split-window-right    |             |
+| -   | split-window-below    |             |
+| ?   | meow-cheatsheet       |             |
+| a   | dispatch: C-c a       | Addons      |
+| l   | dispatch: C-c l       | Lints       |
+| t   | dispatch: C-c t       | Toggles     |
+| p   | dispatch: C-x p       | Projects    |
+| P   | dispatch: C-c p       | Straight    |
+| r   | dispatch: C-c r       | Org Roam    |
+| w   | tab-bar-switch-to-tab |             |
+| i   | imenu                 |             |
+| b   | switch-to-buffer      |             |
+| o   | delete-other-windows  |             |
+| k   | kill-current-buffer   |             |
+#+TBLFM: 
 
 *** Initialization
 
