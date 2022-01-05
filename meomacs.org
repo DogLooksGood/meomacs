@@ -237,6 +237,7 @@ Tweaking following table for key bindings in leader keymap.
 | P   | dispatch: C-c p      | Straight    |
 | r   | dispatch: C-c r      | Org Roam    |
 | i   | imenu                |             |
+| b   | switch-to-buffer     |             |
 | o   | delete-other-windows |             |
 | k   | kill-current-buffer  |             |
 
