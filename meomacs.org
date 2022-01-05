@@ -362,7 +362,6 @@ A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =
 #+begin_src emacs-lisp
   (with-eval-after-load "company"
     (require 'company-tng)
-    (require 'company-template)
 
     (add-hook 'company-mode-hook 'company-tng-mode)
 
@@ -375,14 +374,20 @@ A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =
     (define-key company-active-map [escape] nil)
     (define-key company-active-map [return] nil)
     (define-key company-active-map (kbd "RET") nil)
-    (define-key company-active-map (kbd "SPC") nil)
-
-    (define-key company-template-nav-map (kbd "RET") 'company-template-forward-field)
-    (define-key company-template-nav-map [return] 'company-template-forward-field)
-    (define-key company-template-nav-map (kbd "TAB") nil)
-    (define-key company-template-nav-map [tab] nil))
+    (define-key company-active-map (kbd "SPC") nil))
 #+end_src
 
+** Templating with yasnippet
+Expand template with =TAB=. Jump between the placeholders with =TAB= and =S-TAB=.
+
+#+begin_src emacs-lisp
+  (straight-use-package 'yasnippet)
+  (straight-use-package 'yasnippet-snippets)
+
+  (require 'yasnippet)
+
+  (yas-global-mode 1)
+#+end_src
 ** Git integration with magit & diff-hl & smerge
 
 To manage the git repository, use builtin package ~vc~.
