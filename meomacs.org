@@ -1,5 +1,8 @@
 #+title: Meomacs - A simple Emacs configuration with modal editing
 
+Press =F9= to open this configuration file.
+Press =F12= to reload configuration after changes.
+
 #+begin_src emacs-lisp
   ;;; -*- lexical-binding: t -*-
 #+end_src
@@ -9,6 +12,23 @@
 ** Pakcage management with Straight
 
 Straight.el is used for package management.
+
+#+begin_src emacs-lisp
+  ;; Setup straight as package manager
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+#+end_src
+
 Bind some keys for quick operations.
 
 #+begin_src emacs-lisp
@@ -211,6 +231,7 @@ Tweaking following table for key bindings in leader keymap.
 | -   | split-window-below   |             |
 | ?   | meow-cheatsheet      |             |
 | a   | dispatch: C-c a      | Addons      |
+| l   | dispatch: C-c l      | Lints       |
 | t   | dispatch: C-c t      | Toggles     |
 | p   | dispatch: C-x p      | Projects    |
 | P   | dispatch: C-c p      | Straight    |
@@ -277,6 +298,25 @@ Switch window by pressing the number showned in the mode line.
       (setq-default mode-line-format (cons modeline-segment mode-line-format))))
 #+end_src
 
+** Workspaces management with tab-bar-mode
+
+Use tabs for workspaces.
+
+#+begin_src emacs-lisp
+  (setq tab-bar-border nil
+        tab-bar-close-button nil
+        tab-bar-back-button nil
+        tab-bar-new-button nil
+        tab-bar-tab-name-truncated-max 10)
+
+  (tab-bar-mode 1)
+#+end_src
+
+Add missing keybindings
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-x t .") 'tab-bar-rename-tab)
+#+end_src
 ** Auto pairs with Smartparens
 
 #+begin_src emacs-lisp
@@ -593,6 +633,11 @@ Increasing/decreasing font size with =M-+= / =M--=.
 
 * Writing
 ** Org
+*** Toggle markup visibility with visible mode
+#+begin_src emacs-lisp
+  (with-eval-after-load "org"
+    (define-key org-mode-map (kbd "C-c t v") 'visible-mode))
+#+end_src
 *** Org Roam
 #+begin_src emacs-lisp
   (straight-use-package 'org-roam)
@@ -651,6 +696,10 @@ Enable ~variable-pitch-mode~.
                           :host github
                           :type git))
 
+  (custom-set-faces
+   '(org-visual-indent-pipe-face ((t :foreground "gray50" :background "gray50" :height .1)))
+   '(org-visual-indent-blank-pipe-face ((t :foreground nil :background nil :height .1))))
+
   (autoload 'org-visual-indent-mode "org-visual-indent")
 
   (add-hook 'org-mode-hook 'org-visual-indent-mode)
@@ -678,7 +727,49 @@ Enable ~variable-pitch-mode~.
   (with-eval-after-load "org"
     (add-to-list 'org-emphasis-alist '("=" (:box (:line-width -2 :color "gray50" :style released-button) :inherit org-verbatim))))
 #+end_src
+* Programming
+** Linting with Flymake
 
+#+begin_src emacs-lisp
+  (straight-use-package 'flymake)
+
+  (autoload #'flymake-mode "flymake" nil t)
+
+  (with-eval-after-load "flymake"
+    (define-key flymake-mode-map (kbd "C-c l l") 'flymake-show-diagnostics-buffer)
+    (define-key flymake-mode-map (kbd "C-c l n") 'flymake-goto-next-error)
+    (define-key flymake-mode-map (kbd "C-c l p") 'flymake-goto-prev-error))
+#+end_src
+
+** LSP with Eglot
+
+Use eglot as LSP client.
+
+#+begin_src emacs-lisp
+  (straight-use-package 'eglot)
+
+  (autoload 'eglot-ensure "eglot")
+  (autoload 'eglot "eglot" nil t)
+
+  (setq eglot-connect-timeout 300)
+#+end_src
+** Clojure
+
+*** clojure-mode
+
+Use clojure-mode for basic syntax support.
+
+#+begin_src emacs-lisp
+  (straight-use-package 'clojure-mode)
+#+end_src
+
+*** Cider for REPL connection
+
+#+begin_src emacs-lisp
+  (straight-use-package 'cider)
+
+  (autoload 'cider-jack-in "cider" nil t)
+#+end_src
 * Addons
 ** Input method with emacs-rime
 
@@ -720,3 +811,31 @@ Use Telega as Telegram client.
 
   (global-set-key (kbd "C-c a t") 'telega)
 #+end_src
+
+** Password management with pass
+
+Manage password with pass
+
+Adding following to ~$HOME/.gnupg/gpg-agent.conf~.
+#+begin_example
+allow-emacs-pinentry
+allow-loopback-pinentry
+#+end_example
+
+Open pass menu with =C-c a p=.
+
+#+begin_src emacs-lisp
+  (straight-use-package 'pass)
+  (straight-use-package 'pinentry)
+
+  (setq pass-username-fallback-on-filename t
+        pass-show-keybindings nil)
+
+  (autoload #'pass "pass" nil t)
+
+  (global-set-key (kbd "C-c a p") 'pass)
+
+  (with-eval-after-load "pass"
+    (pinentry-start))
+#+end_src
+

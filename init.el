@@ -8,21 +8,6 @@
 ;;   emacs -q -l /path/to/meomacs/init.el
 (setq user-emacs-directory (file-name-directory (or load-file-name buffer-file-name)))
 
-;; Setup straight as package manager
-;; check https://github.com/raxod502/straight.el#getting-started for documentation
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
 ;; Define helper command for reloading configuration
 (defun meomacs-refresh ()
   "Refresh and tangle configuration."
@@ -34,6 +19,13 @@
     (org-babel-tangle-file source target)
     (load-file target)))
 
+;; Define helper command for open configuration file.
+(defun meomacs-open-configuration ()
+  "Open meomacs.org under `user-emacs-directory'."
+  (interactive)
+  (find-file (expand-file-name "meomacs.org" user-emacs-directory)))
+
+(global-set-key (kbd "<f9>") 'meomacs-open-configuration)
 (global-set-key (kbd "<f12>") 'meomacs-refresh)
 
 ;; Detecting tangle output
