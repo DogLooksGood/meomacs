@@ -4,3 +4,6 @@ projects
 transient
 org-roam.db
 rime
+custom.el
+eln-cache
+auto-save-list

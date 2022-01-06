@@ -94,7 +94,7 @@ Bind some keys for quick operations.
 
    ;; Disable copy region blink
    copy-region-blink-delay 0
- 
+
    ;; Use short answer when asking yes or no
    read-answer-short t
 
@@ -102,7 +102,10 @@ Bind some keys for quick operations.
    vc-follow-symlinks t
 
    ;; Use custom.el as custom file
-   custom-file (expand-file-name "custom.el" user-emacs-directory))
+   custom-file (expand-file-name "custom.el" user-emacs-directory)
+
+   ;; disable ring bell
+   ring-bell-function 'ignore)
 #+end_src
 
 ** Modal editing with Meow
@@ -230,6 +233,8 @@ Tweaking following table for key bindings in leader keymap.
 | s   | split-window-right    |             |
 | -   | split-window-below    |             |
 | ?   | meow-cheatsheet       |             |
+| ,   | xref-go-back          |             |
+| .   | xref-find-definitions |             |
 | a   | dispatch: C-c a       | Addons      |
 | l   | dispatch: C-c l       | Lints       |
 | t   | dispatch: C-c t       | Toggles     |
@@ -285,16 +290,16 @@ Switch window by pressing the number showned in the mode line.
             (let ((n (window-numbering-get-number)))
               (alist-get
                n
-               '((0 . "🄌")
-                 (1 . "❶")
-                 (2 . "❷")
-                 (3 . "❸")
-                 (4 . "❹")
-                 (5 . "❺")
-                 (6 . "❻")
-                 (7 . "❼")
-                 (8 . "❽")
-                 (9 . "❾"))))))
+               '((0 . "0")
+                 (1 . "1")
+                 (2 . "2")
+                 (3 . "3")
+                 (4 . "4")
+                 (5 . "5")
+                 (6 . "6")
+                 (7 . "7")
+                 (8 . "8")
+                 (9 . "9"))))))
 
   (let ((modeline-segment '(:eval (meomacs-window-numbering-modeline))))
     (unless (member modeline-segment mode-line-format)
@@ -546,7 +551,7 @@ Increasing/decreasing font size with =M-+= / =M--=.
     "Current font size.")
 
   (defvar meomacs-resize-font-sizes
-    '(10 11 12 13 14 15 16)
+    '(7 8 9 10 11 12 13 14 15 16)
     "Font sizes for resizing.")
 
   (defun meomacs-increase-font-size ()
@@ -773,6 +778,11 @@ Use clojure-mode for basic syntax support.
 
   (autoload 'cider-jack-in "cider" nil t)
 #+end_src
+** HTML
+#+begin_src emacs-lisp
+  (setq-default css-indent-offset 2)
+#+end_src
+
 * Addons
 ** Input method with emacs-rime
 
@@ -842,3 +852,10 @@ Open pass menu with =C-c a p=.
     (pinentry-start))
 #+end_src
 
+** Directory environment support with direnv
+
+#+begin_src emacs-lisp
+  (straight-use-package 'direnv)
+
+  (direnv-mode 1)
+#+end_src
