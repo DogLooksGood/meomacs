@@ -9,7 +9,9 @@ Work in progress.
 
 * Get Started
 
-Check [[file:meomacs.org][the configuration org file]].
+Check a list of configuration files.
+- [[file:laf.org][Look and feel]]
+- [[file:programming][Programming]]
 
 After changes made, press =F12= to reload.
 

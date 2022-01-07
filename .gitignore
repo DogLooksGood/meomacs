@@ -1,4 +1,4 @@
-tangle.el
+tangle
 straight
 projects
 transient
@@ -7,3 +7,5 @@ rime
 custom.el
 eln-cache
 auto-save-list
+.org-id-locations
+bookmarks

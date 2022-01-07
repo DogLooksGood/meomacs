@@ -260,12 +260,10 @@ Tweaking following table for key bindings in leader keymap.
                      (cons (format "%s" (car x))
                            (if (string-prefix-p "dispatch:" (cadr x))
                                (string-trim (substring (cadr x) 9))
-                             (intern (cadr x))))))
-        (parse-remap (lambda (x) (cons (format "%s" (car x)) (format "%s%s" meow-motion-remap-prefix (car x))))))
+                             (intern (cadr x)))))))
     (apply #'meow-normal-define-key (mapcar parse-def normal-keybindings))
     (apply #'meow-motion-overwrite-define-key (mapcar parse-def motion-keybindings))
-    (apply #'meow-leader-define-key (mapcar parse-def leader-keybindings))
-    (apply #'meow-leader-define-key (mapcar parse-remap motion-keybindings)))
+    (apply #'meow-leader-define-key (mapcar parse-def leader-keybindings)))
 
   (meow-global-mode 1)
   (meow-setup-indicator)
@@ -327,6 +325,8 @@ Add missing keybindings
 #+end_src
 ** Auto pairs with Smartparens
 
+Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
+
 #+begin_src emacs-lisp
   (straight-use-package 'smartparens)
 
@@ -335,10 +335,25 @@ Add missing keybindings
   (add-hook 'prog-mode-hook 'smartparens-mode)
   (add-hook 'conf-mode-hook 'smartparens-mode)
 
-  ;; setup for emacs-lisp
-  (sp-with-modes '(emacs-lisp-mode)
-    (sp-local-pair "'" nil :actions nil))
+  (with-eval-after-load "smartparens"
+
+    ;; setup for emacs-lisp
+    (sp-with-modes '(emacs-lisp-mode)
+      (sp-local-pair "'" nil :actions nil))
+
+    ;; Use strict-mode by default
+    (add-hook 'smartparens-mode-hook 'smartparens-strict-mode)
+
+    ;; Keybindings
+    (define-key smartparens-mode-map (kbd "C-c t s") 'smartparens-strict-mode))
 #+end_src
+
+** Line numbers with display-line-numbers-mode
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c t l") 'display-line-numbers-mode)
+#+end_src
+
 
 ** Completions
 *** Minibuffer completion reading with Vertico & Orderless & Marginalia
@@ -459,10 +474,10 @@ Enable diff-hl in based on major modes.
   (add-hook 'conf-mode-hook 'diff-hl-mode)
 #+end_src
 
-Enable smerge mode after ~find-file~.
+Enable smerge mode with =C-c t m=.
 
 #+begin_src emacs-lisp
-  (add-hook 'find-file-hook 'smerge-mode)
+  (global-set-key (kbd "C-c t m") 'smerge-mode)
 #+end_src
 
 ** Project management with project.el
@@ -493,150 +508,6 @@ To find files/buffers and apply commands on project, use builtin package ~projec
     (define-key wgrep-mode-map (kbd "C-c C-c") #'wgrep-finish-edit))
 
   (define-key project-prefix-map "r" 'rg-project)
-#+end_src
-
-* Look & Feel
-** Disabling some components
-#+begin_src emacs-lisp
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
-  (menu-bar-mode -1)
-#+end_src
-
-** Themes
-#+name: themes
-- [X] modus-operandi
-- [X] modus-vivendi
-- [ ] deeper-blue
-
-Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes between listed above.
-
-#+header: :var themes=themes
-#+begin_src emacs-lisp
-  (require 'cl-lib)
-
-  (defvar meomacs-themes nil
-    "Themes to use.")
-
-  (setq meomacs-themes
-        (thread-last
-          themes
-          (mapcar 'car)
-          (cl-remove-if-not (lambda (s) (string-prefix-p "[X] " s)))
-          (mapcar (lambda (s) (intern (substring s 4))))))
-
-  (defun meomacs-next-theme ()
-    (interactive)
-    (mapc 'disable-theme custom-enabled-themes)
-    (when meomacs-themes
-      (message "Load theme: %s" (car meomacs-themes))
-      (load-theme (car meomacs-themes) t)
-      (setq meomacs-themes (append (cdr meomacs-themes) (list (car meomacs-themes))))))
-
-  (global-set-key (kbd "C-c t t") 'meomacs-next-theme)
-
-  (unless custom-enabled-themes
-    (meomacs-next-theme))
-#+end_src
-
-** Fonts
-
-*** Font resizing
-Increasing/decreasing font size with =M-+= / =M--=.
-
-#+begin_src emacs-lisp
-  (require 'cl-lib)
-
-  (defvar meomacs-font-size 11
-    "Current font size.")
-
-  (defvar meomacs-resize-font-sizes
-    '(7 8 9 10 11 12 13 14 15 16)
-    "Font sizes for resizing.")
-
-  (defun meomacs-increase-font-size ()
-    (interactive)
-    (if-let ((size (cl-find-if (lambda (s)
-                                 (> s meomacs-font-size))
-                               meomacs-resize-font-sizes)))
-        (progn (setq meomacs-font-size size)
-               (meomacs-load-base-font)
-               (meomacs-load-face-font)
-               (meomacs-load-ext-font)
-               (message "Font size: %s" size))
-      (message "Using biggest font size.")))
-
-  (defun meomacs-decrease-font-size ()
-    (interactive)
-    (if-let ((size (cl-find-if (lambda (s)
-                                 (< s meomacs-font-size))
-                               (reverse meomacs-resize-font-sizes))))
-        (progn (setq meomacs-font-size size)
-               (meomacs-load-base-font)
-               (meomacs-load-face-font)
-               (meomacs-load-ext-font)
-               (message "Font size: %s" size))
-      (message "Using smallest font size.")))
-
-  (global-set-key (kbd "M-+") 'meomacs-increase-font-size)
-  (global-set-key (kbd "M--") 'meomacs-decrease-font-size)
-#+end_src
-
-*** Font Families
-#+tblname: fonts
-| key      | font                    | where to apply                        |
-|----------+-------------------------+---------------------------------------|
-| default  | MesloLGM Nerd Font Mono | default font for ascii characters     |
-| unicode  | LXGW WenKai             | default font for non-ascii characters |
-| modeline | MesloLGL Nerd Font Mono | modeline                              |
-| fixed    | Sarasa Mono SC          | code blocks and tables in markups     |
-| variable | ETBembo                 | texts in markups                      |
-
-#+header: :var fonts=fonts
-#+begin_src emacs-lisp
-    (defun meomacs--get-font-family (key)
-      (car (alist-get key fonts nil nil #'string-equal)))
-
-    (defun meomacs--get-font-spec (key)
-      (format "%s-%d"
-              (meomacs--get-font-family key)
-              meomacs-font-size))
-
-    (defun meomacs-load-base-font ()
-      "Load the default font for ascii characters."
-      (let* ((font-spec (meomacs--get-font-spec "default")))
-        (set-frame-parameter nil 'font font-spec)
-        (add-to-list 'default-frame-alist (cons 'font font-spec))))
-
-    (defun meomacs-load-face-font ()
-      "Load fonts used in faces."
-      (let ((modeline-font-spec (meomacs--get-font-spec "modeline"))
-            (variable-font-spec (meomacs--get-font-spec "variable"))
-            (fixed-font-spec (meomacs--get-font-spec "fixed")))
-        (set-face-attribute 'variable-pitch nil :font variable-font-spec :height 1.1)
-        (set-face-attribute 'fixed-pitch nil :font fixed-font-spec)
-        (set-face-attribute 'fixed-pitch-serif nil :font fixed-font-spec)
-        (set-face-attribute 'mode-line nil :font modeline-font-spec)
-        (set-face-attribute 'mode-line-inactive nil :font modeline-font-spec)))
-
-    (defun meomacs-load-ext-font ()
-      "Load fonts used for non-ascii characters."
-      (let ((font (frame-parameter nil 'font))
-            (font-spec (font-spec :family (meomacs--get-font-family "unicode"))))
-        (dolist (charset '(kana han hangul cjk-misc bopomofo symbol))
-          (set-fontset-font font charset font-spec))))
-
-    ;; Only have font setup in GUI
-    (when window-system
-      (meomacs-load-base-font)
-      (meomacs-load-face-font)
-      (meomacs-load-ext-font)
-
-      ;; Setup faces after creating new frame
-      (add-hook 'after-make-frame-functions
-                (lambda ()
-                  (meomacs-load-face-font)
-                  (meomacs-load-ext-font))))
 #+end_src
 
 * Writing
@@ -705,8 +576,7 @@ Enable ~variable-pitch-mode~.
                           :type git))
 
   (custom-set-faces
-   '(org-visual-indent-pipe-face ((t :foreground "gray50" :background "gray50" :height .1)))
-   '(org-visual-indent-blank-pipe-face ((t :foreground nil :background nil :height .1))))
+   '(org-visual-indent-pipe-face ((t :foreground "gray50" :background "gray50" :height .1))))
 
   (autoload 'org-visual-indent-mode "org-visual-indent")
 
@@ -720,8 +590,8 @@ Enable ~variable-pitch-mode~.
     (setq-local prettify-symbols-alist
                 '(("#+begin_src" . "»")
                   ("#+end_src" . "«")
-                  ("#+begin_example" . "»")
-                  ("#+end_example" . "«")
+                  ("#+begin_example" . "❯")
+                  ("#+end_example" . "❮")
                   ("#+begin_quote" . "‟")
                   ("#+end_quote" . "‟")
                   ("[X]" . "☑")
@@ -735,54 +605,6 @@ Enable ~variable-pitch-mode~.
   (with-eval-after-load "org"
     (add-to-list 'org-emphasis-alist '("=" (:box (:line-width -2 :color "gray50" :style released-button) :inherit org-verbatim))))
 #+end_src
-* Programming
-** Linting with Flymake
-
-#+begin_src emacs-lisp
-  (straight-use-package 'flymake)
-
-  (autoload #'flymake-mode "flymake" nil t)
-
-  (with-eval-after-load "flymake"
-    (define-key flymake-mode-map (kbd "C-c l l") 'flymake-show-diagnostics-buffer)
-    (define-key flymake-mode-map (kbd "C-c l n") 'flymake-goto-next-error)
-    (define-key flymake-mode-map (kbd "C-c l p") 'flymake-goto-prev-error))
-#+end_src
-
-** LSP with Eglot
-
-Use eglot as LSP client.
-
-#+begin_src emacs-lisp
-  (straight-use-package 'eglot)
-
-  (autoload 'eglot-ensure "eglot")
-  (autoload 'eglot "eglot" nil t)
-
-  (setq eglot-connect-timeout 300)
-#+end_src
-** Clojure
-
-*** clojure-mode
-
-Use clojure-mode for basic syntax support.
-
-#+begin_src emacs-lisp
-  (straight-use-package 'clojure-mode)
-#+end_src
-
-*** Cider for REPL connection
-
-#+begin_src emacs-lisp
-  (straight-use-package 'cider)
-
-  (autoload 'cider-jack-in "cider" nil t)
-#+end_src
-** HTML
-#+begin_src emacs-lisp
-  (setq-default css-indent-offset 2)
-#+end_src
-
 * Addons
 ** Input method with emacs-rime
 
@@ -830,9 +652,10 @@ Use Telega as Telegram client.
 Manage password with pass
 
 Adding following to ~$HOME/.gnupg/gpg-agent.conf~.
+
 #+begin_example
-allow-emacs-pinentry
-allow-loopback-pinentry
+  allow-emacs-pinentry
+  allow-loopback-pinentry
 #+end_example
 
 Open pass menu with =C-c a p=.
