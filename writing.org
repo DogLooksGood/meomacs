@@ -1,0 +1,107 @@
+#+title: Writing
+
+Configuration for writing with Emacs, specifically for Markdown and Org mode.
+
+#+begin_src emacs-lisp
+  ;;; -*- lexical-binding: t -*-
+#+end_src
+
+* Org
+** Toggle markup visibility with visible mode
+#+begin_src emacs-lisp
+  (with-eval-after-load "org"
+    (define-key org-mode-map (kbd "C-c t v") 'visible-mode))
+#+end_src
+** Org Roam
+#+begin_src emacs-lisp
+  (straight-use-package 'org-roam)
+
+  (setq org-roam-directory (expand-file-name "~/Org"))
+
+  (defvar org-roam-keymap
+    (let ((keymap (make-keymap)))
+      (define-key keymap "l" 'org-roam-buffer-toggle)
+      (define-key keymap "f" 'org-roam-node-find)
+      (define-key keymap "g" 'org-roam-graph)
+      (define-key keymap "i" 'org-roam-node-insert)
+      (define-key keymap "c" 'org-roam-capture)
+      (define-key keymap "s" 'org-roam-db-sync)
+      keymap))
+
+  (defalias 'org-roam-keymap org-roam-keymap)
+
+  (global-set-key (kbd "C-c r") 'org-roam-keymap)
+
+  (with-eval-after-load "org-roam"
+    (org-roam-setup))
+#+end_src
+
+** Good old template shortcut
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "org"
+    (require 'org-tempo))
+#+end_src
+
+** Using variable pitch font
+
+Enable ~variable-pitch-mode~.
+
+#+begin_src emacs-lisp
+  (add-hook 'org-mode-hook 'variable-pitch-mode)
+
+  (with-eval-after-load "org"
+    ;; Use fixed pitch for table and code
+    (custom-set-faces
+     '(org-table ((t :inherit 'fixed-pitch)))
+     '(org-code ((t :inherit 'fixed-pitch)))
+     '(org-block ((t :inherit 'fixed-pitch)))
+     '(org-checkbox ((t :inherit 'fixed-pitch :background nil :box nil)))
+     '(org-latex-and-related ((t (:inherit 'fixed-pitch))))))
+#+end_src
+
+** Better structure indication with org-visual-outline
+
+~org-visual-outline~ provides a better visual feedback for document structure.
+
+#+begin_src emacs-lisp
+  (straight-use-package '(org-visual-outline
+                          :repo "legalnonsense/org-visual-outline"
+                          :host github
+                          :type git))
+
+  (custom-set-faces
+   '(org-visual-indent-pipe-face ((t :foreground "gray50" :background "gray50" :height .1))))
+
+  (autoload 'org-visual-indent-mode "org-visual-indent")
+
+  (add-hook 'org-mode-hook 'org-visual-indent-mode)
+#+end_src
+
+** Ricing markups
+
+#+begin_src emacs-lisp
+  (defun meomacs--org-prettify-symbols ()
+    (setq-local prettify-symbols-alist
+                '(("#+begin_src" . "»")
+                  ("#+end_src" . "«")
+                  ("#+begin_example" . "❯")
+                  ("#+end_example" . "❮")
+                  ("#+begin_quote" . "‟")
+                  ("#+end_quote" . "‟")
+                  ("[X]" . "☑")
+                  ("[ ]" . "☐")))
+    (prettify-symbols-mode 1))
+
+  (add-hook 'org-mode-hook 'meomacs--org-prettify-symbols)
+
+  (setq org-hide-emphasis-markers t)
+
+  (with-eval-after-load "org"
+    (add-to-list 'org-emphasis-alist '("=" (:box (:line-width -2 :color "gray50" :style released-button) :inherit org-verbatim))))
+#+end_src
+
+
+* Markdown
+
+TBD

@@ -5,8 +5,10 @@
   "Refresh and tangle configuration."
   (interactive)
   (meomacs-load-config "laf" t)
-  (meomacs-load-config "meomacs" t)
-  (meomacs-load-config "programming" t))
+  (meomacs-load-config "private" t)
+  (meomacs-load-config "writing" t)
+  (meomacs-load-config "programming" t)
+  (meomacs-load-config "addons" t))
 
 ;; Define helper command for open configuration file.
 (defun meomacs-open-configuration ()
@@ -18,5 +20,6 @@
 (global-set-key (kbd "<f12>") 'meomacs-refresh)
 
 ;; Load main configuration
-(meomacs-load-config "meomacs")
+(meomacs-load-config "writing")
 (meomacs-load-config "programming")
+(meomacs-load-config "addons" t)

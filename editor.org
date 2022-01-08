@@ -1,15 +1,12 @@
-#+title: Meomacs - A simple Emacs configuration with modal editing
+#+title: Editor Basics
 
-Press =F9= to open this configuration file.
-Press =F12= to reload configuration after changes.
+Configuration for editor basics.
 
 #+begin_src emacs-lisp
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
-* Editor basics
-
-** Pakcage management with Straight
+* Pakcage management with Straight
 
 Straight.el is used for package management.
 
@@ -46,7 +43,7 @@ Bind some keys for quick operations.
   (global-set-key (kbd "C-c p") 'straight-keymap)
 #+end_src
 
-** Better defaults
+* Better defaults
 
 #+begin_src emacs-lisp
   (setq-default
@@ -108,11 +105,11 @@ Bind some keys for quick operations.
    ring-bell-function 'ignore)
 #+end_src
 
-** Modal editing with Meow
+* Modal editing with Meow
 
 This configuration sticks with Meow for modal editing.
 
-*** Normal
+** Normal
 Tweaking following table for key bindings in normal state.
 
 #+TBLNAME: normal-keybindings
@@ -193,7 +190,7 @@ Tweaking following table for key bindings in normal state.
 | %        | meow-query-replace        |
 | <escape> | ignore                    |
 
-*** Motion
+** Motion
 
 Tweaking following table for key bindings in motion state.
 
@@ -212,7 +209,7 @@ Tweaking following table for key bindings in motion state.
 |        9 | select-window-9 |
 |        0 | select-window-0 |
 
-*** Leader
+** Leader
 
 Tweaking following table for key bindings in leader keymap.
 
@@ -248,7 +245,7 @@ Tweaking following table for key bindings in leader keymap.
 | k   | kill-current-buffer   |             |
 #+TBLFM: 
 
-*** Initialization
+** Initialization
 
 #+header: :var normal-keybindings=normal-keybindings :var motion-keybindings=motion-keybindings :var leader-keybindings=leader-keybindings
 #+begin_src emacs-lisp
@@ -269,7 +266,7 @@ Tweaking following table for key bindings in leader keymap.
   (meow-setup-indicator)
 #+end_src
 
-** Window management
+* Window management
 
 Switch window by pressing the number showned in the mode line.
 
@@ -304,7 +301,7 @@ Switch window by pressing the number showned in the mode line.
       (setq-default mode-line-format (cons modeline-segment mode-line-format))))
 #+end_src
 
-** Workspaces management with tab-bar-mode
+* Workspaces management with tab-bar-mode
 
 Use tabs for workspaces.
 
@@ -323,7 +320,7 @@ Add missing keybindings
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-x t .") 'tab-bar-rename-tab)
 #+end_src
-** Auto pairs with Smartparens
+* Auto pairs with Smartparens
 
 Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
 
@@ -348,15 +345,15 @@ Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
     (define-key smartparens-mode-map (kbd "C-c t s") 'smartparens-strict-mode))
 #+end_src
 
-** Line numbers with display-line-numbers-mode
+* Line numbers with display-line-numbers-mode
 
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-c t l") 'display-line-numbers-mode)
 #+end_src
 
 
-** Completions
-*** Minibuffer completion reading with Vertico & Orderless & Marginalia
+* Completions
+** Minibuffer completion reading with Vertico & Orderless & Marginalia
 
 - Vertico provides a better UX for completion reading.
 - Orderless provides a completion style, which allows you to search with orderless segments.
@@ -402,7 +399,7 @@ Do "delete" instead of "kill" when pressing =M-DEL=.
   (define-key minibuffer-mode-map (kbd "M-DEL") #'meomacs-backward-delete-sexp)
 #+end_src
 
-*** Completion at point with Company
+** Completion at point with Company
 
 #+begin_src emacs-lisp
   (straight-use-package 'company)
@@ -440,7 +437,7 @@ A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =
     (define-key company-active-map (kbd "SPC") nil))
 #+end_src
 
-** Templating with yasnippet
+* Templating with yasnippet
 Expand template with =TAB=. Jump between the placeholders with =TAB= and =S-TAB=.
 
 #+begin_src emacs-lisp
@@ -451,7 +448,7 @@ Expand template with =TAB=. Jump between the placeholders with =TAB= and =S-TAB=
 
   (yas-global-mode 1)
 #+end_src
-** Git integration with magit & diff-hl & smerge
+* Git integration with magit & diff-hl & smerge
 
 To manage the git repository, use builtin package ~vc~.
 
@@ -480,7 +477,7 @@ Enable smerge mode with =C-c t m=.
   (global-set-key (kbd "C-c t m") 'smerge-mode)
 #+end_src
 
-** Project management with project.el
+* Project management with project.el
 
 To find files/buffers and apply commands on project, use builtin package ~project~.
 
@@ -497,7 +494,7 @@ To find files/buffers and apply commands on project, use builtin package ~projec
     (define-key project-prefix-map "m" 'magit))
 #+end_src
 
-** Searching with rg
+* Searching with rg
 #+begin_src emacs-lisp
   (straight-use-package 'rg)
 
@@ -510,175 +507,3 @@ To find files/buffers and apply commands on project, use builtin package ~projec
   (define-key project-prefix-map "r" 'rg-project)
 #+end_src
 
-* Writing
-** Org
-*** Toggle markup visibility with visible mode
-#+begin_src emacs-lisp
-  (with-eval-after-load "org"
-    (define-key org-mode-map (kbd "C-c t v") 'visible-mode))
-#+end_src
-*** Org Roam
-#+begin_src emacs-lisp
-  (straight-use-package 'org-roam)
-
-  (setq org-roam-directory (expand-file-name "~/Org"))
-
-  (defvar org-roam-keymap
-    (let ((keymap (make-keymap)))
-      (define-key keymap "l" 'org-roam-buffer-toggle)
-      (define-key keymap "f" 'org-roam-node-find)
-      (define-key keymap "g" 'org-roam-graph)
-      (define-key keymap "i" 'org-roam-node-insert)
-      (define-key keymap "c" 'org-roam-capture)
-      (define-key keymap "s" 'org-roam-db-sync)
-      keymap))
-
-  (defalias 'org-roam-keymap org-roam-keymap)
-
-  (global-set-key (kbd "C-c r") 'org-roam-keymap)
-
-  (with-eval-after-load "org-roam"
-    (org-roam-setup))
-#+end_src
-
-*** Good old template shortcut
-
-#+begin_src emacs-lisp
-  (with-eval-after-load "org"
-    (require 'org-tempo))
-#+end_src
-
-*** Using variable pitch font
-
-Enable ~variable-pitch-mode~.
-
-#+begin_src emacs-lisp
-  (add-hook 'org-mode-hook 'variable-pitch-mode)
-
-  (with-eval-after-load "org"
-    ;; Use fixed pitch for table and code
-    (custom-set-faces
-     '(org-table ((t :inherit 'fixed-pitch)))
-     '(org-code ((t :inherit 'fixed-pitch)))
-     '(org-block ((t :inherit 'fixed-pitch)))
-     '(org-checkbox ((t :inherit 'fixed-pitch :background nil :box nil)))
-     '(org-latex-and-related ((t (:inherit 'fixed-pitch))))))
-#+end_src
-
-*** Better structure indication with org-visual-outline
-
-~org-visual-outline~ provides a better visual feedback for document structure.
-
-#+begin_src emacs-lisp
-  (straight-use-package '(org-visual-outline
-                          :repo "legalnonsense/org-visual-outline"
-                          :host github
-                          :type git))
-
-  (custom-set-faces
-   '(org-visual-indent-pipe-face ((t :foreground "gray50" :background "gray50" :height .1))))
-
-  (autoload 'org-visual-indent-mode "org-visual-indent")
-
-  (add-hook 'org-mode-hook 'org-visual-indent-mode)
-#+end_src
-
-*** Ricing markups
-
-#+begin_src emacs-lisp
-  (defun meomacs--org-prettify-symbols ()
-    (setq-local prettify-symbols-alist
-                '(("#+begin_src" . "»")
-                  ("#+end_src" . "«")
-                  ("#+begin_example" . "❯")
-                  ("#+end_example" . "❮")
-                  ("#+begin_quote" . "‟")
-                  ("#+end_quote" . "‟")
-                  ("[X]" . "☑")
-                  ("[ ]" . "☐")))
-    (prettify-symbols-mode 1))
-
-  (add-hook 'org-mode-hook 'meomacs--org-prettify-symbols)
-
-  (setq org-hide-emphasis-markers t)
-
-  (with-eval-after-load "org"
-    (add-to-list 'org-emphasis-alist '("=" (:box (:line-width -2 :color "gray50" :style released-button) :inherit org-verbatim))))
-#+end_src
-* Addons
-** Input method with emacs-rime
-
-~librime~ is required for this feature.
-
-~emacs-rime~ is the frontend of rime built with emacs input method API.
-
-#+begin_src emacs-lisp
-  (straight-use-package 'rime)
-
-  (setq default-input-method "rime")
-#+end_src
-
-Disable input method in non-insert state.
-
-#+begin_src emacs-lisp
-  (setq rime-disable-predicates '(meow-normal-mode-p
-                                  meow-keypad-mode-p
-                                  meow-motion-mode-p
-                                  meow-beacon-mode-p))
-#+end_src
-
-Auto switch to inline ascii state when after a space after a non-ascii character.
-
-#+begin_src emacs-lisp
-  (setq rime-inline-predicates '(rime-predicate-space-after-cc-p))
-#+end_src
-
-** Telegram client with Telega
-
-~telegram-libtd~ is required for this feature.
-
-Use Telega as Telegram client.
-
-#+begin_src emacs-lisp
-  (straight-use-package 'telega)
-
-  (autoload 'telega "telega" nil t)
-
-  (global-set-key (kbd "C-c a t") 'telega)
-#+end_src
-
-** Password management with pass
-
-Manage password with pass
-
-Adding following to ~$HOME/.gnupg/gpg-agent.conf~.
-
-#+begin_example
-  allow-emacs-pinentry
-  allow-loopback-pinentry
-#+end_example
-
-Open pass menu with =C-c a p=.
-
-#+begin_src emacs-lisp
-  (straight-use-package 'pass)
-  (straight-use-package 'pinentry)
-
-  (setq pass-username-fallback-on-filename t
-        pass-show-keybindings nil)
-
-  (autoload #'pass "pass" nil t)
-
-  (global-set-key (kbd "C-c a p") 'pass)
-
-  (with-eval-after-load "pass"
-    (pinentry-start))
-#+end_src
-
-** Directory environment support with direnv
-
-#+begin_src emacs-lisp
-  (straight-use-package 'direnv)
-
-  (direnv-mode 1)
-#+end_src

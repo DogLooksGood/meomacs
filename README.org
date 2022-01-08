@@ -13,7 +13,8 @@ Check a list of configuration files.
 - [[file:laf.org][Look and feel]]
 - [[file:programming][Programming]]
 
-After changes made, press =F12= to reload.
+Press =F9= to select and open a configuration file.
+Press =F12= to reload configuration after changes.
 
 * Project targets
 - Simple, no framework, no magic.

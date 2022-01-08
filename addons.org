@@ -1,0 +1,92 @@
+#+title: Addons
+
+Configuration for addons, additional features provided by individual packages.
+
+#+begin_src emacs-lisp
+  ;;; -*- lexical-binding: t -*-
+#+end_src
+
+* Input method with emacs-rime
+
+~librime~ is required for this feature.
+
+~emacs-rime~ is the frontend of rime built with emacs input method API.
+
+#+begin_src emacs-lisp
+  (straight-use-package 'rime)
+
+  (setq default-input-method "rime")
+#+end_src
+
+Disable input method in non-insert state.
+
+#+begin_src emacs-lisp
+  (setq rime-disable-predicates '(meow-normal-mode-p
+                                  meow-keypad-mode-p
+                                  meow-motion-mode-p
+                                  meow-beacon-mode-p))
+#+end_src
+
+Auto switch to inline ascii state when after a space after a non-ascii character.
+
+#+begin_src emacs-lisp
+  (setq rime-inline-predicates '(rime-predicate-space-after-cc-p))
+#+end_src
+
+* Telegram client with Telega
+
+~telegram-libtd~ is required for this feature.
+
+Use Telega as Telegram client.
+
+#+begin_src emacs-lisp
+  (straight-use-package 'telega)
+
+  (autoload 'telega "telega" nil t)
+
+  (global-set-key (kbd "C-c a t") 'telega)
+#+end_src
+
+Proxy setup
+
+#+begin_src emacs-lisp
+  (setq telega-proxies
+        `((:server ,meomacs-socks5-proxy-host :port ,meomacs-socks5-proxy-port
+                   :enable t :type (:@type "proxyTypeSocks5"))))
+#+end_src
+
+* Password management with pass
+
+Manage password with pass
+
+Adding following to ~$HOME/.gnupg/gpg-agent.conf~.
+
+#+begin_example
+  allow-emacs-pinentry
+  allow-loopback-pinentry
+#+end_example
+
+Open pass menu with =C-c a p=.
+
+#+begin_src emacs-lisp
+  (straight-use-package 'pass)
+  (straight-use-package 'pinentry)
+
+  (setq pass-username-fallback-on-filename t
+        pass-show-keybindings nil)
+
+  (autoload #'pass "pass" nil t)
+
+  (global-set-key (kbd "C-c a p") 'pass)
+
+  (with-eval-after-load "pass"
+    (pinentry-start))
+#+end_src
+
+* Directory environment support with direnv
+
+#+begin_src emacs-lisp
+  (straight-use-package 'direnv)
+
+  (direnv-mode 1)
+#+end_src

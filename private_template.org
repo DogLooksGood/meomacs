@@ -1,0 +1,22 @@
+#+title: Private
+
+Private configuration.
+
+#+begin_src emacs-lisp
+  ;;; -*- lexical-binding: t -*-
+#+end_src
+
+* Network settings
+
+#+begin_src emacs-lisp
+  (defvar meomacs-http-proxy-host "localhost")
+  (defvar meomacs-http-proxy-port 8889)
+  (defvar meomacs-socks5-proxy-host "localhost")
+  (defvar meomacs-socks5-proxy-port 1089)
+
+  (setq url-proxy-services
+        `(("http" . ,(format "%s:%s" meomacs-http-proxy-host  meomacs-http-proxy-port))
+          ("https" . ,(format "%s:%s" meomacs-http-proxy-host meomacs-http-proxy-port))
+          ("no_proxy" . "\\(localhost\\)")))
+#+end_src
+
