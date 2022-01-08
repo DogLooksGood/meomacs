@@ -10,9 +10,14 @@ Work in progress.
 * Get Started
 
 Check a list of configuration files.
-- [[file:laf.org][Look and feel]]
-- [[file:programming][Programming]]
 
+- [[file:laf.org][Look and feel]]
+- [[file:editor.org][Editor Basics]]
+- [[file:writing.org][Writing]]
+- [[file:programming.org][Programming]]
+- [[file:addons.org][Addons]]
+- [[file:private.org][Private]] (Created after first launch)
+  
 Press =F9= to select and open a configuration file.
 Press =F12= to reload configuration after changes.
 

@@ -5,6 +5,7 @@
   "Refresh and tangle configuration."
   (interactive)
   (meomacs-load-config "laf" t)
+  (meomacs-load-config "editor" t)
   (meomacs-load-config "private" t)
   (meomacs-load-config "writing" t)
   (meomacs-load-config "programming" t)
@@ -14,7 +15,16 @@
 (defun meomacs-open-configuration ()
   "Open meomacs.org under `user-emacs-directory'."
   (interactive)
-  (find-file (expand-file-name "meomacs.org" user-emacs-directory)))
+  (let ((config (completing-read "Open configuration: "
+				 '("private"
+				   "laf"
+				   "editor"
+				   "writing"
+				   "programming"
+				   "addons")
+				 nil
+				 t)))
+    (find-file (expand-file-name (format "%s.org" config) user-emacs-directory))))
 
 (global-set-key (kbd "<f9>") 'meomacs-open-configuration)
 (global-set-key (kbd "<f12>") 'meomacs-refresh)
