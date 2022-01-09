@@ -9,14 +9,30 @@ Private configuration.
 * Network settings
 
 #+begin_src emacs-lisp
-  (defvar meomacs-http-proxy-host "localhost")
-  (defvar meomacs-http-proxy-port 8889)
-  (defvar meomacs-socks5-proxy-host "localhost")
-  (defvar meomacs-socks5-proxy-port 1089)
+  (defvar meomacs-http-proxy-host)
+  (defvar meomacs-http-proxy-port)
+  (defvar meomacs-socks5-proxy-host)
+  (defvar meomacs-socks5-proxy-port)
 
-  (setq url-proxy-services
-        `(("http" . ,(format "%s:%s" meomacs-http-proxy-host  meomacs-http-proxy-port))
-          ("https" . ,(format "%s:%s" meomacs-http-proxy-host meomacs-http-proxy-port))
-          ("no_proxy" . "\\(localhost\\)")))
+  (when (and meomacs-http-proxy-host meomacs-http-proxy-port)
+    (setq url-proxy-services
+          `(("http" . ,(format "%s:%s" meomacs-http-proxy-host  meomacs-http-proxy-port))
+            ("https" . ,(format "%s:%s" meomacs-http-proxy-host meomacs-http-proxy-port))
+            ("no_proxy" . "\\(localhost\\)"))))
 #+end_src
 
+* Themes
+
+#+name: themes
+- [X] modus-operandi
+- [X] modus-vivendi
+
+#+header: :var themes=themes
+#+begin_src emacs-lisp
+  (setq meomacs-themes
+        (thread-last
+          themes
+          (mapcar 'car)
+          (cl-remove-if-not (lambda (s) (string-prefix-p "[X] " s)))
+          (mapcar (lambda (s) (intern (substring s 4))))))
+#+end_src

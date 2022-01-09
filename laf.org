@@ -107,27 +107,14 @@ Increasing/decreasing font size with =M-+= / =M--=.
 
 * Themes
 
-#+name: themes
-- [X] modus-operandi
-- [X] deeper-blue
-- [ ] modus-vivendi
-
 Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes between listed above.
 
-#+header: :var themes=themes
 #+begin_src emacs-lisp
   (require 'subr-x)
   (require 'cl-lib)
 
   (defvar meomacs-themes nil
     "Themes to use.")
-
-  (setq meomacs-themes
-        (thread-last
-          themes
-          (mapcar 'car)
-          (cl-remove-if-not (lambda (s) (string-prefix-p "[X] " s)))
-          (mapcar (lambda (s) (intern (substring s 4))))))
 
   (defun meomacs-next-theme ()
     (interactive)
@@ -139,8 +126,5 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes between list
       (meomacs-load-face-font)))
 
   (global-set-key (kbd "C-c t t") 'meomacs-next-theme)
-
-  (unless custom-enabled-themes
-    (meomacs-next-theme))
 #+end_src
 

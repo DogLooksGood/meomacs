@@ -51,6 +51,7 @@ If FORCE-TANGLE is non-nil, always tangle before load."
 ;; Load configurations
 (meomacs-load-config "private")
 (meomacs-load-config "laf")
-(meomacs-load-config "editor")
 
-
+;; Enable the first theme in `meomacs-themes'
+(unless custom-enabled-themes
+  (meomacs-next-theme))

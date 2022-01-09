@@ -30,6 +30,7 @@
 (global-set-key (kbd "<f12>") 'meomacs-refresh)
 
 ;; Load main configuration
+(meomacs-load-config "editor")
 (meomacs-load-config "writing")
 (meomacs-load-config "programming")
 (meomacs-load-config "addons" t)
