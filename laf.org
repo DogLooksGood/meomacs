@@ -13,43 +13,6 @@ Configuration for look and feels, make UI looks better.
   (menu-bar-mode -1)
 #+end_src
 
-* Themes
-#+name: themes
-- [X] modus-operandi
-- [X] modus-vivendi
-- [ ] deeper-blue
-
-Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes between listed above.
-
-#+header: :var themes=themes
-#+begin_src emacs-lisp
-  (require 'subr-x)
-  (require 'cl-lib)
-
-  (defvar meomacs-themes nil
-    "Themes to use.")
-
-  (setq meomacs-themes
-        (thread-last
-          themes
-          (mapcar 'car)
-          (cl-remove-if-not (lambda (s) (string-prefix-p "[X] " s)))
-          (mapcar (lambda (s) (intern (substring s 4))))))
-
-  (defun meomacs-next-theme ()
-    (interactive)
-    (mapc 'disable-theme custom-enabled-themes)
-    (when meomacs-themes
-      (message "Load theme: %s" (car meomacs-themes))
-      (load-theme (car meomacs-themes) t)
-      (setq meomacs-themes (append (cdr meomacs-themes) (list (car meomacs-themes))))))
-
-  (global-set-key (kbd "C-c t t") 'meomacs-next-theme)
-
-  (unless custom-enabled-themes
-    (meomacs-next-theme))
-#+end_src
-
 * Fonts
 
 ** Font resizing
@@ -99,7 +62,7 @@ Increasing/decreasing font size with =M-+= / =M--=.
 |----------+-------------------------+---------------------------------------|
 | default  | MesloLGM Nerd Font Mono | default font for ascii characters     |
 | unicode  | LXGW WenKai             | default font for non-ascii characters |
-| modeline | MesloLGL Nerd Font Mono | modeline                              |
+| modeline | Source Serif Pro        | modeline                              |
 | fixed    | Sarasa Mono SC          | code blocks and tables in markups     |
 | variable | ETBembo                 | texts in markups                      |
 
@@ -110,8 +73,8 @@ Increasing/decreasing font size with =M-+= / =M--=.
 
   (defun meomacs--get-font-spec (key)
     (format "%s-%d"
-            (meomacs--get-font-family key)
-            meomacs-font-size))
+	    (meomacs--get-font-family key)
+	    meomacs-font-size))
 
   (defun meomacs-load-base-font ()
     "Load the default font for ascii characters."
@@ -122,8 +85,8 @@ Increasing/decreasing font size with =M-+= / =M--=.
   (defun meomacs-load-face-font ()
     "Load fonts used in faces."
     (let ((modeline-font-spec (meomacs--get-font-spec "modeline"))
-          (variable-font-spec (meomacs--get-font-spec "variable"))
-          (fixed-font-spec (meomacs--get-font-spec "fixed")))
+	  (variable-font-spec (meomacs--get-font-spec "variable"))
+	  (fixed-font-spec (meomacs--get-font-spec "fixed")))
       (set-face-attribute 'variable-pitch nil :font variable-font-spec :height 1.1)
       (set-face-attribute 'fixed-pitch nil :font fixed-font-spec)
       (set-face-attribute 'fixed-pitch-serif nil :font fixed-font-spec)
@@ -133,21 +96,51 @@ Increasing/decreasing font size with =M-+= / =M--=.
   (defun meomacs-load-ext-font ()
     "Load fonts used for non-ascii characters."
     (let ((font (frame-parameter nil 'font))
-          (font-spec (font-spec :family (meomacs--get-font-family "unicode"))))
+	  (font-spec (font-spec :family (meomacs--get-font-family "unicode"))))
       (dolist (charset '(kana han hangul cjk-misc bopomofo symbol))
-        (set-fontset-font font charset font-spec))))
+	(set-fontset-font font charset font-spec))))
 
   ;; Only have font setup in GUI
-  (when window-system
-    (meomacs-load-base-font)
-    (meomacs-load-face-font)
-    (meomacs-load-ext-font)
-
-    ;; Setup faces after creating new frame
-    (add-hook 'after-make-frame-functions
-              (lambda ()
-                (meomacs-load-face-font)
-                (meomacs-load-ext-font))))
+  (meomacs-load-base-font)
 #+end_src
 
+
+* Themes
+
+#+name: themes
+- [X] modus-operandi
+- [X] deeper-blue
+- [ ] modus-vivendi
+
+Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes between listed above.
+
+#+header: :var themes=themes
+#+begin_src emacs-lisp
+  (require 'subr-x)
+  (require 'cl-lib)
+
+  (defvar meomacs-themes nil
+    "Themes to use.")
+
+  (setq meomacs-themes
+        (thread-last
+          themes
+          (mapcar 'car)
+          (cl-remove-if-not (lambda (s) (string-prefix-p "[X] " s)))
+          (mapcar (lambda (s) (intern (substring s 4))))))
+
+  (defun meomacs-next-theme ()
+    (interactive)
+    (mapc 'disable-theme custom-enabled-themes)
+    (when meomacs-themes
+      (message "Load theme: %s" (car meomacs-themes))
+      (load-theme (car meomacs-themes) t)
+      (setq meomacs-themes (append (cdr meomacs-themes) (list (car meomacs-themes))))
+      (meomacs-load-face-font)))
+
+  (global-set-key (kbd "C-c t t") 'meomacs-next-theme)
+
+  (unless custom-enabled-themes
+    (meomacs-next-theme))
+#+end_src
 

@@ -34,7 +34,23 @@ If FORCE-TANGLE is non-nil, always tangle before load."
    (expand-file-name "private_template.org" user-emacs-directory)
    (expand-file-name "private.org" user-emacs-directory)))
 
-;; Detecting look & feel configuration
-(meomacs-load-config "laf")
+;; Setup straight as package manager
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+;; Load configurations
 (meomacs-load-config "private")
+(meomacs-load-config "laf")
 (meomacs-load-config "editor")
+
+

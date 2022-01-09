@@ -9,23 +9,6 @@ Configuration for editor basics.
 * Pakcage management with Straight
 
 Straight.el is used for package management.
-
-#+begin_src emacs-lisp
-  ;; Setup straight as package manager
-  (defvar bootstrap-version)
-  (let ((bootstrap-file
-         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-        (bootstrap-version 5))
-    (unless (file-exists-p bootstrap-file)
-      (with-current-buffer
-          (url-retrieve-synchronously
-           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-           'silent 'inhibit-cookies)
-        (goto-char (point-max))
-        (eval-print-last-sexp)))
-    (load bootstrap-file nil 'nomessage))
-#+end_src
-
 Bind some keys for quick operations.
 
 #+begin_src emacs-lisp
@@ -101,8 +84,11 @@ Bind some keys for quick operations.
    ;; Use custom.el as custom file
    custom-file (expand-file-name "custom.el" user-emacs-directory)
 
-   ;; disable ring bell
-   ring-bell-function 'ignore)
+   ;; Disable ring bell
+   ring-bell-function 'ignore
+
+   ;; Mouse yank at current point
+   mouse-yank-at-point t)
 #+end_src
 
 * Modal editing with Meow
@@ -232,6 +218,7 @@ Tweaking following table for key bindings in leader keymap.
 | ?   | meow-cheatsheet       |             |
 | ,   | xref-go-back          |             |
 | .   | xref-find-definitions |             |
+| ;   | dispatch: M-;         |             |
 | a   | dispatch: C-c a       | Addons      |
 | l   | dispatch: C-c l       | Lints       |
 | t   | dispatch: C-c t       | Toggles     |
@@ -262,6 +249,13 @@ Tweaking following table for key bindings in leader keymap.
     (apply #'meow-motion-overwrite-define-key (mapcar parse-def motion-keybindings))
     (apply #'meow-leader-define-key (mapcar parse-def leader-keybindings)))
 
+  (setq meow-replace-state-name-list
+        '((normal . "🅝")
+          (beacon . "🅑")
+          (insert . "🅘")
+          (motion . "🅜")
+          (keypad . "🅚")))
+
   (meow-global-mode 1)
   (meow-setup-indicator)
 #+end_src
@@ -285,16 +279,16 @@ Switch window by pressing the number showned in the mode line.
             (let ((n (window-numbering-get-number)))
               (alist-get
                n
-               '((0 . "0")
-                 (1 . "1")
-                 (2 . "2")
-                 (3 . "3")
-                 (4 . "4")
-                 (5 . "5")
-                 (6 . "6")
-                 (7 . "7")
-                 (8 . "8")
-                 (9 . "9"))))))
+               '((0 . "⓪")
+                 (1 . "①")
+                 (2 . "②")
+                 (3 . "③")
+                 (4 . "④")
+                 (5 . "⑤")
+                 (6 . "⑥")
+                 (7 . "⑦")
+                 (8 . "⑧")
+                 (9 . "⑨"))))))
 
   (let ((modeline-segment '(:eval (meomacs-window-numbering-modeline))))
     (unless (member modeline-segment mode-line-format)
@@ -306,10 +300,22 @@ Switch window by pressing the number showned in the mode line.
 Use tabs for workspaces.
 
 #+begin_src emacs-lisp
+  (defun meomacs-format-tab (tab i)
+    (let ((current-p (eq (car tab) 'current-tab)))
+      (concat
+       (propertize (concat
+                    " "
+                    (alist-get 'name tab)
+                    " ")
+                   'face
+                   (funcall tab-bar-tab-face-function tab))
+       " ")))
+
   (setq tab-bar-border nil
         tab-bar-close-button nil
+        tab-bar-new-button (propertize "🞤" 'display '(:height 2.0))
         tab-bar-back-button nil
-        tab-bar-new-button nil
+        tab-bar-tab-name-format-function 'meomacs-format-tab
         tab-bar-tab-name-truncated-max 10)
 
   (tab-bar-mode 1)

@@ -33,3 +33,7 @@
 (meomacs-load-config "writing")
 (meomacs-load-config "programming")
 (meomacs-load-config "addons" t)
+
+;; Load fonts setup
+(meomacs-load-ext-font)
+(meomacs-load-face-font)

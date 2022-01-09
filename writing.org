@@ -65,17 +65,19 @@ Enable ~variable-pitch-mode~.
 ~org-visual-outline~ provides a better visual feedback for document structure.
 
 #+begin_src emacs-lisp
-  (straight-use-package '(org-visual-outline
-                          :repo "legalnonsense/org-visual-outline"
-                          :host github
-                          :type git))
+  ;; (straight-use-package '(org-visual-outline
+  ;;                         :repo "legalnonsense/org-visual-outline"
+  ;;                         :host github
+  ;;                         :type git))
 
-  (custom-set-faces
-   '(org-visual-indent-pipe-face ((t :foreground "gray50" :background "gray50" :height .1))))
+  ;; (custom-set-faces
+  ;;  '(org-visual-indent-pipe-face ((t :foreground "gray50" :background "gray50" :height .1))))
 
-  (autoload 'org-visual-indent-mode "org-visual-indent")
+  ;; (autoload 'org-visual-indent-mode "org-visual-indent")
 
-  (add-hook 'org-mode-hook 'org-visual-indent-mode)
+  ;; (add-hook 'org-mode-hook 'org-visual-indent-mode)
+
+  (add-hook 'org-mode-hook 'org-indent-mode)
 #+end_src
 
 ** Ricing markups

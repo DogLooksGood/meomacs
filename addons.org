@@ -45,6 +45,9 @@ Use Telega as Telegram client.
   (autoload 'telega "telega" nil t)
 
   (global-set-key (kbd "C-c a t") 'telega)
+
+  (with-eval-after-load "telega"
+    (define-key telega-msg-button-map (kbd "SPC") nil))
 #+end_src
 
 Proxy setup
@@ -88,5 +91,7 @@ Open pass menu with =C-c a p=.
 #+begin_src emacs-lisp
   (straight-use-package 'direnv)
 
-  (direnv-mode 1)
+  (global-set-key (kbd "C-c t e") 'direnv-mode)
+
+  (autoload 'direnv-mode "direnv" nil t)
 #+end_src
