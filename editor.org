@@ -88,7 +88,11 @@ Bind some keys for quick operations.
    ring-bell-function 'ignore
 
    ;; Mouse yank at current point
-   mouse-yank-at-point t)
+   mouse-yank-at-point t
+
+   ;; DWIM target for dired
+   ;; Automatically use another dired buffer as target for copy/rename
+   dired-dwim-target t)
 #+end_src
 
 * Modal editing with Meow

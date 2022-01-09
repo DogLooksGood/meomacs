@@ -13,6 +13,12 @@ Configuration for look and feels, make UI looks better.
   (menu-bar-mode -1)
 #+end_src
 
+* Some UI related variables
+
+#+begin_src emacs-lisp
+  (setq x-underline-at-descent-line t)
+#+end_src
+
 * Fonts
 
 ** Font resizing
