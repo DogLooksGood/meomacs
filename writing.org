@@ -103,7 +103,21 @@ Enable ~variable-pitch-mode~.
     (add-to-list 'org-emphasis-alist '("=" (:box (:line-width -2 :color "gray50" :style released-button) :inherit org-verbatim))))
 #+end_src
 
+** Babel
 
+#+begin_src emacs-lisp
+  (with-eval-after-load "org"
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((R . t)
+       (dot . t))))
+#+end_src
+
+** Latex
+#+begin_src emacs-lisp
+  (with-eval-after-load "org"
+    (setq org-format-latex-options (plist-put org-format-latex-options :scale 4.0)))
+#+end_src
 * Markdown
 
 TBD

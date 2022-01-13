@@ -75,7 +75,8 @@ Use clojure-mode for basic syntax support.
 
 * HTML
 #+begin_src emacs-lisp
-  (setq-default css-indent-offset 2)
+  (setq-default css-indent-offset 2
+                js-indent-level 2)
 #+end_src
 
 

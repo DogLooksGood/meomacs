@@ -16,6 +16,9 @@ Configuration for addons, additional features provided by individual packages.
   (straight-use-package 'rime)
 
   (setq default-input-method "rime")
+
+  (with-eval-after-load "rime"
+    (define-key rime-active-mode-map (kbd "TAB") 'rime-inline-ascii))
 #+end_src
 
 Disable input method in non-insert state.
