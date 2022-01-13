@@ -67,9 +67,10 @@ Use clojure-mode for basic syntax support.
                                  :host github
                                  :repo "DogLooksGood/zprint.el"))
 
-  (autoload 'zprint-mode "zprint" nil t)
+  (autoload 'zprint "zprint" nil t)
 
   (with-eval-after-load "clojure-mode"
+    (define-key cider-mode-map (kbd "C-c C-f") 'zprint)
     (define-key clojure-mode-map (kbd "C-c C-f") 'zprint))
 #+end_src
 
