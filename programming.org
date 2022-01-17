@@ -6,32 +6,20 @@ Configuration for programming and languages support.
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
-* LSP with Eglot
+* LSP with lsp-mode
 
-Use eglot as LSP client.
-
-#+begin_src emacs-lisp
-  (straight-use-package 'eglot)
-
-  (autoload 'eglot-ensure "eglot")
-  (autoload 'eglot "eglot" nil t)
-
-  (setq eglot-connect-timeout 300)
-#+end_src
-
-** Linting with Flymake
-
-Eglot use flymake for linting.
+Use lsp-mode as LSP client.
 
 #+begin_src emacs-lisp
-  (straight-use-package 'flymake)
+  (straight-use-package 'lsp-mode)
 
-  (autoload #'flymake-mode "flymake" nil t)
+  (setq lsp-keymap-prefix "C-c l"
+        lsp-enable-symbol-highlighting nil
+        lsp-enable-dap-auto-configure nil
+        lsp-lens-enable nil
+        lsp-headerline-breadcrumb-enable nil)
 
-  (with-eval-after-load "flymake"
-    (define-key flymake-mode-map (kbd "C-c l l") 'flymake-show-diagnostics-buffer)
-    (define-key flymake-mode-map (kbd "C-c l n") 'flymake-goto-next-error)
-    (define-key flymake-mode-map (kbd "C-c l p") 'flymake-goto-prev-error))
+  (autoload 'lsp "lsp-mode" nil t)
 #+end_src
 
 * Clojure
@@ -50,6 +38,9 @@ Use clojure-mode for basic syntax support.
   (straight-use-package 'cider)
 
   (autoload 'cider-jack-in "cider" nil t)
+
+  (with-eval-after-load "cider"
+    (define-key cider-mode-map (kbd "C-c C-f") nil))
 #+end_src
 
 ** Linting with flycheck-clj-kondo
@@ -70,8 +61,15 @@ Use clojure-mode for basic syntax support.
   (autoload 'zprint "zprint" nil t)
 
   (with-eval-after-load "clojure-mode"
-    (define-key cider-mode-map (kbd "C-c C-f") 'zprint)
     (define-key clojure-mode-map (kbd "C-c C-f") 'zprint))
+#+end_src
+
+* Rust
+** rust-mode
+#+begin_src emacs-lisp
+  (straight-use-package 'rust-mode)
+
+  (add-hook 'rust-mode-hook 'lsp)
 #+end_src
 
 * HTML

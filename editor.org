@@ -6,7 +6,7 @@ Configuration for editor basics.
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
-* Pakcage management with Straight
+* Package management with Straight
 
 Straight.el is used for package management.
 Bind some keys for quick operations.
@@ -224,7 +224,7 @@ Tweaking following table for key bindings in leader keymap.
 | .   | xref-find-definitions |             |
 | ;   | dispatch: M-;         |             |
 | a   | dispatch: C-c a       | Addons      |
-| l   | dispatch: C-c l       | Lints       |
+| l   | dispatch: C-c l       | LSP         |
 | t   | dispatch: C-c t       | Toggles     |
 | p   | dispatch: C-x p       | Projects    |
 | P   | dispatch: C-c p       | Straight    |
@@ -317,7 +317,7 @@ Use tabs for workspaces.
 
   (setq tab-bar-border nil
         tab-bar-close-button nil
-        tab-bar-new-button (propertize "🞤" 'display '(:height 2.0))
+        tab-bar-new-button (propertize " 🞤 " 'display '(:height 2.0))
         tab-bar-back-button nil
         tab-bar-tab-name-format-function 'meomacs-format-tab
         tab-bar-tab-name-truncated-max 10)
@@ -409,15 +409,19 @@ Do "delete" instead of "kill" when pressing =M-DEL=.
   (define-key minibuffer-mode-map (kbd "M-DEL") #'meomacs-backward-delete-sexp)
 #+end_src
 
+** Completion at point
+
+#+begin_src emacs-lisp
+  (add-hook 'prog-mode-hook 'company-mode)
+  (add-hook 'conf-mode-hook 'company-mode)
+#+end_src
+
 ** Completion at point with Company
 
 #+begin_src emacs-lisp
   (straight-use-package 'company)
 
   (autoload 'company-mode "company" nil t)
-
-  (add-hook 'prog-mode-hook 'company-mode)
-  (add-hook 'conf-mode-hook 'company-mode)
 #+end_src
 
 A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =RET= will do insertion even though the popup is available.

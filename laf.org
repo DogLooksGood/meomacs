@@ -64,13 +64,13 @@ Increasing/decreasing font size with =M-+= / =M--=.
 
 ** Font Families
 #+tblname: fonts
-| key      | font                    | where to apply                        |
-|----------+-------------------------+---------------------------------------|
-| default  | MesloLGM Nerd Font Mono | default font for ascii characters     |
-| unicode  | LXGW WenKai             | default font for non-ascii characters |
-| modeline | Source Serif Pro        | modeline                              |
-| fixed    | Sarasa Mono SC          | code blocks and tables in markups     |
-| variable | ETBembo                 | texts in markups                      |
+| key      | font             | where to apply                        |
+|----------+------------------+---------------------------------------|
+| default  | Fira Code        | default font for ascii characters     |
+| unicode  | LXGW WenKai      | default font for non-ascii characters |
+| modeline | Source Serif Pro | modeline & tabbar                     |
+| fixed    | Sarasa Mono SC   | code blocks and tables in markups     |
+| variable | ETBembo          | texts in markups                      |
 
 #+header: :var fonts=fonts
 #+begin_src emacs-lisp
@@ -79,8 +79,8 @@ Increasing/decreasing font size with =M-+= / =M--=.
 
   (defun meomacs--get-font-spec (key)
     (format "%s-%d"
-	    (meomacs--get-font-family key)
-	    meomacs-font-size))
+            (meomacs--get-font-family key)
+            meomacs-font-size))
 
   (defun meomacs-load-base-font ()
     "Load the default font for ascii characters."
@@ -91,20 +91,21 @@ Increasing/decreasing font size with =M-+= / =M--=.
   (defun meomacs-load-face-font ()
     "Load fonts used in faces."
     (let ((modeline-font-spec (meomacs--get-font-spec "modeline"))
-	  (variable-font-spec (meomacs--get-font-spec "variable"))
-	  (fixed-font-spec (meomacs--get-font-spec "fixed")))
+          (variable-font-spec (meomacs--get-font-spec "variable"))
+          (fixed-font-spec (meomacs--get-font-spec "fixed")))
       (set-face-attribute 'variable-pitch nil :font variable-font-spec :height 1.1)
       (set-face-attribute 'fixed-pitch nil :font fixed-font-spec)
       (set-face-attribute 'fixed-pitch-serif nil :font fixed-font-spec)
       (set-face-attribute 'mode-line nil :font modeline-font-spec)
-      (set-face-attribute 'mode-line-inactive nil :font modeline-font-spec)))
+      (set-face-attribute 'mode-line-inactive nil :font modeline-font-spec)
+      (set-face-attribute 'tab-bar nil :font modeline-font-spec)))
 
   (defun meomacs-load-ext-font ()
     "Load fonts used for non-ascii characters."
     (let ((font (frame-parameter nil 'font))
-	  (font-spec (font-spec :family (meomacs--get-font-family "unicode"))))
+          (font-spec (font-spec :family (meomacs--get-font-family "unicode"))))
       (dolist (charset '(kana han hangul cjk-misc bopomofo symbol))
-	(set-fontset-font font charset font-spec))))
+        (set-fontset-font font charset font-spec))))
 
   ;; Only have font setup in GUI
   (meomacs-load-base-font)

@@ -6,9 +6,6 @@
 ;;   emacs -q -l /path/to/meomacs/init.el
 (setq user-emacs-directory (file-name-directory (or load-file-name buffer-file-name)))
 
-;; Enable GC after initialization
-(add-hook 'after-init-hook (lambda () (setq gc-cons-threshold #x80000000)))
-
 ;; Define configuration loader helper
 (defun meomacs-load-config (config-name &optional force-tangle)
   "Load configuration by CONFIG-NAME.
@@ -47,6 +44,9 @@ If FORCE-TANGLE is non-nil, always tangle before load."
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
+
+(straight-use-package 'gcmh)
+(gcmh-mode 1)
 
 ;; Load configurations
 (meomacs-load-config "private")
