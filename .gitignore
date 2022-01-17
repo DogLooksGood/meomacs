@@ -10,3 +10,4 @@ auto-save-list
 .org-id-locations
 bookmarks
 private.org
+.lsp-session-*
