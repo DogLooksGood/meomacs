@@ -46,6 +46,7 @@ If FORCE-TANGLE is non-nil, always tangle before load."
   (load bootstrap-file nil 'nomessage))
 
 (straight-use-package 'gcmh)
+(require 'gcmh)
 (gcmh-mode 1)
 
 ;; Load configurations
