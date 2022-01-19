@@ -220,8 +220,8 @@ Tweaking following table for key bindings in leader keymap.
 | s   | split-window-right    |             |
 | -   | split-window-below    |             |
 | ?   | meow-cheatsheet       |             |
-| ,   | xref-go-back          |             |
-| .   | xref-find-definitions |             |
+| ,   | dispatch: M-,         |             |
+| .   | dispatch: M-.         |             |
 | ;   | dispatch: M-;         |             |
 | a   | dispatch: C-c a       | Addons      |
 | l   | dispatch: C-c l       | LSP         |
@@ -253,12 +253,15 @@ Tweaking following table for key bindings in leader keymap.
     (apply #'meow-motion-overwrite-define-key (mapcar parse-def motion-keybindings))
     (apply #'meow-leader-define-key (mapcar parse-def leader-keybindings)))
 
-  (setq meow-replace-state-name-list
-        '((normal . "🅝")
-          (beacon . "🅑")
-          (insert . "🅘")
-          (motion . "🅜")
-          (keypad . "🅚")))
+  (when window-system
+    (setq meow-replace-state-name-list
+          '((normal . "🅝")
+            (beacon . "🅑")
+            (insert . "🅘")
+            (motion . "🅜")
+            (keypad . "🅚"))))
+
+  (setq meow-esc-delay 0.001)
 
   (meow-global-mode 1)
   (meow-setup-indicator)
@@ -281,18 +284,20 @@ Switch window by pressing the number showned in the mode line.
   (defun meomacs-window-numbering-modeline ()
     (concat " "
             (let ((n (window-numbering-get-number)))
-              (alist-get
-               n
-               '((0 . "⓪")
-                 (1 . "①")
-                 (2 . "②")
-                 (3 . "③")
-                 (4 . "④")
-                 (5 . "⑤")
-                 (6 . "⑥")
-                 (7 . "⑦")
-                 (8 . "⑧")
-                 (9 . "⑨"))))))
+              (if window-system
+                  (alist-get
+                   n
+                   '((0 . "⓪")
+                     (1 . "①")
+                     (2 . "②")
+                     (3 . "③")
+                     (4 . "④")
+                     (5 . "⑤")
+                     (6 . "⑥")
+                     (7 . "⑦")
+                     (8 . "⑧")
+                     (9 . "⑨")))
+                (number-to-string n)))))
 
   (let ((modeline-segment '(:eval (meomacs-window-numbering-modeline))))
     (unless (member modeline-segment mode-line-format)
