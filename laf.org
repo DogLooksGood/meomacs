@@ -7,9 +7,20 @@ Configuration for look and feels, make UI looks better.
 #+end_src
 
 * Disabling some components
+
+No tool bar & menu bar.
+
 #+begin_src emacs-lisp
   (tool-bar-mode -1)
-  (menu-bar-mode -1)
+#+end_src
+
+No scroll bars in minibuffer.
+
+#+begin_src emacs-lisp
+  (add-hook 'after-make-frame-functions
+            (lambda (frame)
+              (set-window-scroll-bars
+               (minibuffer-window frame) 0 nil 0 nil t)))
 #+end_src
 
 * Some UI related variables
