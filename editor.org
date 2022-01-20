@@ -223,12 +223,7 @@ Tweaking following table for key bindings in leader keymap.
 | ,   | dispatch: M-,         |             |
 | .   | dispatch: M-.         |             |
 | ;   | dispatch: M-;         |             |
-| a   | dispatch: C-c a       | Addons      |
-| l   | dispatch: C-c l       | LSP         |
-| t   | dispatch: C-c t       | Toggles     |
-| p   | dispatch: C-x p       | Projects    |
-| P   | dispatch: C-c p       | Straight    |
-| r   | dispatch: C-c r       | Org Roam    |
+| p   | dispatch: C-x p       |             |
 | w   | tab-bar-switch-to-tab |             |
 | i   | imenu                 |             |
 | b   | switch-to-buffer      |             |
