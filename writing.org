@@ -120,4 +120,13 @@ Enable ~variable-pitch-mode~.
 #+end_src
 * Markdown
 
-TBD
+#+begin_src emacs-lisp
+  (straight-use-package 'markdown-mode)
+#+end_src
+
+** Keybindings
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "markdown-mode"
+    (define-key markdown-mode-map (kbd "C-c t v") 'markdown-toggle-markup-hiding))
+#+end_src

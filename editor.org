@@ -223,7 +223,7 @@ Tweaking following table for key bindings in leader keymap.
 | ,   | dispatch: M-,         |             |
 | .   | dispatch: M-.         |             |
 | ;   | dispatch: M-;         |             |
-| p   | dispatch: C-x p       |             |
+| p   | project-map           |             |
 | w   | tab-bar-switch-to-tab |             |
 | i   | imenu                 |             |
 | b   | switch-to-buffer      |             |
@@ -502,6 +502,8 @@ To find files/buffers and apply commands on project, use builtin package ~projec
                                   (project-eshell "Eshell")
                                   (shell "Shell")
                                   (magit "Magit")))
+
+  (defalias 'project-map project-prefix-map)
 
   (with-eval-after-load "project"
     (define-key project-prefix-map "s" 'shell)

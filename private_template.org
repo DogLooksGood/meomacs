@@ -6,6 +6,19 @@ Private configuration.
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
+* User custom keymaps
+
+#+begin_src emacs-lisp
+  (defvar toggle-map (make-keymap))
+  (defalias 'toggle-map toggle-map)
+
+  (defvar addon-map (make-keymap))
+  (defalias 'addon-map addon-map)
+
+  (global-set-key (kbd "C-c t") 'toggle-map)
+  (global-set-key (kbd "C-c a") 'addon-map)
+#+end_src
+
 * Network settings
 
 #+begin_src emacs-lisp
