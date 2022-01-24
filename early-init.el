@@ -55,4 +55,4 @@ If FORCE-TANGLE is non-nil, always tangle before load."
 
 ;; Enable the first theme in `meomacs-themes'
 (unless custom-enabled-themes
-  (meomacs-next-theme))
+  (meomacs-load-theme))

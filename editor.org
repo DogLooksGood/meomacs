@@ -93,6 +93,8 @@ Bind some keys for quick operations.
    ;; DWIM target for dired
    ;; Automatically use another dired buffer as target for copy/rename
    dired-dwim-target t)
+
+  (global-hl-line-mode t)
 #+end_src
 
 * Modal editing with Meow
@@ -206,7 +208,7 @@ Tweaking following table for key bindings in leader keymap.
 #+tblname: leader-keybindings
 | key | command               | description |
 |-----+-----------------------+-------------|
-| e   | eval-last-sexp        |             |
+| e   | dispatch: C-x C-e     |             |
 | 1   | meow-digit-argument   |             |
 | 2   | meow-digit-argument   |             |
 | 3   | meow-digit-argument   |             |
@@ -220,11 +222,9 @@ Tweaking following table for key bindings in leader keymap.
 | s   | split-window-right    |             |
 | -   | split-window-below    |             |
 | ?   | meow-cheatsheet       |             |
-| ,   | dispatch: M-,         |             |
-| .   | dispatch: M-.         |             |
-| ;   | dispatch: M-;         |             |
 | p   | project-map           |             |
-| w   | tab-bar-switch-to-tab |             |
+| w   | other-window          |             |
+| j   | tab-bar-switch-to-tab |             |
 | i   | imenu                 |             |
 | b   | switch-to-buffer      |             |
 | o   | delete-other-windows  |             |
@@ -342,12 +342,15 @@ Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
   (add-hook 'prog-mode-hook 'smartparens-mode)
   (add-hook 'conf-mode-hook 'smartparens-mode)
 
+  (setq sp-highlight-pair-overlay nil
+        sp-highlight-wrap-overlay nil)
+
   (with-eval-after-load "smartparens"
 
     ;; setup for emacs-lisp
     (sp-with-modes '(emacs-lisp-mode)
       (sp-local-pair "'" nil :actions nil))
-
+  
     ;; Use strict-mode by default
     (add-hook 'smartparens-mode-hook 'smartparens-strict-mode)
 
@@ -441,9 +444,11 @@ A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =
 
     (define-key company-active-map [tab] 'company-complete-common-or-cycle)
     (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
-    (define-key company-active-map (kbd "C-n") 'company-select-next)
-    (define-key company-active-map (kbd "C-p") 'company-select-previous)
-
+    (define-key company-active-map (kbd "C-n") nil)
+    (define-key company-active-map (kbd "C-p") nil)
+    (define-key company-active-map (kbd "M-n") 'company-select-next)
+    (define-key company-active-map (kbd "M-p") 'company-select-previous)
+  
     ;; Free SPC and RET, popup will no longer interrupt typing.
     (define-key company-active-map [escape] nil)
     (define-key company-active-map [return] nil)

@@ -106,11 +106,19 @@ Enable ~variable-pitch-mode~.
 ** Babel
 
 #+begin_src emacs-lisp
+  (setq org-confirm-babel-evaluate nil)
+
   (with-eval-after-load "org"
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((R . t)
        (dot . t))))
+
+  (defun meomacs-after-babel-execute ()
+    (when org-inline-image-overlays
+      (org-redisplay-inline-images)))
+
+  (add-hook 'org-babel-after-execute-hook 'meomacs-after-babel-execute)
 #+end_src
 
 ** Latex

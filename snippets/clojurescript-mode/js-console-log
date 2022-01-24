@@ -2,4 +2,4 @@
 # name: js-console-log
 # key: jl
 # --
-(js/console.log "$1: %s" $1)$0
+(js/console.log "$1: " $1)$0

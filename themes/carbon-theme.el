@@ -32,7 +32,7 @@
 
 (deftheme carbon "A minimal light theme.")
 
-(defvar carbon-theme-header-scales '(1.6 1.4 1.2 1.0 1.0 1.0 1.0)
+(defvar carbon-theme-header-scales '(1.0 1.0 1.0 1.0 1.0 1.0 1.0)
   "Scales for headers.")
 
 (let ((bg "#202020")
