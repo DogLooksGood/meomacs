@@ -94,7 +94,7 @@ Open pass menu with =C-c a p=.
 #+begin_src emacs-lisp
   (straight-use-package 'direnv)
 
-  (global-set-key (kbd "C-c t e") 'direnv-mode)
+  (define-key toggle-map "e" 'direnv-mode)
 
   (autoload 'direnv-mode "direnv" nil t)
 #+end_src

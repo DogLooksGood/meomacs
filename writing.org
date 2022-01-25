@@ -10,7 +10,7 @@ Configuration for writing with Emacs, specifically for Markdown and Org mode.
 ** Toggle markup visibility with visible mode
 #+begin_src emacs-lisp
   (with-eval-after-load "org"
-    (define-key org-mode-map (kbd "C-c t v") 'visible-mode))
+    (define-key org-mode-map (kbd "C-c v") 'visible-mode))
 #+end_src
 ** Org Roam
 #+begin_src emacs-lisp
@@ -136,5 +136,5 @@ Enable ~variable-pitch-mode~.
 
 #+begin_src emacs-lisp
   (with-eval-after-load "markdown-mode"
-    (define-key markdown-mode-map (kbd "C-c t v") 'markdown-toggle-markup-hiding))
+    (define-key markdown-mode-map (kbd "C-c v") 'markdown-toggle-markup-hiding))
 #+end_src

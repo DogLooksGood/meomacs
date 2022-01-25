@@ -15,8 +15,8 @@ Private configuration.
   (defvar addon-map (make-keymap))
   (defalias 'addon-map addon-map)
 
-  (global-set-key (kbd "C-c t") 'toggle-map)
-  (global-set-key (kbd "C-c a") 'addon-map)
+  (define-key mode-specific-map "t" 'toggle-map)
+  (define-key mode-specific-map "a" 'addon-map)
 #+end_src
 
 * Network settings

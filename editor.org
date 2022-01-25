@@ -209,22 +209,10 @@ Tweaking following table for key bindings in leader keymap.
 | key | command               | description |
 |-----+-----------------------+-------------|
 | e   | dispatch: C-x C-e     |             |
-| 1   | meow-digit-argument   |             |
-| 2   | meow-digit-argument   |             |
-| 3   | meow-digit-argument   |             |
-| 4   | meow-digit-argument   |             |
-| 5   | meow-digit-argument   |             |
-| 6   | meow-digit-argument   |             |
-| 7   | meow-digit-argument   |             |
-| 8   | meow-digit-argument   |             |
-| 9   | meow-digit-argument   |             |
-| 0   | meow-digit-argument   |             |
 | s   | split-window-right    |             |
-| -   | split-window-below    |             |
-| ?   | meow-cheatsheet       |             |
+| v   | split-window-below    |             |
 | p   | project-map           |             |
 | w   | other-window          |             |
-| j   | tab-bar-switch-to-tab |             |
 | i   | imenu                 |             |
 | b   | switch-to-buffer      |             |
 | o   | delete-other-windows  |             |
@@ -299,7 +287,21 @@ Switch window by pressing the number showned in the mode line.
       (setq-default mode-line-format (cons modeline-segment mode-line-format))))
 #+end_src
 
-* Workspaces management with tab-bar-mode
+* Workspace management with frames
+
+Use frames for workspaces.
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c j") 'select-frame-by-name)
+
+  ;; Better to have title name with project name
+  (setq-default frame-title-format
+                '((:eval
+                   (or (cdr (project-current))
+                       (buffer-name)))))
+#+end_src
+
+* COMMENT Workspace management with tab-bar-mode
 
 Use tabs for workspaces.
 
@@ -323,6 +325,8 @@ Use tabs for workspaces.
         tab-bar-tab-name-truncated-max 10)
 
   (tab-bar-mode 1)
+
+  (global-set-key (kbd "C-c j") 'tab-bar-switch-to-tab)
 #+end_src
 
 Add missing keybindings
@@ -350,22 +354,29 @@ Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
     ;; setup for emacs-lisp
     (sp-with-modes '(emacs-lisp-mode)
       (sp-local-pair "'" nil :actions nil))
-  
+
     ;; Use strict-mode by default
     (add-hook 'smartparens-mode-hook 'smartparens-strict-mode)
 
     ;; Keybindings
-    (define-key smartparens-mode-map (kbd "C-c t s") 'smartparens-strict-mode))
+    (define-key toggle-map "s" 'smartparens-strict-mode))
 #+end_src
 
 * Line numbers with display-line-numbers-mode
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-c t l") 'display-line-numbers-mode)
+  (define-key toggle-map "l" 'display-line-numbers-mode)
 #+end_src
 
 
 * Completions
+
+** Key sequence completion with which-key
+#+begin_src emacs-lisp
+(straight-use-package 'which-key)
+(which-key-mode 1)
+#+end_src
+
 ** Minibuffer completion reading with Vertico & Orderless & Marginalia
 
 - Vertico provides a better UX for completion reading.
@@ -493,7 +504,7 @@ Enable diff-hl in based on major modes.
 Enable smerge mode with =C-c t m=.
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-c t m") 'smerge-mode)
+  (define-key toggle-map "m" 'smerge-mode)
 #+end_src
 
 * Project management with project.el
@@ -527,4 +538,3 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 
   (define-key project-prefix-map "r" 'rg-project)
 #+end_src
-
