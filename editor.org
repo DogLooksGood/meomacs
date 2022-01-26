@@ -206,17 +206,18 @@ Tweaking following table for key bindings in motion state.
 Tweaking following table for key bindings in leader keymap.
 
 #+tblname: leader-keybindings
-| key | command               | description |
-|-----+-----------------------+-------------|
-| e   | dispatch: C-x C-e     |             |
-| s   | split-window-right    |             |
-| v   | split-window-below    |             |
-| p   | project-map           |             |
-| w   | other-window          |             |
-| i   | imenu                 |             |
-| b   | switch-to-buffer      |             |
-| o   | delete-other-windows  |             |
-| k   | kill-current-buffer   |             |
+| key | command                 | description |
+|-----+-------------------------+-------------|
+| e   | dispatch: C-x C-e       |             |
+| s   | split-window-right      |             |
+| v   | split-window-below      |             |
+| p   | project-map             |             |
+| w   | other-window            |             |
+| i   | imenu                   |             |
+| b   | switch-to-buffer        |             |
+| o   | delete-other-windows    |             |
+| k   | kill-current-buffer     |             |
+| u   | meow-universal-argument |             |
 #+TBLFM: 
 
 ** Initialization
@@ -246,7 +247,9 @@ Tweaking following table for key bindings in leader keymap.
 
   (setq meow-esc-delay 0.001)
 
-  (meow-global-mode 1)
+  (unless (bound-and-true-p meow-global-mode)
+    (meow-global-mode 1))
+
   (meow-setup-indicator)
 #+end_src
 
@@ -386,13 +389,11 @@ Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
 #+begin_src emacs-lisp
   (straight-use-package 'vertico)
   (straight-use-package 'orderless)
-  (straight-use-package 'marginalia)
 
   (require 'vertico)
   (require 'orderless)
 
   (vertico-mode 1)
-  (marginalia-mode 1)
 #+end_src
 
 Enable orderless for minibuffer completion.
@@ -453,13 +454,15 @@ A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =
 
     (add-hook 'company-mode-hook 'company-tng-mode)
 
-    (define-key company-active-map [tab] 'company-complete-common-or-cycle)
-    (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
+    (define-key company-mode-map (kbd "M-n") 'company-complete-common)
+  
+    (define-key company-active-map (kbd "TAB") nil)
+    (define-key company-active-map [tab] nil)
     (define-key company-active-map (kbd "C-n") nil)
     (define-key company-active-map (kbd "C-p") nil)
     (define-key company-active-map (kbd "M-n") 'company-select-next)
     (define-key company-active-map (kbd "M-p") 'company-select-previous)
-  
+
     ;; Free SPC and RET, popup will no longer interrupt typing.
     (define-key company-active-map [escape] nil)
     (define-key company-active-map [return] nil)

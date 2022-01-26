@@ -74,13 +74,13 @@ Increasing/decreasing font size with =M-+= / =M--=.
 
 ** Font Families
 #+tblname: fonts
-| key      | font             | where to apply                        |
-|----------+------------------+---------------------------------------|
-| default  | Fira Code        | default font for ascii characters     |
-| unicode  | LXGW WenKai      | default font for non-ascii characters |
-| modeline | Source Serif Pro | modeline & tabbar                     |
-| fixed    | Sarasa Mono SC   | code blocks and tables in markups     |
-| variable | ETBembo          | texts in markups                      |
+| key      | font               | where to apply                        |
+|----------+--------------------+---------------------------------------|
+| default  | MesloLGL Nerd Font | default font for ascii characters     |
+| unicode  | LXGW WenKai        | default font for non-ascii characters |
+| modeline | Source Serif Pro   | modeline & tabbar                     |
+| fixed    | Sarasa Mono SC     | code blocks and tables in markups     |
+| variable | ETBembo            | texts in markups                      |
 
 #+header: :var fonts=fonts
 #+begin_src emacs-lisp
