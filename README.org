@@ -16,7 +16,7 @@ Check a list of configuration files.
 - [[file:writing.org][Writing]]
 - [[file:programming.org][Programming]]
 - [[file:addons.org][Addons]]
-- [[file:private.org][Private]] (Created after first launch)
+- [[file:private_template.org][Private]]
   
 Press =F9= to select and open a configuration file.
 Press =F12= to reload configuration after changes.
