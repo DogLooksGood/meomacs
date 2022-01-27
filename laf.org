@@ -73,16 +73,9 @@ Increasing/decreasing font size with =M-+= / =M--=.
 #+end_src
 
 ** Font Families
-#+tblname: fonts
-| key      | font               | where to apply                        |
-|----------+--------------------+---------------------------------------|
-| default  | MesloLGL Nerd Font | default font for ascii characters     |
-| unicode  | LXGW WenKai        | default font for non-ascii characters |
-| modeline | Source Serif Pro   | modeline & tabbar                     |
-| fixed    | Sarasa Mono SC     | code blocks and tables in markups     |
-| variable | ETBembo            | texts in markups                      |
 
-Define functions for loading above fonts .
+Define functions for loading fonts.
+Font families are specified in [[file:private.org::Fonts][private]] config.
 
 #+begin_src emacs-lisp
   (defun meomacs--get-font-family (key)
