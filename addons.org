@@ -6,6 +6,35 @@ Configuration for addons, additional features provided by individual packages.
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
+* Git integration with magit & diff-hl & smerge
+
+To manage the git repository, use builtin package ~vc~.
+
+#+begin_src emacs-lisp
+  (straight-use-package 'magit)
+  (straight-use-package 'diff-hl)
+  (straight-use-package 'smerge-mode)
+
+  (autoload 'magit "magit" nil t)
+  (autoload 'diff-hl-mode "diff-hl" nil t)
+  (autoload 'diff-hl-dired-mode "diff-hl-dired" nil t)
+  (autoload 'smerge-mode "smerge-mode" nil t)
+#+end_src
+
+Enable diff-hl in based on major modes.
+
+#+begin_src emacs-lisp
+  (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+  (add-hook 'prog-mode-hook 'diff-hl-mode)
+  (add-hook 'conf-mode-hook 'diff-hl-mode)
+#+end_src
+
+Enable smerge mode with =C-c t m=.
+
+#+begin_src emacs-lisp
+  (define-key toggle-map "m" 'smerge-mode)
+#+end_src
+
 * Input method with emacs-rime
 
 ~librime~ is required for this feature.
