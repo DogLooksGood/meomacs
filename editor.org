@@ -6,7 +6,9 @@ Configuration for editor basics.
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
-* Package management with Straight
+* Package management
+
+** Straight
 
 Straight.el is used for package management.
 Bind some keys for quick operations.
@@ -97,146 +99,18 @@ Bind some keys for quick operations.
   (global-hl-line-mode t)
 #+end_src
 
-* Modal editing with Meow
+* Meow
 
 This configuration sticks with Meow for modal editing.
 
-** Normal
-Tweaking following table for key bindings in normal state.
+Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][private]] config.
 
-#+TBLNAME: normal-keybindings
-| key      | command                   |
-|----------+---------------------------|
-| ?        | meow-keypad-describe-key  |
-| *        | meow-expand-0             |
-| =        | meow-expand-9             |
-| !        | meow-expand-8             |
-| [        | meow-expand-7             |
-| ]        | meow-expand-6             |
-| {        | meow-expand-5             |
-| +        | meow-expand-4             |
-| }        | meow-expand-3             |
-| )        | meow-expand-2             |
-| (        | meow-expand-1             |
-| 1        | select-window-1           |
-| 2        | select-window-2           |
-| 3        | select-window-3           |
-| 4        | select-window-4           |
-| 5        | select-window-5           |
-| 6        | select-window-6           |
-| 7        | select-window-7           |
-| 8        | select-window-8           |
-| 9        | select-window-9           |
-| 0        | select-window-0           |
-| -        | negative-argument         |
-| ;        | meow-reverse              |
-| ,        | meow-inner-of-thing       |
-| .        | meow-bounds-of-thing      |
-| <        | meow-beginning-of-thing   |
-| >        | meow-end-of-thing         |
-| a        | meow-append               |
-| A        | meow-open-below           |
-| b        | meow-back-word            |
-| B        | meow-back-symbol          |
-| c        | meow-change               |
-| d        | meow-delete               |
-| D        | meow-backward-delete      |
-| e        | meow-line                 |
-| E        | meow-goto-line            |
-| f        | meow-find                 |
-| g        | meow-cancel-selection     |
-| G        | meow-grab                 |
-| h        | meow-left                 |
-| H        | meow-left-expand          |
-| i        | meow-insert               |
-| I        | meow-open-above           |
-| j        | meow-join                 |
-| k        | meow-kill                 |
-| l        | meow-till                 |
-| m        | meow-mark-word            |
-| M        | meow-mark-symbol          |
-| n        | meow-next                 |
-| N        | meow-next-expand          |
-| o        | meow-block                |
-| O        | meow-to-block             |
-| p        | meow-prev                 |
-| P        | meow-prev-expand          |
-| q        | meow-quit                 |
-| r        | meow-replace              |
-| R        | meow-swap-grab            |
-| s        | meow-search               |
-| t        | meow-right                |
-| T        | meow-right-expand         |
-| u        | meow-undo                 |
-| U        | meow-undo-in-selection    |
-| v        | meow-visit                |
-| w        | meow-next-word            |
-| W        | meow-next-symbol          |
-| x        | meow-save                 |
-| X        | meow-sync-grab            |
-| y        | meow-yank                 |
-| z        | meow-pop-selection        |
-| $        | repeat                    |
-| '        | repeat                    |
-| &        | meow-query-replace-regexp |
-| %        | meow-query-replace        |
-| <escape> | ignore                    |
-
-** Motion
-
-Tweaking following table for key bindings in motion state.
-
-#+TBLNAME: motion-keybindings
-|      key | command         |
-|----------+-----------------|
-| <escape> | ignore          |
-|        1 | select-window-1 |
-|        2 | select-window-2 |
-|        3 | select-window-3 |
-|        4 | select-window-4 |
-|        5 | select-window-5 |
-|        6 | select-window-6 |
-|        7 | select-window-7 |
-|        8 | select-window-8 |
-|        9 | select-window-9 |
-|        0 | select-window-0 |
-
-** Leader
-
-Tweaking following table for key bindings in leader keymap.
-
-#+tblname: leader-keybindings
-| key | command                 | description |
-|-----+-------------------------+-------------|
-| e   | dispatch: C-x C-e       |             |
-| s   | split-window-right      |             |
-| v   | split-window-below      |             |
-| p   | project-map             |             |
-| w   | other-window            |             |
-| i   | imenu                   |             |
-| b   | switch-to-buffer        |             |
-| o   | delete-other-windows    |             |
-| k   | kill-current-buffer     |             |
-| u   | meow-universal-argument |             |
-#+TBLFM: 
-
-** Initialization
-
-#+header: :var normal-keybindings=normal-keybindings :var motion-keybindings=motion-keybindings :var leader-keybindings=leader-keybindings
 #+begin_src emacs-lisp
   (straight-use-package 'meow)
 
   (require 'meow)
 
-  (let ((parse-def (lambda (x)
-                     (cons (format "%s" (car x))
-                           (if (string-prefix-p "dispatch:" (cadr x))
-                               (string-trim (substring (cadr x) 9))
-                             (intern (cadr x)))))))
-    (apply #'meow-normal-define-key (mapcar parse-def normal-keybindings))
-    (apply #'meow-motion-overwrite-define-key (mapcar parse-def motion-keybindings))
-    (apply #'meow-leader-define-key (mapcar parse-def leader-keybindings)))
-
+  ;; custom indicator
   (when window-system
     (setq meow-replace-state-name-list
           '((normal . "🅝")
@@ -245,12 +119,14 @@ Tweaking following table for key bindings in leader keymap.
             (motion . "🅜")
             (keypad . "🅚"))))
 
+  ;; custom variables
   (setq meow-esc-delay 0.001)
 
-  (unless (bound-and-true-p meow-global-mode)
-    (meow-global-mode 1))
+  (meow-setup)
 
-  (meow-setup-indicator)
+  (unless (bound-and-true-p meow-global-mode)
+    (meow-setup-indicator)
+    (meow-global-mode 1))
 #+end_src
 
 * Window management
@@ -290,7 +166,9 @@ Switch window by pressing the number showned in the mode line.
       (setq-default mode-line-format (cons modeline-segment mode-line-format))))
 #+end_src
 
-* Workspace management with frames
+* Workspace management
+
+** Using frames
 
 Use frames for workspaces.
 
@@ -304,7 +182,7 @@ Use frames for workspaces.
                        (buffer-name)))))
 #+end_src
 
-* COMMENT Workspace management with tab-bar-mode
+** COMMENT Using tab-bar-mode
 
 Use tabs for workspaces.
 
@@ -337,7 +215,17 @@ Add missing keybindings
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-x t .") 'tab-bar-rename-tab)
 #+end_src
-* Auto pairs with Smartparens
+
+* Auto pairs
+
+** Builtin electric pair
+
+#+begin_src emacs-lisp
+  (add-hook 'prog-mode-hook 'electric-pair-local-mode)
+  (add-hook 'conf-mode-hook 'electric-pair-local-mode)
+#+end_src
+
+** COMMENT Smartparens
 
 Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
 
@@ -372,15 +260,16 @@ Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
 #+end_src
 
 
-* Completions
+* Completion for key sequence
 
-** Key sequence completion with which-key
+** Which-key
 #+begin_src emacs-lisp
 (straight-use-package 'which-key)
 (which-key-mode 1)
 #+end_src
 
-** Minibuffer completion reading with Vertico & Orderless & Marginalia
+* Minibuffer completion reading
+** Vertico & Orderless
 
 - Vertico provides a better UX for completion reading.
 - Orderless provides a completion style, which allows you to search with orderless segments.
@@ -424,18 +313,15 @@ Do "delete" instead of "kill" when pressing =M-DEL=.
   (define-key minibuffer-mode-map (kbd "M-DEL") #'meomacs-backward-delete-sexp)
 #+end_src
 
-** Completion at point
+* Completion at point
 
-#+begin_src emacs-lisp
-  (add-hook 'prog-mode-hook 'company-mode)
-  (add-hook 'conf-mode-hook 'company-mode)
-#+end_src
-
-** Completion at point with Company
+** Company
 
 #+begin_src emacs-lisp
   (straight-use-package 'company)
 
+  (add-hook 'prog-mode-hook 'company-mode)
+  (add-hook 'conf-mode-hook 'company-mode)
   (autoload 'company-mode "company" nil t)
 #+end_src
 
@@ -470,7 +356,10 @@ A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =
     (define-key company-active-map (kbd "SPC") nil))
 #+end_src
 
-* Templating with yasnippet
+* Templating
+
+** yasnippet
+
 Expand template with =TAB=. Jump between the placeholders with =TAB= and =S-TAB=.
 
 #+begin_src emacs-lisp
@@ -482,7 +371,9 @@ Expand template with =TAB=. Jump between the placeholders with =TAB= and =S-TAB=
   (yas-global-mode 1)
 #+end_src
 
-* Project management with project.el
+* Project management
+
+** project.el
 
 To find files/buffers and apply commands on project, use builtin package ~project~.
 
@@ -494,14 +385,19 @@ To find files/buffers and apply commands on project, use builtin package ~projec
                                   (shell "Shell")
                                   (magit "Magit")))
 
-  (defalias 'project-map project-prefix-map)
+  (defalias 'project-prefix-map project-prefix-map)
+
+  (define-key mode-specific-map "p" 'project-prefix-map)
 
   (with-eval-after-load "project"
     (define-key project-prefix-map "s" 'shell)
     (define-key project-prefix-map "m" 'magit))
 #+end_src
 
-* Searching with rg
+* Text searching
+
+** rg.el
+
 #+begin_src emacs-lisp
   (straight-use-package 'rg)
 

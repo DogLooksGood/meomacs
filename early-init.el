@@ -45,6 +45,10 @@ If FORCE-TANGLE is non-nil, always tangle before load."
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+;; Straight configs
+(setq straight-vc-git-default-clone-depth 1)
+
+;; Use GCMH as GC config.
 (straight-use-package 'gcmh)
 (require 'gcmh)
 (gcmh-mode 1)

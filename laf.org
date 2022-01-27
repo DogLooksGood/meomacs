@@ -82,10 +82,11 @@ Increasing/decreasing font size with =M-+= / =M--=.
 | fixed    | Sarasa Mono SC     | code blocks and tables in markups     |
 | variable | ETBembo            | texts in markups                      |
 
-#+header: :var fonts=fonts
+Define functions for loading above fonts .
+
 #+begin_src emacs-lisp
   (defun meomacs--get-font-family (key)
-    (car (alist-get key fonts nil nil #'string-equal)))
+    (car (alist-get key meomacs-fonts nil nil #'string-equal)))
 
   (defun meomacs--get-font-spec (key)
     (format "%s-%d"
@@ -99,7 +100,9 @@ Increasing/decreasing font size with =M-+= / =M--=.
       (add-to-list 'default-frame-alist (cons 'font font-spec))))
 
   (defun meomacs-load-face-font ()
-    "Load fonts used in faces."
+    "Load fonts used in faces.
+
+  This function must be called after frame creation."
     (let ((modeline-font-spec (meomacs--get-font-spec "modeline"))
           (variable-font-spec (meomacs--get-font-spec "variable"))
           (fixed-font-spec (meomacs--get-font-spec "fixed")))
@@ -111,7 +114,9 @@ Increasing/decreasing font size with =M-+= / =M--=.
       (set-face-attribute 'tab-bar nil :font modeline-font-spec)))
 
   (defun meomacs-load-ext-font ()
-    "Load fonts used for non-ascii characters."
+    "Load fonts used for non-ascii characters.
+
+  This function must be called after frame creation."
     (let ((font (frame-parameter nil 'font))
           (font-spec (font-spec :family (meomacs--get-font-family "unicode"))))
       (dolist (charset '(kana han hangul cjk-misc bopomofo symbol))
@@ -123,7 +128,7 @@ Increasing/decreasing font size with =M-+= / =M--=.
 
 * Themes
 
-Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes between listed above.
+Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes.
 
 #+begin_src emacs-lisp
   (require 'subr-x)

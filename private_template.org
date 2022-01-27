@@ -15,23 +15,160 @@ Private configuration.
   (defvar addon-map (make-keymap))
   (defalias 'addon-map addon-map)
 
-  (define-key mode-specific-map "t" 'toggle-map)
-  (define-key mode-specific-map "a" 'addon-map)
+  (define-key mode-specific-map "t" toggle-map)
+  (define-key mode-specific-map "a" addon-map)
 #+end_src
 
-* Network settings
+* Modal editing key bindings
 
+** Programmer Dvorak
+
+*** Normal
+Tweaking following table for key bindings in normal state.
+
+#+TBLNAME: normal-keybindings
+| key      | command                   |
+|----------+---------------------------|
+| ?        | meow-keypad-describe-key  |
+| *        | meow-expand-0             |
+| =        | meow-expand-9             |
+| !        | meow-expand-8             |
+| [        | meow-expand-7             |
+| ]        | meow-expand-6             |
+| {        | meow-expand-5             |
+| +        | meow-expand-4             |
+| }        | meow-expand-3             |
+| )        | meow-expand-2             |
+| (        | meow-expand-1             |
+| 1        | select-window-1           |
+| 2        | select-window-2           |
+| 3        | select-window-3           |
+| 4        | select-window-4           |
+| 5        | select-window-5           |
+| 6        | select-window-6           |
+| 7        | select-window-7           |
+| 8        | select-window-8           |
+| 9        | select-window-9           |
+| 0        | select-window-0           |
+| -        | negative-argument         |
+| ;        | meow-reverse              |
+| ,        | meow-inner-of-thing       |
+| .        | meow-bounds-of-thing      |
+| <        | meow-beginning-of-thing   |
+| >        | meow-end-of-thing         |
+| a        | meow-append               |
+| A        | meow-open-below           |
+| b        | meow-back-word            |
+| B        | meow-back-symbol          |
+| c        | meow-change               |
+| d        | meow-delete               |
+| D        | meow-backward-delete      |
+| e        | meow-line                 |
+| E        | meow-goto-line            |
+| f        | meow-find                 |
+| g        | meow-cancel-selection     |
+| G        | meow-grab                 |
+| h        | meow-left                 |
+| H        | meow-left-expand          |
+| i        | meow-insert               |
+| I        | meow-open-above           |
+| j        | meow-join                 |
+| k        | meow-kill                 |
+| l        | meow-till                 |
+| m        | meow-mark-word            |
+| M        | meow-mark-symbol          |
+| n        | meow-next                 |
+| N        | meow-next-expand          |
+| o        | meow-block                |
+| O        | meow-to-block             |
+| p        | meow-prev                 |
+| P        | meow-prev-expand          |
+| q        | meow-quit                 |
+| r        | meow-replace              |
+| R        | meow-swap-grab            |
+| s        | meow-search               |
+| t        | meow-right                |
+| T        | meow-right-expand         |
+| u        | meow-undo                 |
+| U        | meow-undo-in-selection    |
+| v        | meow-visit                |
+| w        | meow-next-word            |
+| W        | meow-next-symbol          |
+| x        | meow-save                 |
+| X        | meow-sync-grab            |
+| y        | meow-yank                 |
+| z        | meow-pop-selection        |
+| $        | repeat                    |
+| '        | repeat                    |
+| &        | meow-query-replace-regexp |
+| %        | meow-query-replace        |
+| <escape> | ignore                    |
+
+*** Motion
+
+Tweaking following table for key bindings in motion state.
+
+#+TBLNAME: motion-keybindings
+|      key | command         |
+|----------+-----------------|
+| <escape> | ignore          |
+|        1 | select-window-1 |
+|        2 | select-window-2 |
+|        3 | select-window-3 |
+|        4 | select-window-4 |
+|        5 | select-window-5 |
+|        6 | select-window-6 |
+|        7 | select-window-7 |
+|        8 | select-window-8 |
+|        9 | select-window-9 |
+|        0 | select-window-0 |
+
+*** Leader
+
+Tweaking following table for key bindings in leader keymap.
+
+#+tblname: leader-keybindings
+| key | command                 | description |
+|-----+-------------------------+-------------|
+| e   | dispatch: C-x C-e       |             |
+| s   | split-window-right      |             |
+| v   | split-window-below      |             |
+| w   | other-window            |             |
+| i   | imenu                   |             |
+| b   | switch-to-buffer        |             |
+| o   | delete-other-windows    |             |
+| k   | kill-current-buffer     |             |
+| u   | meow-universal-argument |             |
+#+TBLFM:
+
+** Define keys
+
+#+header: :var normal-keybindings=normal-keybindings :var motion-keybindings=motion-keybindings :var leader-keybindings=leader-keybindings
 #+begin_src emacs-lisp
-  (defvar meomacs-http-proxy-host)
-  (defvar meomacs-http-proxy-port)
-  (defvar meomacs-socks5-proxy-host)
-  (defvar meomacs-socks5-proxy-port)
+  (defun meow-setup ()
+    (let ((parse-def (lambda (x)
+                       (cons (format "%s" (car x))
+                             (if (string-prefix-p "dispatch:" (cadr x))
+                                 (string-trim (substring (cadr x) 9))
+                               (intern (cadr x)))))))
+      (apply #'meow-normal-define-key (mapcar parse-def normal-keybindings))
+      (apply #'meow-motion-overwrite-define-key (mapcar parse-def motion-keybindings))
+      (apply #'meow-leader-define-key (mapcar parse-def leader-keybindings))))
+#+end_src
 
-  (when (and meomacs-http-proxy-host meomacs-http-proxy-port)
-    (setq url-proxy-services
-          `(("http" . ,(format "%s:%s" meomacs-http-proxy-host  meomacs-http-proxy-port))
-            ("https" . ,(format "%s:%s" meomacs-http-proxy-host meomacs-http-proxy-port))
-            ("no_proxy" . "\\(localhost\\)"))))
+* Fonts
+
+#+tblname: fonts
+| key      | font               | where to apply                        |
+|----------+--------------------+---------------------------------------|
+| default  | MesloLGL Nerd Font | default font for ascii characters     |
+| unicode  | LXGW WenKai        | default font for non-ascii characters |
+| modeline | Source Serif Pro   | modeline & tabbar                     |
+| fixed    | Sarasa Mono SC     | code blocks and tables in markups     |
+| variable | ETBembo            | texts in markups                      |
+
+#+begin_src emacs-lisp :var fonts=fonts
+  (setq meomacs-fonts fonts)
 #+end_src
 
 * Themes
@@ -48,4 +185,18 @@ Private configuration.
           (mapcar 'car)
           (cl-remove-if-not (lambda (s) (string-prefix-p "[X] " s)))
           (mapcar (lambda (s) (intern (substring s 4))))))
+#+end_src
+
+* Network settings
+
+#+begin_src emacs-lisp
+  (defvar meomacs-http-proxy-host "localhost")
+  (defvar meomacs-http-proxy-port 8889)
+  (defvar meomacs-socks5-proxy-host "localhost")
+  (defvar meomacs-socks5-proxy-port 1089)
+
+  (setq url-proxy-services
+        `(("http" . ,(format "%s:%s" meomacs-http-proxy-host  meomacs-http-proxy-port))
+          ("https" . ,(format "%s:%s" meomacs-http-proxy-host meomacs-http-proxy-port))
+          ("no_proxy" . "\\(localhost\\)")))
 #+end_src

@@ -11,3 +11,4 @@ auto-save-list
 bookmarks
 private.org
 .lsp-session-*
+.emacs.desktop

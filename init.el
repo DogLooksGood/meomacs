@@ -4,9 +4,9 @@
 (defun meomacs-refresh ()
   "Refresh and tangle configuration."
   (interactive)
+  (meomacs-load-config "private" t)
   (meomacs-load-config "laf" t)
   (meomacs-load-config "editor" t)
-  (meomacs-load-config "private" t)
   (meomacs-load-config "writing" t)
   (meomacs-load-config "programming" t)
   (meomacs-load-config "addons" t))
