@@ -6,7 +6,7 @@ Configuration for editor basics.
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
-* Package management
+* Package management                                               :required:
 
 ** Straight
 

@@ -6,7 +6,7 @@ Private configuration.
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
-* User custom keymaps
+* User custom keymaps                                              :required:
 
 #+begin_src emacs-lisp
   (defvar toggle-map (make-keymap))
@@ -156,7 +156,7 @@ Tweaking following table for key bindings in leader keymap.
       (apply #'meow-leader-define-key (mapcar parse-def leader-keybindings))))
 #+end_src
 
-* Fonts
+* Fonts                                                            :required:
 
 #+tblname: fonts
 | key      | font               | where to apply                        |
@@ -171,7 +171,7 @@ Tweaking following table for key bindings in leader keymap.
   (setq meomacs-fonts fonts)
 #+end_src
 
-* Themes
+* Themes                                                           :required:
 
 #+name: themes
 - [X] modus-operandi

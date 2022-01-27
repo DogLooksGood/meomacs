@@ -85,9 +85,12 @@ Use Telega as Telegram client.
 Proxy setup
 
 #+begin_src emacs-lisp
-  (setq telega-proxies
-        `((:server ,meomacs-socks5-proxy-host :port ,meomacs-socks5-proxy-port
-                   :enable t :type (:@type "proxyTypeSocks5"))))
+  (when (and
+         (bound-and-true-p meomacs-socks5-proxy-host)
+         (bound-and-true-p meomacs-socks5-proxy-port))
+    (setq telega-proxies
+          `((:server ,meomacs-socks5-proxy-host :port ,meomacs-socks5-proxy-port
+                     :enable t :type (:@type "proxyTypeSocks5")))))
 #+end_src
 
 * Password management with pass
