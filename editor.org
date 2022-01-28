@@ -269,11 +269,10 @@ Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
 #+end_src
 
 * Minibuffer completion reading
-** Vertico & Orderless
+** COMMENT Vertico & Orderless
 
 - Vertico provides a better UX for completion reading.
 - Orderless provides a completion style, which allows you to search with orderless segments.
-- Marginalia provides helpful messages in completion.
 
 #+begin_src emacs-lisp
   (straight-use-package 'vertico)
@@ -293,6 +292,19 @@ Enable orderless for minibuffer completion.
 
   (add-hook 'minibuffer-setup-hook 'meomacs--vertico-init-minibuffer)
 #+end_src
+
+** Selectrum & Precient
+
+#+begin_src emacs-lisp
+  (straight-use-package 'selectrum)
+  (straight-use-package 'selectrum-prescient)
+
+  (selectrum-mode 1)
+  (selectrum-prescient-mode 1)
+  (prescient-persist-mode 1)
+#+end_src
+
+** Fix M-DEL in minibuffer
 
 Do "delete" instead of "kill" when pressing =M-DEL=.
 
