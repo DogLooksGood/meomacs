@@ -35,8 +35,3 @@
 (meomacs-load-config "programming")
 (meomacs-load-config "addons" t)
 
-;; Load fonts setup
-(when window-system
-  (meomacs-load-ext-font)
-  (meomacs-load-face-font))
-

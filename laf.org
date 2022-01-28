@@ -122,8 +122,12 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
       (dolist (charset '(kana han hangul cjk-misc bopomofo symbol))
         (set-fontset-font font charset font-spec))))
 
-  ;; Only have font setup in GUI
   (meomacs-load-base-font)
+
+  (add-hook 'after-init-hook
+            (lambda ()
+              (meomacs-load-ext-font)
+              (meomacs-load-face-font)))
 #+end_src
 
 * Themes
