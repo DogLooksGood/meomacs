@@ -78,8 +78,15 @@ Define functions for loading fonts.
 Font families are specified in [[file:private.org::Fonts][private]] config.
 
 #+begin_src emacs-lisp
+  (defvar meomacs-fonts '((default . "MesloLGL Nerd Font")
+                          (unicode . "LXGW WenKai")
+                          (modeline . "Source Serif Pro")
+                          (fixed . "Sarasa Mono SC")
+                          (variable . "ETBembo"))
+    "Fonts to use.")
+
   (defun meomacs--get-font-family (key)
-    (car (alist-get key meomacs-fonts nil nil #'string-equal)))
+    (alist-get key meomacs-fonts))
 
   (defun meomacs--get-font-spec (key)
     (format "%s-%d"
@@ -88,7 +95,7 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
 
   (defun meomacs-load-base-font ()
     "Load the default font for ascii characters."
-    (let* ((font-spec (meomacs--get-font-spec "default")))
+    (let* ((font-spec (meomacs--get-font-spec 'default)))
       (set-frame-parameter nil 'font font-spec)
       (add-to-list 'default-frame-alist (cons 'font font-spec))))
 
@@ -96,9 +103,9 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
     "Load fonts used in faces.
 
   This function must be called after frame creation."
-    (let ((modeline-font-spec (meomacs--get-font-spec "modeline"))
-          (variable-font-spec (meomacs--get-font-spec "variable"))
-          (fixed-font-spec (meomacs--get-font-spec "fixed")))
+    (let ((modeline-font-spec (meomacs--get-font-spec 'modeline))
+          (variable-font-spec (meomacs--get-font-spec 'variable))
+          (fixed-font-spec (meomacs--get-font-spec 'fixed)))
       (set-face-attribute 'variable-pitch nil :font variable-font-spec :height 1.1)
       (set-face-attribute 'fixed-pitch nil :font fixed-font-spec)
       (set-face-attribute 'fixed-pitch-serif nil :font fixed-font-spec)
@@ -111,7 +118,7 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
 
   This function must be called after frame creation."
     (let ((font (frame-parameter nil 'font))
-          (font-spec (font-spec :family (meomacs--get-font-family "unicode"))))
+          (font-spec (font-spec :family (meomacs--get-font-family 'unicode))))
       (dolist (charset '(kana han hangul cjk-misc bopomofo symbol))
         (set-fontset-font font charset font-spec))))
 
@@ -127,7 +134,7 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes.
   (require 'subr-x)
   (require 'cl-lib)
 
-  (defvar meomacs-themes nil
+  (defvar meomacs-themes '(modus-operandi modus-vivendi)
     "Themes to use.")
 
   (defun meomacs-load-theme ()
