@@ -168,7 +168,12 @@ Tweaking following table for key bindings in leader keymap.
 | variable | ETBembo            | texts in markups                      |
 
 #+begin_src emacs-lisp :var fonts=fonts
-  (setq meomacs-fonts fonts)
+  (setq meomacs-fonts
+        (mapcar (lambda (row)
+                  (cons
+                   (intern (car row))
+                   (cadr row)))
+                fonts))
 #+end_src
 
 * Themes                                                           :required:
