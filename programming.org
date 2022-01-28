@@ -6,7 +6,9 @@ Configuration for programming and languages support.
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
-* LSP with lsp-mode
+* LSP
+
+** lsp-mode
 
 Use lsp-mode as LSP client.
 
@@ -20,6 +22,16 @@ Use lsp-mode as LSP client.
         lsp-headerline-breadcrumb-enable nil)
 
   (autoload 'lsp "lsp-mode" nil t)
+#+end_src
+
+** COMMENT eglot
+
+Use eglot as LSP client.
+
+#+begin_src emacs-lisp
+  (straight-use-package 'eglot)
+
+  (autoload 'eglot "eglot" nil t)
 #+end_src
 
 * Clojure
