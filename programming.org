@@ -6,6 +6,16 @@ Configuration for programming and languages support.
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
+* Flycheck
+
+#+begin_src emacs-lisp
+  (straight-use-package 'flycheck)
+  (straight-use-package 'flycheck-pos-tip)
+
+  (with-eval-after-load 'flycheck
+    (flycheck-pos-tip-mode))
+#+end_src
+
 * LSP
 
 ** lsp-mode
@@ -24,6 +34,12 @@ Use lsp-mode as LSP client.
   (autoload 'lsp "lsp-mode" nil t)
 #+end_src
 
+*** Key binding
+
+#+begin_src emacs-lisp
+  (define-key toggle-map "L" 'lsp)
+#+end_src
+
 ** COMMENT eglot
 
 Use eglot as LSP client.
@@ -34,6 +50,12 @@ Use eglot as LSP client.
   (autoload 'eglot "eglot" nil t)
 #+end_src
 
+*** Key Binding
+
+#+begin_src emacs-lisp
+  (define-key toggle-map "L" 'eglot)
+#+end_src
+
 * Clojure
 
 ** clojure-mode
@@ -42,6 +64,8 @@ Use clojure-mode for basic syntax support.
 
 #+begin_src emacs-lisp
   (straight-use-package 'clojure-mode)
+
+  (setq clojure-toplevel-inside-comment-form t)
 
   (with-eval-after-load "clojure-mode"
     (define-clojure-indent
@@ -174,8 +198,6 @@ Use clojure-mode for basic syntax support.
 ** rust-mode
 #+begin_src emacs-lisp
   (straight-use-package 'rust-mode)
-
-  (add-hook 'rust-mode-hook 'lsp)
 #+end_src
 
 * HTML
@@ -183,5 +205,3 @@ Use clojure-mode for basic syntax support.
   (setq-default css-indent-offset 2
                 js-indent-level 2)
 #+end_src
-
-

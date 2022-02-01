@@ -126,6 +126,12 @@ Enable ~variable-pitch-mode~.
   (with-eval-after-load "org"
     (setq org-format-latex-options (plist-put org-format-latex-options :scale 4.0)))
 #+end_src
+
+** Agenda
+
+#+begin_src emacs-lisp
+  (setq org-agenda-files (list (expand-file-name "~/Org")))
+#+end_src
 * Markdown
 
 #+begin_src emacs-lisp

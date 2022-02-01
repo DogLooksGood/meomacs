@@ -126,8 +126,9 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
 
   (add-hook 'after-init-hook
             (lambda ()
-              (meomacs-load-ext-font)
-              (meomacs-load-face-font)))
+              (when window-system
+                (meomacs-load-ext-font)
+                (meomacs-load-face-font))))
 #+end_src
 
 * Themes
@@ -142,10 +143,11 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes.
     "Themes to use.")
 
   (defun meomacs-load-theme ()
-    (message "Load theme: %s" (car meomacs-themes))
-    (mapc 'disable-theme custom-enabled-themes)
-    (load-theme (car meomacs-themes) t)
-    (meomacs-load-face-font))
+    (when-let ((theme (car meomacs-themes)))
+      (message "Load theme: %s" (car meomacs-themes))
+      (mapc 'disable-theme custom-enabled-themes)
+      (load-theme theme t)
+      (meomacs-load-face-font)))
 
   (defun meomacs-next-theme ()
     (interactive)
@@ -157,4 +159,3 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes.
 
   (add-hook 'desktop-after-read-hook 'meomacs-load-theme)
 #+end_src
-

@@ -126,6 +126,8 @@ Open pass menu with =C-c a p=.
 #+begin_src emacs-lisp
   (straight-use-package 'direnv)
 
+  (setq direnv-always-show-summary nil)
+
   (define-key toggle-map "e" 'direnv-mode)
 
   (autoload 'direnv-mode "direnv" nil t)

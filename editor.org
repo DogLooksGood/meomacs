@@ -25,13 +25,17 @@ Bind some keys for quick operations.
       keymap))
 
   (defalias 'straight-keymap straight-keymap)
-  (global-set-key (kbd "C-c p") 'straight-keymap)
+  (global-set-key (kbd "C-c P") 'straight-keymap)
 #+end_src
 
 * Better defaults
 
 #+begin_src emacs-lisp
   (setq-default
+
+   inhibit-startup-screen t
+   ;; Don't display comp warnings
+   warning-suppress-log-types '((comp))
    ;; Don't create lockfiles
    create-lockfiles nil
 
@@ -94,9 +98,12 @@ Bind some keys for quick operations.
 
    ;; DWIM target for dired
    ;; Automatically use another dired buffer as target for copy/rename
-   dired-dwim-target t)
+   dired-dwim-target t
+
+   indent-tabs-mode nil)
 
   (global-hl-line-mode t)
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
 
 * Meow
@@ -126,7 +133,8 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
 
   (unless (bound-and-true-p meow-global-mode)
     (meow-setup-indicator)
-    (meow-global-mode 1))
+    (meow-global-mode 1)
+    (set-keymap-parent meow-keypad-state-keymap mode-specific-map))
 #+end_src
 
 * Window management
@@ -353,7 +361,7 @@ A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =
     (add-hook 'company-mode-hook 'company-tng-mode)
 
     (define-key company-mode-map (kbd "M-n") 'company-complete-common)
-  
+
     (define-key company-active-map (kbd "TAB") nil)
     (define-key company-active-map [tab] nil)
     (define-key company-active-map (kbd "C-n") nil)
