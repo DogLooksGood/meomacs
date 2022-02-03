@@ -133,8 +133,7 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
 
   (unless (bound-and-true-p meow-global-mode)
     (meow-setup-indicator)
-    (meow-global-mode 1)
-    (set-keymap-parent meow-keypad-state-keymap mode-specific-map))
+    (meow-global-mode 1))
 #+end_src
 
 * Window management

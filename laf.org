@@ -12,6 +12,7 @@ No tool bar & menu bar.
 
 #+begin_src emacs-lisp
   (tool-bar-mode -1)
+  (menu-bar-mode -1)
 #+end_src
 
 No scroll bars in minibuffer.
