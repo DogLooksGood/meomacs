@@ -346,12 +346,12 @@ Do "delete" instead of "kill" when pressing =M-DEL=.
 
 A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =RET= will do insertion even though the popup is available.
 
-| action                    | key |
-|---------------------------+-----|
-| completion at point       | TAB |
-| previous candidate        | C-p |
-| next candidate            | C-n |
-| next template placeholder | RET |
+| action                      | key |
+|-----------------------------+-----|
+| trigger completion at point | TAB |
+| previous candidate          | M-p |
+| next candidate              | M-n |
+| next template placeholder   | RET |
 
 #+begin_src emacs-lisp
   (with-eval-after-load "company"
