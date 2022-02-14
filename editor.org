@@ -131,8 +131,9 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
 
   (meow-setup)
 
+  (meow-setup-indicator)
+
   (unless (bound-and-true-p meow-global-mode)
-    (meow-setup-indicator)
     (meow-global-mode 1))
 #+end_src
 

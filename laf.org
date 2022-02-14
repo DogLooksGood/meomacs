@@ -160,3 +160,20 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes.
 
   (add-hook 'desktop-after-read-hook 'meomacs-load-theme)
 #+end_src
+
+* Modeline
+
+** COMMENT telephone-line
+#+begin_src emacs-lisp
+  (straight-use-package 'telephone-line)
+
+  (telephone-line-mode 1)
+#+end_src
+
+** mood-line
+#+begin_src emacs-lisp
+  (straight-use-package 'mood-line)
+
+  (require 'mood-line)
+  (mood-line-mode 1)
+#+end_src
