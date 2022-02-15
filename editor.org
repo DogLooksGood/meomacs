@@ -78,10 +78,6 @@ Bind some keys for quick operations.
    mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil))
    mouse-wheel-progressive-speed nil
 
-   ;; Vim-like scroll
-   scroll-step 1
-   scroll-margin 3
-
    ;; Disable copy region blink
    copy-region-blink-delay 0
 
