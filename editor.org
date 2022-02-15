@@ -78,6 +78,10 @@ Bind some keys for quick operations.
    mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil))
    mouse-wheel-progressive-speed nil
 
+   ;; Vim-like scroll
+   scroll-step 1
+   scroll-margin 3
+
    ;; Disable copy region blink
    copy-region-blink-delay 0
 
@@ -100,7 +104,11 @@ Bind some keys for quick operations.
    ;; Automatically use another dired buffer as target for copy/rename
    dired-dwim-target t
 
-   indent-tabs-mode nil)
+   ;; Use spaces instead of tab
+   indent-tabs-mode nil
+
+   ;; Don't echo multiline eldoc
+   eldoc-echo-area-use-multiline-p nil)
 
   (global-hl-line-mode t)
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -414,7 +422,29 @@ To find files/buffers and apply commands on project, use builtin package ~projec
     (define-key project-prefix-map "m" 'magit))
 #+end_src
 
+* Enanced completion commands
+
+** consult
+
+#+begin_src emacs-lisp
+  (straight-use-package 'consult)
+
+  (require 'consult)
+
+  (define-key mode-specific-map "q" 'consult-ripgrep)
+#+end_src
+
 * Text searching
+
+** COMMENT deadgrep
+
+#+begin_src emacs-lisp
+  (straight-use-package 'deadgrep)
+
+  (require 'deadgrep)
+
+  (define-key project-prefix-map "r" 'deadgrep)
+#+end_src
 
 ** rg.el
 

@@ -42,7 +42,7 @@ Increasing/decreasing font size with =M-+= / =M--=.
     "Current font size.")
 
   (defvar meomacs-resize-font-sizes
-    '(7 8 9 10 11 12 13 14 15 16)
+    '(6 7 8 9 10 11 12 13 14 15 16 17 18 19 20)
     "Font sizes for resizing.")
 
   (defun meomacs-increase-font-size ()
@@ -125,6 +125,12 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
 
   (meomacs-load-base-font)
 
+  ;; Available only when reloading
+  (when window-system
+    (meomacs-load-ext-font)
+    (meomacs-load-face-font))
+
+  ;; Run after startup
   (add-hook 'after-init-hook
             (lambda ()
               (when window-system

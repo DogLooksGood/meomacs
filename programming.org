@@ -200,8 +200,26 @@ Use clojure-mode for basic syntax support.
   (straight-use-package 'rust-mode)
 #+end_src
 
+** Use LSP
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "lsp-mode"
+    (add-hook 'rust-mode-hook 'lsp))
+#+end_src
+
 * HTML
 #+begin_src emacs-lisp
   (setq-default css-indent-offset 2
                 js-indent-level 2)
+#+end_src
+
+** Emmet
+#+begin_src emacs-lisp
+  (straight-use-package 'emmet-mode)
+
+  (autoload 'emmet-expand-line "emmet-mode" nil t)
+
+  (with-eval-after-load "mhtml-mode"
+    (define-key mhtml-mode-map (kbd "M-RET") 'emmet-expand-line))
+
 #+end_src
