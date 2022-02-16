@@ -334,7 +334,7 @@ Do "delete" instead of "kill" when pressing =M-DEL=.
          (point))
        (point))))
 
-  (define-key minibuffer-mode-map (kbd "M-DEL") #'meomacs-backward-delete-sexp)
+  (define-key minibuffer-local-map (kbd "M-DEL") #'meomacs-backward-delete-sexp)
 #+end_src
 
 * Completion at point
@@ -402,20 +402,21 @@ Expand template with =TAB=. Jump between the placeholders with =TAB= and =S-TAB=
 To find files/buffers and apply commands on project, use builtin package ~project~.
 
 #+begin_src emacs-lisp
-  (setq project-switch-commands '((project-find-file "Find file")
-                                  (project-find-regexp "Find regexp")
-                                  (project-dired "Dired")
-                                  (project-eshell "Eshell")
-                                  (shell "Shell")
-                                  (magit "Magit")))
+  (when (version<= "28" emacs-version)
+    (setq project-switch-commands '((project-find-file "Find file")
+                                    (project-find-regexp "Find regexp")
+                                    (project-dired "Dired")
+                                    (project-eshell "Eshell")
+                                    (shell "Shell")
+                                    (magit "Magit")))
 
-  (defalias 'project-prefix-map project-prefix-map)
+    (defalias 'project-prefix-map project-prefix-map)
 
-  (define-key mode-specific-map "p" 'project-prefix-map)
+    (define-key mode-specific-map "p" 'project-prefix-map)
 
-  (with-eval-after-load "project"
-    (define-key project-prefix-map "s" 'shell)
-    (define-key project-prefix-map "m" 'magit))
+    (with-eval-after-load "project"
+      (define-key project-prefix-map "s" 'shell)
+      (define-key project-prefix-map "m" 'magit)))
 #+end_src
 
 * Enanced completion commands

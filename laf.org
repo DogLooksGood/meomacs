@@ -99,7 +99,7 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes.
   (require 'subr-x)
   (require 'cl-lib)
 
-  (defvar meomacs-themes '(modus-operandi modus-vivendi)
+  (defvar meomacs-themes '()
     "Themes to use.")
 
   (defun meomacs-load-theme ()
