@@ -32,110 +32,63 @@ No scroll bars in minibuffer.
 
 * Fonts
 
-** Font resizing
-Increasing/decreasing font size with =M-+= / =M--=.
-
-#+begin_src emacs-lisp
-  (require 'cl-lib)
-
-  (defvar meomacs-font-size 11
-    "Current font size.")
-
-  (defvar meomacs-resize-font-sizes
-    '(6 7 8 9 10 11 12 13 14 15 16 17 18 19 20)
-    "Font sizes for resizing.")
-
-  (defun meomacs-increase-font-size ()
-    (interactive)
-    (if-let ((size (cl-find-if (lambda (s)
-                                 (> s meomacs-font-size))
-                               meomacs-resize-font-sizes)))
-        (progn (setq meomacs-font-size size)
-               (meomacs-load-base-font)
-               (meomacs-load-face-font)
-               (meomacs-load-ext-font)
-               (message "Font size: %s" size))
-      (message "Using biggest font size.")))
-
-  (defun meomacs-decrease-font-size ()
-    (interactive)
-    (if-let ((size (cl-find-if (lambda (s)
-                                 (< s meomacs-font-size))
-                               (reverse meomacs-resize-font-sizes))))
-        (progn (setq meomacs-font-size size)
-               (meomacs-load-base-font)
-               (meomacs-load-face-font)
-               (meomacs-load-ext-font)
-               (message "Font size: %s" size))
-      (message "Using smallest font size.")))
-
-  (global-set-key (kbd "M-+") 'meomacs-increase-font-size)
-  (global-set-key (kbd "M--") 'meomacs-decrease-font-size)
-#+end_src
-
 ** Font Families
 
 Define functions for loading fonts.
 Font families are specified in [[file:private.org::Fonts][private]] config.
 
 #+begin_src emacs-lisp
-  (defvar meomacs-fonts '((default . "MesloLGL Nerd Font")
-                          (unicode . "LXGW WenKai")
-                          (modeline . "Source Serif Pro")
-                          (fixed . "Sarasa Mono SC")
-                          (variable . "ETBembo"))
+  (defvar meomacs-font-size 14
+    "Current font size.")
+
+  (defvar meomacs-fonts '((default . "Monospace")
+                          (cjk . "Unifont")
+                          (symbol . "Unifont")
+                          (fixed . "Monospace")
+                          (fixed-serif . "Monospace Serif")
+                          (variable . "Sans Serif"))
     "Fonts to use.")
 
   (defun meomacs--get-font-family (key)
     (alist-get key meomacs-fonts))
 
-  (defun meomacs--get-font-spec (key)
-    (format "%s-%d"
-            (meomacs--get-font-family key)
-            meomacs-font-size))
+  ;; Set default font before frame creation
+  ;; to make sure the first frame have the correct size
+  (add-to-list 'default-frame-alist (cons 'font (format "%s-%s"
+                                                        (meomacs--get-font-family 'default)
+                                                        meomacs-font-size)))
 
-  (defun meomacs-load-base-font ()
-    "Load the default font for ascii characters."
-    (let* ((font-spec (meomacs--get-font-spec 'default)))
-      (set-frame-parameter nil 'font font-spec)
-      (add-to-list 'default-frame-alist (cons 'font font-spec))))
+  (defun meomacs-load-font ()
+    "Load font configuration."
+    (let ((default-font (format "%s-%s"
+                                (meomacs--get-font-family 'default)
+                                meomacs-font-size))
+          (cjk-font (meomacs--get-font-family 'cjk))
+          (symbol-font (meomacs--get-font-family 'symbol))
+          (variable-font (meomacs--get-font-family 'variable))
+          (fixed-font (meomacs--get-font-family 'fixed))
+          (fixed-serif-font (meomacs--get-font-family 'fixed-serif)))
+      (let ((fontset (create-fontset-from-ascii-font default-font)))
+        ;; Fonts for charsets
+        (dolist (charset '(kana han hangul cjk-misc bopomofo))
+          (set-fontset-font fontset charset cjk-font))
+        (set-fontset-font fontset 'symbol symbol-font)
+        ;; Apply fontset
+        (set-frame-parameter nil 'font fontset)
+        (add-to-list 'default-frame-alist (cons 'font fontset))
+        ;; Fonts for faces
+        (set-face-attribute 'variable-pitch nil :family variable-font :height 1.0)
+        (set-face-attribute 'fixed-pitch nil :family fixed-font :height 1.0)
+        (set-face-attribute 'fixed-pitch-serif nil :family fixed-serif-font :height 1.0))))
 
-  (defun meomacs-load-face-font ()
-    "Load fonts used in faces.
-
-  This function must be called after frame creation."
-    (let ((modeline-font-spec (meomacs--get-font-spec 'modeline))
-          (variable-font-spec (meomacs--get-font-spec 'variable))
-          (fixed-font-spec (meomacs--get-font-spec 'fixed)))
-      (set-face-attribute 'variable-pitch nil :font variable-font-spec :height 1.1)
-      (set-face-attribute 'fixed-pitch nil :font fixed-font-spec)
-      (set-face-attribute 'fixed-pitch-serif nil :font fixed-font-spec)
-      (set-face-attribute 'mode-line nil :font modeline-font-spec)
-      (set-face-attribute 'mode-line-inactive nil :font modeline-font-spec)
-      (set-face-attribute 'tab-bar nil :font modeline-font-spec)))
-
-  (defun meomacs-load-ext-font ()
-    "Load fonts used for non-ascii characters.
-
-  This function must be called after frame creation."
-    (let ((font (frame-parameter nil 'font))
-          (font-spec (font-spec :family (meomacs--get-font-family 'unicode))))
-      (dolist (charset '(kana han hangul cjk-misc bopomofo symbol))
-        (set-fontset-font font charset font-spec))))
-
-  (meomacs-load-base-font)
-
-  ;; Available only when reloading
   (when window-system
-    (meomacs-load-ext-font)
-    (meomacs-load-face-font))
+    (meomacs-load-font))
 
   ;; Run after startup
   (add-hook 'after-init-hook
             (lambda ()
               (when window-system
-                (meomacs-load-ext-font)
-                (meomacs-load-face-font))))
+                (meomacs-load-font))))
 #+end_src
 
 * Themes
@@ -154,7 +107,8 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes.
       (message "Load theme: %s" (car meomacs-themes))
       (mapc 'disable-theme custom-enabled-themes)
       (load-theme theme t)
-      (meomacs-load-face-font)))
+      ;; (meomacs-load-face-font)
+      ))
 
   (defun meomacs-next-theme ()
     (interactive)
@@ -169,14 +123,15 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes.
 
 * Modeline
 
-** COMMENT telephone-line
-#+begin_src emacs-lisp
-  (straight-use-package 'telephone-line)
+** Use variable font
 
-  (telephone-line-mode 1)
+#+begin_src emacs-lisp
+  (custom-set-faces
+   '(mode-line ((t :inherit variable-pitch)))
+   '(mode-line-inactive ((t :inherit variable-pitch))))
 #+end_src
 
-** mood-line
+** COMMENT mood-line
 #+begin_src emacs-lisp
   (straight-use-package 'mood-line)
 

@@ -79,6 +79,8 @@ Use Telega as Telegram client.
   (global-set-key (kbd "C-c a t") 'telega)
 
   (with-eval-after-load "telega"
+    (set-face-attribute 'telega-entity-type-code nil :family 'unspecfied :inherit 'fixed-pitch-serif)
+    (set-face-attribute 'telega-entity-type-pre nil :family 'unspecfied :inherit 'fixed-pitch-serif)
     (define-key telega-msg-button-map (kbd "SPC") nil))
 #+end_src
 

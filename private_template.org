@@ -159,13 +159,14 @@ Tweaking following table for key bindings in leader keymap.
 * Fonts                                                            :required:
 
 #+tblname: fonts
-| key      | font               | where to apply                        |
-|----------+--------------------+---------------------------------------|
-| default  | MesloLGL Nerd Font | default font for ascii characters     |
-| unicode  | LXGW WenKai        | default font for non-ascii characters |
-| modeline | Source Serif Pro   | modeline & tabbar                     |
-| fixed    | Sarasa Mono SC     | code blocks and tables in markups     |
-| variable | ETBembo            | texts in markups                      |
+| key         | font              | description                       |
+|-------------+-------------------+-----------------------------------|
+| default     | Latin Modern Mono | default font for ascii characters |
+| cjk         | LXGW WenKai       | default font for cjk characters   |
+| symbol      | Symbola           | default font for unicode symbols  |
+| fixed       | Source Code Pro   | for face ~fixed-pitch~              |
+| fixed-serif | Latin Modern Mono | for face ~fixed-pitch-serif~        |
+| variable    | Source Serif Pro  | for face ~variable-pitch~           |
 
 #+begin_src emacs-lisp :var fonts=fonts
   (setq meomacs-fonts
