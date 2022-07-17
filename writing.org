@@ -83,24 +83,25 @@ Enable ~variable-pitch-mode~.
 ** Ricing markups
 
 #+begin_src emacs-lisp
-  (defun meomacs--org-prettify-symbols ()
-    (setq-local prettify-symbols-alist
-                '(("#+begin_src" . "»")
-                  ("#+end_src" . "«")
-                  ("#+begin_example" . "❯")
-                  ("#+end_example" . "❮")
-                  ("#+begin_quote" . "‟")
-                  ("#+end_quote" . "‟")
-                  ("[X]" . "☑")
-                  ("[ ]" . "☐")))
-    (prettify-symbols-mode 1))
+    (defun meomacs--org-prettify-symbols ()
+      (setq-local prettify-symbols-alist
+                  '(("#+begin_src" . "»")
+                    ("#+end_src" . "«")
+                    ("#+begin_example" . "❯")
+                    ("#+end_example" . "❮")
+                    ("#+begin_quote" . "‟")
+                    ("#+end_quote" . "‟")
+                    ("[X]" . "☑")
+                    ("[ ]" . "☐")
+                    ("[-]" . "⮽")))
+      (prettify-symbols-mode 1))
 
-  (add-hook 'org-mode-hook 'meomacs--org-prettify-symbols)
+    (add-hook 'org-mode-hook 'meomacs--org-prettify-symbols)
 
-  (setq org-hide-emphasis-markers t)
+    (setq org-hide-emphasis-markers t)
 
-  (with-eval-after-load "org"
-    (add-to-list 'org-emphasis-alist '("=" (:box (:line-width -2 :color "gray50" :style released-button) :inherit org-verbatim))))
+    (with-eval-after-load "org"
+      (add-to-list 'org-emphasis-alist '("=" (:box (:line-width -2 :color "gray50" :style released-button) :inherit org-verbatim))))
 #+end_src
 
 ** Babel

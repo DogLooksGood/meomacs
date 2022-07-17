@@ -6,6 +6,17 @@ Configuration for programming and languages support.
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
+* Force save file
+#+begin_src emacs-lisp
+  (defun save-buffer-always ()
+    "Save the buffer even if it is not modified."
+    (interactive)
+    (set-buffer-modified-p t)
+    (save-buffer))
+
+  (global-set-key (kbd "<f5>") 'save-buffer-always)
+#+end_src
+
 * Flycheck
 
 #+begin_src emacs-lisp
@@ -14,6 +25,8 @@ Configuration for programming and languages support.
 
   (with-eval-after-load 'flycheck
     (flycheck-pos-tip-mode))
+
+  (setq flycheck-pos-tip-timeout 60)
 #+end_src
 
 * LSP
@@ -178,6 +191,9 @@ Use clojure-mode for basic syntax support.
 #+begin_src emacs-lisp
   (straight-use-package 'flycheck-clj-kondo)
 
+  (with-eval-after-load "clojure-mode"
+    (require 'flycheck-clj-kondo))
+
   (add-hook 'clojure-mode-hook 'flycheck-mode)
 #+end_src
 
@@ -195,9 +211,20 @@ Use clojure-mode for basic syntax support.
 #+end_src
 
 * Rust
+** cargo.el
+#+begin_src emacs-lisp
+  (straight-use-package 'cargo)
+
+  (autoload 'cargo-minor-mode "cargo" nil t)
+#+end_src
+
 ** rust-mode
 #+begin_src emacs-lisp
   (straight-use-package 'rust-mode)
+
+  (with-eval-after-load "rust-mode"
+    (add-hook 'rust-mode-hook 'cargo-minor-mode)
+    (add-hook 'rust-mode-hook 'subword-mode))
 #+end_src
 
 ** Use LSP
@@ -208,6 +235,15 @@ Use clojure-mode for basic syntax support.
 #+end_src
 
 * HTML
+#+begin_src emacs-lisp
+  (straight-use-package '(htmlz
+                          :type git
+                          :host github
+                          :repo "ezekiiel/htmlz-mode"))
+
+  (straight-use-package 'websocket)
+#+end_src
+
 #+begin_src emacs-lisp
   (setq-default css-indent-offset 2
                 js-indent-level 2)

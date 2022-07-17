@@ -54,9 +54,10 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
 
   ;; Set default font before frame creation
   ;; to make sure the first frame have the correct size
-  (add-to-list 'default-frame-alist (cons 'font (format "%s-%s"
-                                                        (meomacs--get-font-family 'default)
-                                                        meomacs-font-size)))
+  ;; (add-to-list 'default-frame-alist (cons 'font (format "%s-%s"
+  ;;                                                       (meomacs--get-font-family 'default)
+  ;;                                                       meomacs-font-size)))
+  ;; (set-frame-font (format "%s-%s" (meomacs--get-font-family 'default) meomacs-font-size))
 
   (defun meomacs-load-font ()
     "Load font configuration."
@@ -68,6 +69,7 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
           (variable-font (meomacs--get-font-family 'variable))
           (fixed-font (meomacs--get-font-family 'fixed))
           (fixed-serif-font (meomacs--get-font-family 'fixed-serif)))
+      (set-frame-font default-font)
       (let ((fontset (create-fontset-from-ascii-font default-font)))
         ;; Fonts for charsets
         (dolist (charset '(kana han hangul cjk-misc bopomofo))
@@ -106,9 +108,8 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes.
     (when-let ((theme (car meomacs-themes)))
       (message "Load theme: %s" (car meomacs-themes))
       (mapc 'disable-theme custom-enabled-themes)
-      (load-theme theme t)
-      ;; (meomacs-load-face-font)
-      ))
+      (unless (eq theme 'default)
+        (load-theme theme t))))
 
   (defun meomacs-next-theme ()
     (interactive)

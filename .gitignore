@@ -14,3 +14,6 @@ bookmarks
 private.org
 .lsp-session-*
 .emacs.desktop
+.cache
+eshell
+session.*
