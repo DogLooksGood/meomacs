@@ -91,9 +91,9 @@ Enable ~variable-pitch-mode~.
                     ("#+end_example" . "❮")
                     ("#+begin_quote" . "‟")
                     ("#+end_quote" . "‟")
-                    ("[X]" . "☑")
-                    ("[ ]" . "☐")
-                    ("[-]" . "⮽")))
+                    ("[X]" . "⦿")
+                    ("[ ]" . "🞆")
+                    ("[-]" . "⦾")))
       (prettify-symbols-mode 1))
 
     (add-hook 'org-mode-hook 'meomacs--org-prettify-symbols)
