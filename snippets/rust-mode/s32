@@ -1,0 +1,5 @@
+# -*- mode: rust-mode -*-
+# name: size_of_u32
+# key: s32
+# --
+size_of::<u32>()

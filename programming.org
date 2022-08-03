@@ -6,6 +6,14 @@ Configuration for programming and languages support.
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
+* Stick scroll
+#+begin_src emacs-lisp
+  (straight-use-package
+   '(topsy :host github :repo "alphapapa/topsy.el"))
+
+  (add-hook 'prog-mode-hook 'topsy-mode)
+#+end_src
+
 * Force save file
 #+begin_src emacs-lisp
   (defun save-buffer-always ()
@@ -210,6 +218,24 @@ Use clojure-mode for basic syntax support.
     (define-key clojure-mode-map (kbd "C-c C-f") 'zprint))
 #+end_src
 
+* Svelte
+** svelte-mode
+#+begin_src emacs-lisp
+  (straight-use-package 'svelte-mode)
+#+end_src
+
+* Typescript
+
+** typescript-mode
+#+begin_src emacs-lisp
+  (straight-use-package 'typescript-mode)
+#+end_src
+
+* Lua
+#+begin_src emacs-lisp
+  (straight-use-package 'lua-mode)
+#+end_src
+
 * Rust
 ** cargo.el
 #+begin_src emacs-lisp
@@ -258,4 +284,6 @@ Use clojure-mode for basic syntax support.
   (with-eval-after-load "mhtml-mode"
     (define-key mhtml-mode-map (kbd "M-RET") 'emmet-expand-line))
 
+  (with-eval-after-load "svelte-mode"
+    (define-key svelte-mode-map (kbd "M-RET") 'emmet-expand-line))
 #+end_src

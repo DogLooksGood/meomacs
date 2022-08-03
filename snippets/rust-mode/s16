@@ -1,0 +1,5 @@
+# -*- mode: rust-mode -*-
+# name: size_of_u16
+# key: s16
+# --
+size_of::<u16>()

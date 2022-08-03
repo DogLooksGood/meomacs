@@ -106,6 +106,7 @@ Bind some keys for quick operations.
    ;; Don't echo multiline eldoc
    eldoc-echo-area-use-multiline-p nil)
 
+  (show-paren-mode -1)
   (global-hl-line-mode t)
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
@@ -172,6 +173,12 @@ Switch window by pressing the number showned in the mode line.
                      (8 . "⑧")
                      (9 . "⑨")))
                 (number-to-string n)))))
+
+  (setq window-numbering-assign-func
+        (lambda ()
+          (when (string-prefix-p " *Treemacs"
+                                 (buffer-name))
+            9)))
 
   (let ((modeline-segment '(:eval (meomacs-window-numbering-modeline))))
     (unless (member modeline-segment mode-line-format)

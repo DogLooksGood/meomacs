@@ -1,0 +1,5 @@
+# -*- mode: rust-mode -*-
+# name: size_of_u64
+# key: s64
+# --
+size_of::<u64>()
