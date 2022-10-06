@@ -11,7 +11,7 @@ Configuration for programming and languages support.
   (straight-use-package
    '(topsy :host github :repo "alphapapa/topsy.el"))
 
-  (add-hook 'prog-mode-hook 'topsy-mode)
+  (define-key toggle-map (kbd "s") 'topsy-mode)
 #+end_src
 
 * Force save file

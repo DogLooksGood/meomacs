@@ -438,6 +438,16 @@ To find files/buffers and apply commands on project, use builtin package ~projec
   (define-key mode-specific-map "q" 'consult-ripgrep)
 #+end_src
 
+* File Navigator
+
+** treemacs
+
+#+begin_src emacs-lisp
+  (straight-use-package 'treemacs)
+
+  (setq treemacs-is-never-other-window t)
+#+end_src
+
 * Text searching
 
 ** COMMENT deadgrep
