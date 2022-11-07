@@ -1,0 +1,5 @@
+# -*- mode: rust-mode -*-
+# name: println
+# key: p
+# --
+println!("$0");

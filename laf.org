@@ -24,6 +24,11 @@ No scroll bars in minibuffer.
                (minibuffer-window frame) 0 nil 0 nil t)))
 #+end_src
 
+* Enable window divider
+#+begin_src emacs-lisp
+  (window-divider-mode 1)
+#+end_src
+
 * Some UI related variables
 
 #+begin_src emacs-lisp

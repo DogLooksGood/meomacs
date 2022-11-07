@@ -37,6 +37,15 @@ Configuration for programming and languages support.
   (setq flycheck-pos-tip-timeout 60)
 #+end_src
 
+* Outline
+#+begin_src emacs-lisp
+  (straight-use-package 'imenu-list)
+
+  (require 'imenu-list)
+
+  (define-key toggle-map "i" 'imenu-list)
+#+end_src
+
 * LSP
 
 ** lsp-mode
@@ -50,7 +59,8 @@ Use lsp-mode as LSP client.
         lsp-enable-symbol-highlighting nil
         lsp-enable-dap-auto-configure nil
         lsp-lens-enable nil
-        lsp-headerline-breadcrumb-enable nil)
+        lsp-headerline-breadcrumb-enable nil
+        lsp-signature-doc-lines 3)
 
   (autoload 'lsp "lsp-mode" nil t)
 #+end_src
@@ -61,7 +71,7 @@ Use lsp-mode as LSP client.
   (define-key toggle-map "L" 'lsp)
 #+end_src
 
-** COMMENT eglot
+** COMMENT Eglot
 
 Use eglot as LSP client.
 
@@ -69,6 +79,12 @@ Use eglot as LSP client.
   (straight-use-package 'eglot)
 
   (autoload 'eglot "eglot" nil t)
+
+  (setq eglot-confirm-server-initiated-edits nil)
+
+  (with-eval-after-load "eglot"
+    (define-key eglot-mode-map (kbd "<C-return>") 'eglot-code-actions))
+
 #+end_src
 
 *** Key Binding
