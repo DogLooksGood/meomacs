@@ -134,3 +134,8 @@ Open pass menu with =C-c a p=.
 
   (autoload 'direnv-mode "direnv" nil t)
 #+end_src
+
+* Pinentry
+#+begin_src emacs-lisp
+  (setq epa-pinentry-mode 'loopback)
+#+end_src
