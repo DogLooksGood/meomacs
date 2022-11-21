@@ -48,7 +48,27 @@ Configuration for programming and languages support.
 
 * LSP
 
-** lsp-mode
+** lspce
+
+Use lspce as LSP client.
+
+#+begin_src emacs-lisp
+  (straight-use-package '(lspce :host github
+                                :repo "zbelial/lspce"
+                                :files (:defaults "lspce-module.so")
+                                :pre-build (("cargo" "build" "--release")
+                                            ("cp" "./target/release/liblspce_module.so" "./lspce-module.so"))))
+
+  (autoload 'lspce-mode "lspce" nil t)
+#+end_src
+
+*** Key binding
+
+#+begin_src emacs-lisp
+  (define-key toggle-map "L" 'lspce-mode)
+#+end_src
+
+** COMMENT lsp-mode
 
 Use lsp-mode as LSP client.
 
@@ -184,13 +204,6 @@ Use clojure-mode for basic syntax support.
   (with-eval-after-load "rust-mode"
     (add-hook 'rust-mode-hook 'cargo-minor-mode)
     (add-hook 'rust-mode-hook 'subword-mode))
-#+end_src
-
-** Use LSP
-
-#+begin_src emacs-lisp
-  (with-eval-after-load "lsp-mode"
-    (add-hook 'rust-mode-hook 'lsp))
 #+end_src
 
 * HTML

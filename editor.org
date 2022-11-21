@@ -185,6 +185,25 @@ Switch window by pressing the number showned in the mode line.
       (setq-default mode-line-format (cons modeline-segment mode-line-format))))
 #+end_src
 
+
+** golden-ratio
+#+begin_src emacs-lisp
+  (straight-use-package 'golden-ratio)
+
+  (define-key mode-specific-map "\\" 'golden-ratio)
+
+  (autoload 'golden-ratio "golden-ratio" nil t)
+#+end_src
+
+** ace-window
+#+begin_src emacs-lisp
+  (straight-use-package 'ace-window)
+
+  (define-key mode-specific-map "W" 'ace-swap-window)
+
+  (autoload 'ace-swap-window "ace-window" nil t)
+#+end_src
+
 * Workspace management
 
 ** Using frames
@@ -472,24 +491,4 @@ To find files/buffers and apply commands on project, use builtin package ~projec
     (define-key wgrep-mode-map (kbd "C-c C-c") #'wgrep-finish-edit))
 
   (define-key project-prefix-map "r" 'rg-project)
-#+end_src
-
-* Window management
-
-** golden-ratio
-#+begin_src emacs-lisp
-  (straight-use-package 'golden-ratio)
-
-  (define-key mode-specific-map "\\" 'golden-ratio)
-
-  (autoload 'golden-ratio "golden-ratio" nil t)
-#+end_src
-
-** ace-window
-#+begin_src emacs-lisp
-  (straight-use-package 'ace-window)
-
-  (define-key mode-specific-map "W" 'ace-window)
-
-  (autoload 'ace-window "ace-window" nil t)
 #+end_src

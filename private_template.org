@@ -166,7 +166,7 @@ Tweaking following table for key bindings in leader keymap.
 | symbol      | Symbola           | default font for unicode symbols  |
 | fixed       | Source Code Pro   | for face ~fixed-pitch~              |
 | fixed-serif | Latin Modern Mono | for face ~fixed-pitch-serif~        |
-| variable    | Source Serif Pro  | for face ~variable-pitch~           |
+| variable    | Latin Modern Sans | for face ~variable-pitch~           |
 
 #+begin_src emacs-lisp :var fonts=fonts
   (setq meomacs-fonts
