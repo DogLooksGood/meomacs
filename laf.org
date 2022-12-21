@@ -57,23 +57,29 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
   (defun meomacs--get-font-family (key)
     (alist-get key meomacs-fonts))
 
-  ;; Set default font before frame creation
-  ;; to make sure the first frame have the correct size
-  ;; (add-to-list 'default-frame-alist (cons 'font (format "%s-%s"
-  ;;                                                       (meomacs--get-font-family 'default)
-  ;;                                                       meomacs-font-size)))
-  ;; (set-frame-font (format "%s-%s" (meomacs--get-font-family 'default) meomacs-font-size))
+  (defun meomacs-load-default-font ()
+    "Load default font configuration."
+    (let ((default-font (format "%s-%s"
+                                (meomacs--get-font-family 'default)
+                                meomacs-font-size)))
+      (add-to-list 'default-frame-alist (cons 'font default-font))))
 
-  (defun meomacs-load-font ()
-    "Load font configuration."
+  (defun meomacs-load-face-font ()
+    "Load face font configuration."
+    (let ((variable-font (meomacs--get-font-family 'variable))
+          (fixed-font (meomacs--get-font-family 'fixed))
+          (fixed-serif-font (meomacs--get-font-family 'fixed-serif)))
+      (set-face-attribute 'variable-pitch nil :family variable-font)
+      (set-face-attribute 'fixed-pitch nil :family fixed-font)
+      (set-face-attribute 'fixed-pitch-serif nil :family fixed-serif-font)))
+
+  (defun meomacs-load-charset-font ()
+    "Load charset font configuration."
     (let ((default-font (format "%s-%s"
                                 (meomacs--get-font-family 'default)
                                 meomacs-font-size))
           (cjk-font (meomacs--get-font-family 'cjk))
-          (symbol-font (meomacs--get-font-family 'symbol))
-          (variable-font (meomacs--get-font-family 'variable))
-          (fixed-font (meomacs--get-font-family 'fixed))
-          (fixed-serif-font (meomacs--get-font-family 'fixed-serif)))
+          (symbol-font (meomacs--get-font-family 'symbol)))
       (set-frame-font default-font)
       (let ((fontset (create-fontset-from-ascii-font default-font)))
         ;; Fonts for charsets
@@ -82,20 +88,16 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
         (set-fontset-font fontset 'symbol symbol-font)
         ;; Apply fontset
         (set-frame-parameter nil 'font fontset)
-        (add-to-list 'default-frame-alist (cons 'font fontset))
-        ;; Fonts for faces
-        (set-face-attribute 'variable-pitch nil :family variable-font :height 1.0)
-        (set-face-attribute 'fixed-pitch nil :family fixed-font :height 1.0)
-        (set-face-attribute 'fixed-pitch-serif nil :family fixed-serif-font :height 1.0))))
+        (add-to-list 'default-frame-alist (cons 'font fontset)))))
 
-  (when window-system
-    (meomacs-load-font))
+  (meomacs-load-default-font)
+  (meomacs-load-face-font)
 
   ;; Run after startup
   (add-hook 'after-init-hook
             (lambda ()
               (when window-system
-                (meomacs-load-font))))
+                (meomacs-load-charset-font))))
 #+end_src
 
 * Themes
