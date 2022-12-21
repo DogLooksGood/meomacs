@@ -67,6 +67,7 @@
    `(match                          ((t (:inverse-video t))))
    `(secondary-selection            ((t (:background ,hl :underline t))))
    `(help-key-binding               ((t ())))
+   `(error                          ((t (:inverse-video t))))
 
    ;; ISearch
    `(isearch                        ((t (:inverse-video t))))

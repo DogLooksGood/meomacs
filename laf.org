@@ -43,7 +43,7 @@ Define functions for loading fonts.
 Font families are specified in [[file:private.org::Fonts][private]] config.
 
 #+begin_src emacs-lisp
-  (defvar meomacs-font-size 14
+  (defvar meomacs-font-size 12
     "Current font size.")
 
   (defvar meomacs-fonts '((default . "Monospace")
@@ -135,6 +135,26 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes.
   (custom-set-faces
    '(mode-line ((t :inherit variable-pitch)))
    '(mode-line-inactive ((t :inherit variable-pitch))))
+#+end_src
+
+** Diminish
+Hide unnecessary lighters.
+#+begin_src emacs-lisp
+  (straight-use-package 'diminish)
+
+  (require 'diminish)
+  (diminish 'which-key-mode)
+  (diminish 'company-mode)
+  (diminish 'buffer-face-mode)
+  (diminish 'yas-minor-mode)
+  (diminish 'gcmh-mode)
+  (diminish 'meow-normal-mode)
+  (diminish 'meow-motion-mode)
+  (diminish 'meow-insert-mode)
+  (diminish 'meow-keypad-mode)
+  (diminish 'meow-beacon-mode)
+  (diminish 'subword-mode)
+  (diminish 'eldoc-mode)
 #+end_src
 
 ** COMMENT mood-line

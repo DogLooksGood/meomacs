@@ -134,6 +134,13 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
   ;; custom variables
   (setq meow-esc-delay 0.001)
 
+  (meow-thing-register 'angle
+                     '(pair ("<") (">"))
+                     '(pair ("<") (">")))
+
+  (add-to-list 'meow-char-thing-table
+               '(?a . angle))
+
   (meow-setup)
 
   (meow-setup-indicator)
@@ -307,31 +314,25 @@ Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
 #+end_src
 
 * Minibuffer completion reading
-** COMMENT Vertico & Orderless
+** Vertico & Orderless
 
 - Vertico provides a better UX for completion reading.
-- Orderless provides a completion style, which allows you to search with orderless segments.
+- Use prescient to support fuzzy search
 
 #+begin_src emacs-lisp
-  (straight-use-package 'vertico)
-  (straight-use-package 'orderless)
+  (straight-use-package '(vertico :files (:defaults "extensions/*")))
+  (straight-use-package 'prescient)
+  (straight-use-package 'vertico-prescient)
 
   (require 'vertico)
-  (require 'orderless)
+  (require 'vertico-prescient)
 
   (vertico-mode 1)
+  (vertico-prescient-mode 1)
+  (prescient-persist-mode 1)
 #+end_src
 
-Enable orderless for minibuffer completion.
-
-#+begin_src emacs-lisp
-  (defun meomacs--vertico-init-minibuffer ()
-    (setq-local completion-styles '(basic orderless)))
-
-  (add-hook 'minibuffer-setup-hook 'meomacs--vertico-init-minibuffer)
-#+end_src
-
-** Selectrum & Precient
+** COMMENT Selectrum & Precient
 
 #+begin_src emacs-lisp
   (straight-use-package 'selectrum)

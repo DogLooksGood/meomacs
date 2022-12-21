@@ -48,7 +48,7 @@ Configuration for programming and languages support.
 
 * LSP
 
-** lspce
+** COMMENT lspce
 
 Use lspce as LSP client.
 
@@ -60,6 +60,11 @@ Use lspce as LSP client.
                                             ("cp" "./target/release/liblspce_module.so" "./lspce-module.so"))))
 
   (autoload 'lspce-mode "lspce" nil t)
+
+  (with-eval-after-load "lspce"
+    (define-key lspce-mode-map (kbd "C-c l r") 'lspce-rename)
+    (define-key lspce-mode-map (kbd "C-c l a") 'lspce-code-actions)
+    (define-key lspce-mode-map (kbd "C-c l h") 'lspce-help-at-point))
 #+end_src
 
 *** Key binding
@@ -68,7 +73,7 @@ Use lspce as LSP client.
   (define-key toggle-map "L" 'lspce-mode)
 #+end_src
 
-** COMMENT lsp-mode
+** lsp-mode
 
 Use lsp-mode as LSP client.
 
@@ -83,6 +88,9 @@ Use lsp-mode as LSP client.
         lsp-signature-doc-lines 3)
 
   (autoload 'lsp "lsp-mode" nil t)
+
+  (with-eval-after-load "lsp-mode"
+    (add-hook 'rust-mode-hook 'lsp))
 #+end_src
 
 *** Key binding
@@ -204,6 +212,12 @@ Use clojure-mode for basic syntax support.
   (with-eval-after-load "rust-mode"
     (add-hook 'rust-mode-hook 'cargo-minor-mode)
     (add-hook 'rust-mode-hook 'subword-mode))
+#+end_src
+
+* Restclient
+#+begin_src emacs-lisp
+  (straight-use-package 'restclient)
+  (add-to-list 'auto-mode-alist '("\\.restclient" . restclient-mode))
 #+end_src
 
 * HTML
