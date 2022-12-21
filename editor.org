@@ -435,7 +435,8 @@ To find files/buffers and apply commands on project, use builtin package ~projec
                                     (project-dired "Dired")
                                     (project-eshell "Eshell")
                                     (shell "Shell")
-                                    (magit "Magit")))
+                                    (magit "Magit")
+                                    (treemacs-add-and-display-current-project "Treemacs")))
 
     (defalias 'project-prefix-map project-prefix-map)
 
@@ -443,7 +444,8 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 
     (with-eval-after-load "project"
       (define-key project-prefix-map "s" 'shell)
-      (define-key project-prefix-map "m" 'magit)))
+      (define-key project-prefix-map "m" 'magit)
+      (define-key project-prefix-map "t" 'treemacs-add-and-display-current-project)))
 #+end_src
 
 * Enanced completion commands

@@ -39,8 +39,7 @@ No scroll bars in minibuffer.
 
 ** Font Families
 
-Define functions for loading fonts.
-Font families are specified in [[file:private.org::Fonts][private]] config.
+Default variables
 
 #+begin_src emacs-lisp
   (defvar meomacs-font-size 12
@@ -53,7 +52,12 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
                           (fixed-serif . "Monospace Serif")
                           (variable . "Sans Serif"))
     "Fonts to use.")
+#+end_src
 
+Define functions for loading fonts.
+Font families are specified in [[file:private.org::Fonts][private]] config.
+
+#+begin_src emacs-lisp
   (defun meomacs--get-font-family (key)
     (alist-get key meomacs-fonts))
 

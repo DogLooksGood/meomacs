@@ -46,7 +46,7 @@
    ;; Basics
    `(cursor                         ((t (:background ,fg))))
    `(region                         ((t (:background ,hl))))
-   `(hl-line                        ((t)))
+   `(hl-line                        ((t (:background ,bg))))
    `(fringe                         ((t (:background ,bg))))
    `(show-paren-match               ((t (:box (:line-width (-1 . -1))))))
    `(highlight                      ((t (:inverse-video t))))
