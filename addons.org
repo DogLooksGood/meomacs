@@ -65,6 +65,17 @@ Auto switch to inline ascii state when after a space after a non-ascii character
   (setq rime-inline-predicates '(rime-predicate-space-after-cc-p))
 #+end_src
 
+* Matrix client with ement
+
+#+begin_src emacs-lisp
+  (straight-use-package 'ement)
+
+  (autoload 'ement-connect "ement" nil t)
+
+  (global-set-key (kbd "C-c a m") 'ement-connect)
+#+end_src
+
+
 * Telegram client with Telega
 
 ~telegram-libtd~ is required for this feature.
@@ -72,7 +83,10 @@ Auto switch to inline ascii state when after a space after a non-ascii character
 Use Telega as Telegram client.
 
 #+begin_src emacs-lisp
-  (straight-use-package 'telega)
+  (straight-use-package '(telega
+                          :host github
+                          :repo "zevlg/telega.el"
+                          :branch "release-0.8.0"))
 
   (autoload 'telega "telega" nil t)
 

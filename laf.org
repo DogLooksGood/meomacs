@@ -149,17 +149,8 @@ Hide unnecessary lighters.
   (straight-use-package 'diminish)
 
   (require 'diminish)
-  (diminish 'which-key-mode)
-  (diminish 'company-mode)
-  (diminish 'buffer-face-mode)
-  (diminish 'yas-minor-mode)
   (diminish 'gcmh-mode)
-  (diminish 'meow-normal-mode)
-  (diminish 'meow-motion-mode)
-  (diminish 'meow-insert-mode)
-  (diminish 'meow-keypad-mode)
-  (diminish 'meow-beacon-mode)
-  (diminish 'subword-mode)
+  (diminish 'buffer-face-mode)
   (diminish 'eldoc-mode)
 #+end_src
 

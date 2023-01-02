@@ -37,7 +37,7 @@
 
 (let ((bg "#FFFFFF")
       (fg "#000000")
-      (cm "#595959")
+      (cm "#B5B5B5")
       (hl "#CCCCCC"))
   (custom-theme-set-faces
    `paperlike

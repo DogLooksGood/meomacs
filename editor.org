@@ -107,6 +107,10 @@ Bind some keys for quick operations.
    eldoc-echo-area-use-multiline-p nil)
 
   (show-paren-mode -1)
+
+  (global-subword-mode 1)
+  (diminish 'subword-mode)
+
   (global-hl-line-mode t)
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
@@ -121,6 +125,13 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
   (straight-use-package 'meow)
 
   (require 'meow)
+
+  ;; hide lighters
+  (diminish 'meow-normal-mode)
+  (diminish 'meow-motion-mode)
+  (diminish 'meow-insert-mode)
+  (diminish 'meow-keypad-mode)
+  (diminish 'meow-beacon-mode)
 
   ;; custom indicator
   (when window-system
@@ -309,8 +320,11 @@ Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
 
 ** Which-key
 #+begin_src emacs-lisp
-(straight-use-package 'which-key)
-(which-key-mode 1)
+  (straight-use-package 'which-key)
+  (which-key-mode 1)
+
+  (with-eval-after-load "which-key"
+    (diminish 'which-key-mode))
 #+end_src
 
 * Minibuffer completion reading
@@ -374,6 +388,9 @@ Do "delete" instead of "kill" when pressing =M-DEL=.
   (add-hook 'prog-mode-hook 'company-mode)
   (add-hook 'conf-mode-hook 'company-mode)
   (autoload 'company-mode "company" nil t)
+
+  (with-eval-after-load "company"
+    (diminish 'company-mode))
 #+end_src
 
 A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =RET= will do insertion even though the popup is available.
@@ -420,6 +437,8 @@ Expand template with =TAB=. Jump between the placeholders with =TAB= and =S-TAB=
   (require 'yasnippet)
 
   (yas-global-mode 1)
+
+  (diminish 'yas-minor-mode)
 #+end_src
 
 * Project management

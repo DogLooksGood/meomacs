@@ -211,7 +211,12 @@ Use clojure-mode for basic syntax support.
 
   (with-eval-after-load "rust-mode"
     (add-hook 'rust-mode-hook 'cargo-minor-mode)
-    (add-hook 'rust-mode-hook 'subword-mode))
+    (define-key rust-mode-map (kbd "C-c C-f") 'lsp-format-buffer))
+#+end_src
+
+** COMMENT rustic-mode
+#+begin_src emacs-lisp
+  (straight-use-package 'rustic)
 #+end_src
 
 * Restclient
