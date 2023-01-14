@@ -152,6 +152,9 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
   (add-to-list 'meow-char-thing-table
                '(?a . angle))
 
+  (add-to-list 'meow-mode-state-list
+               '(cargo-process-mode . motion))
+
   (meow-setup)
 
   (meow-setup-indicator)
@@ -218,8 +221,10 @@ Switch window by pressing the number showned in the mode line.
   (straight-use-package 'ace-window)
 
   (define-key mode-specific-map "W" 'ace-swap-window)
+  (define-key mode-specific-map "q" 'ace-delete-window)
 
   (autoload 'ace-swap-window "ace-window" nil t)
+  (autoload 'ace-delete-other-window "ace-window" nil t)
 #+end_src
 
 * Workspace management
@@ -476,7 +481,7 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 
   (require 'consult)
 
-  (define-key mode-specific-map "q" 'consult-ripgrep)
+  (define-key mode-specific-map "G" 'consult-ripgrep)
 #+end_src
 
 * File Navigator

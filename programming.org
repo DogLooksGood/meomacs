@@ -90,7 +90,9 @@ Use lsp-mode as LSP client.
   (autoload 'lsp "lsp-mode" nil t)
 
   (with-eval-after-load "lsp-mode"
-    (add-hook 'rust-mode-hook 'lsp))
+    (add-hook 'rust-mode-hook 'lsp)
+    (add-hook 'typescript-mode-hook 'lsp)
+    (define-key lsp-mode-map (kbd "M-RET") 'lsp-execute-code-action))
 #+end_src
 
 *** Key binding
@@ -190,6 +192,9 @@ Use clojure-mode for basic syntax support.
 ** typescript-mode
 #+begin_src emacs-lisp
   (straight-use-package 'typescript-mode)
+
+  (with-eval-after-load "typescript-mode"
+    (define-key typescript-mode-map (kbd "C-c C-f") 'lsp-format-buffer))
 #+end_src
 
 * Lua
@@ -208,6 +213,8 @@ Use clojure-mode for basic syntax support.
 ** rust-mode
 #+begin_src emacs-lisp
   (straight-use-package 'rust-mode)
+
+  (setq lsp-rust-analyzer-completion-add-call-parenthesis nil)
 
   (with-eval-after-load "rust-mode"
     (add-hook 'rust-mode-hook 'cargo-minor-mode)
