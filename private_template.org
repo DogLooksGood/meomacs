@@ -162,6 +162,8 @@ Tweaking following table for key bindings in leader keymap.
 | key         | font              | description                       |
 |-------------+-------------------+-----------------------------------|
 | default     | Latin Modern Mono | default font for ascii characters |
+| tall        |                   |                                   |
+| wide        |                   |                                   |
 | cjk         | LXGW WenKai       | default font for cjk characters   |
 | symbol      | Symbola           | default font for unicode symbols  |
 | fixed       | Source Code Pro   | for face ~fixed-pitch~              |

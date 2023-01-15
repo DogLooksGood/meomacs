@@ -61,7 +61,8 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
 
 #+begin_src emacs-lisp
   (defun meomacs--get-font-family (key)
-    (alist-get key meomacs-fonts))
+    (alist-get key meomacs-fonts
+               (alist-get 'default meomacs-fonts)))
 
   (defun meomacs-load-default-font ()
     "Load default font configuration."
@@ -116,6 +117,7 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
               (frame-root-window-p (window-parent)))
       (let* ((prev-font-style meomacs-font-current-variant)
              (wl (seq-filter (lambda (w) (not (string-prefix-p " " (buffer-name (window-buffer w))))) (window-list)))
+             (def (meomacs--get-font-family 'default))
              (new-variant (cond
                               ((= 1 (length wl))
                                (meomacs--get-font-family 'default))
