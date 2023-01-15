@@ -223,6 +223,28 @@ Use clojure-mode for basic syntax support.
     (define-key rust-mode-map (kbd "C-c C-f") 'lsp-format-buffer))
 #+end_src
 
+Write a command to switch between wasm32 and native target triple.
+
+#+begin_src emacs-lisp
+
+  (defun rust-toggle-lsp-target-and-restart ()
+    (interactive)
+    (when
+        (y-or-n-p (format "Current target is [%s], switch?"
+                             (or lsp-rust-analyzer-cargo-target "default")))
+      (if lsp-rust-analyzer-cargo-target
+          (setq lsp-rust-analyzer-cargo-target nil
+                cargo-process--command-check "check")
+        (setq lsp-rust-analyzer-cargo-target "wasm32-unknown-unknown"
+              cargo-process--command-check "check --target wasm32-unknown-unknown"))
+      (call-interactively #'lsp-restart-workspace)))
+
+
+  (with-eval-after-load "rust-mode"
+    (define-key rust-mode-map (kbd "C-c '") #'rust-toggle-lsp-target-and-restart))
+
+#+end_src
+
 ** COMMENT rustic-mode
 #+begin_src emacs-lisp
   (straight-use-package 'rustic)

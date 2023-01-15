@@ -229,7 +229,7 @@ Switch window by pressing the number showned in the mode line.
 
 * Workspace management
 
-** Using frames
+** COMMENT Using frames
 
 Use frames for workspaces.
 
@@ -243,11 +243,18 @@ Use frames for workspaces.
                        (buffer-name)))))
 #+end_src
 
-** COMMENT Using tab-bar-mode
+** Using tab-bar-mode
 
 Use tabs for workspaces.
 
 #+begin_src emacs-lisp
+  ;; We could hide the window decoration
+  (setq default-frame-alist '((undecorated . t)))
+
+  (add-hook 'after-init-hook
+            (lambda ()
+              (tab-rename "*Emacs*")))
+
   (defun meomacs-format-tab (tab i)
     (let ((current-p (eq (car tab) 'current-tab)))
       (concat
@@ -269,6 +276,9 @@ Use tabs for workspaces.
   (tab-bar-mode 1)
 
   (global-set-key (kbd "C-c j") 'tab-bar-switch-to-tab)
+  (global-set-key (kbd "C-<next>") 'tab-bar-switch-to-next-tab)
+  (global-set-key (kbd "C-<prior>") 'tab-bar-switch-to-prev-tab)
+  (global-set-key (kbd "C-<escape>") 'tab-bar-close-tab)
 #+end_src
 
 Add missing keybindings

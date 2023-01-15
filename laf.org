@@ -51,8 +51,8 @@ Default variables
                           (fixed . "Monospace")
                           (fixed-serif . "Monospace Serif")
                           (variable . "Sans Serif")
-                          (wide-variant . "Monospace")
-                          (tall-variant . "Monospace"))
+                          (wide . "Monospace")
+                          (tall . "Monospace"))
     "Fonts to use.")
 #+end_src
 
