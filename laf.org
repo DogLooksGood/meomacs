@@ -50,7 +50,9 @@ Default variables
                           (symbol . "Unifont")
                           (fixed . "Monospace")
                           (fixed-serif . "Monospace Serif")
-                          (variable . "Sans Serif"))
+                          (variable . "Sans Serif")
+                          (wide-variant . "Monospace")
+                          (tall-variant . "Monospace"))
     "Fonts to use.")
 #+end_src
 
@@ -77,11 +79,11 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
       (set-face-attribute 'fixed-pitch nil :family fixed-font)
       (set-face-attribute 'fixed-pitch-serif nil :family fixed-serif-font)))
 
-  (defun meomacs-load-charset-font ()
+  (defun meomacs-load-charset-font (&optional font)
     "Load charset font configuration."
-    (let ((default-font (format "%s-%s"
-                                (meomacs--get-font-family 'default)
-                                meomacs-font-size))
+    (let ((default-font (or font (format "%s-%s"
+                                         (meomacs--get-font-family 'default)
+                                         meomacs-font-size)))
           (cjk-font (meomacs--get-font-family 'cjk))
           (symbol-font (meomacs--get-font-family 'symbol)))
       (set-frame-font default-font)
@@ -102,6 +104,34 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
             (lambda ()
               (when window-system
                 (meomacs-load-charset-font))))
+#+end_src
+
+*** Variants used when spliting window
+#+begin_src emacs-lisp
+  (defvar meomacs-font-current-variant nil)
+
+  (defun meomacs-dynamic-set-font (&rest ignore)
+    (interactive)
+    (when (or (frame-root-window-p (get-buffer-window))
+              (frame-root-window-p (window-parent)))
+      (let* ((prev-font-style meomacs-font-current-variant)
+             (wl (seq-filter (lambda (w) (not (string-prefix-p " " (buffer-name (window-buffer w))))) (window-list)))
+             (new-variant (cond
+                              ((= 1 (length wl))
+                               (meomacs--get-font-family 'default))
+
+                              ((window-combined-p)
+                               (meomacs--get-font-family 'tall))
+
+                              (t
+                               (meomacs--get-font-family 'wide)))))
+        (unless (equal prev-font-style new-variant)
+          (setq meomacs-font-current-variant new-variant)
+          (set-frame-font new-variant)
+          (meomacs-load-charset-font new-variant)))))
+
+  (setq frame-inhibit-implied-resize t)
+  (add-hook 'window-state-change-hook 'meomacs-dynamic-set-font)
 #+end_src
 
 * Themes
