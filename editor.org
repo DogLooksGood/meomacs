@@ -243,13 +243,13 @@ Use frames for workspaces.
                        (buffer-name)))))
 #+end_src
 
-** Using tab-bar-mode
+** COMMENT Using tab-bar-mode
 
 Use tabs for workspaces.
 
 #+begin_src emacs-lisp
   ;; We could hide the window decoration
-  (setq default-frame-alist '((undecorated . t)))
+  ;; (setq default-frame-alist '((undecorated . t)))
 
   (add-hook 'after-init-hook
             (lambda ()
@@ -403,6 +403,8 @@ Do "delete" instead of "kill" when pressing =M-DEL=.
   (add-hook 'prog-mode-hook 'company-mode)
   (add-hook 'conf-mode-hook 'company-mode)
   (autoload 'company-mode "company" nil t)
+
+  (setq company-format-margin-function 'company-text-icons-margin)
 
   (with-eval-after-load "company"
     (diminish 'company-mode))

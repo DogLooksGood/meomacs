@@ -23,6 +23,7 @@ Configuration for programming and languages support.
     (save-buffer))
 
   (global-set-key (kbd "<f5>") 'save-buffer-always)
+  (global-set-key (kbd "C-c y") 'save-buffer-always)
 #+end_src
 
 * Flycheck
@@ -92,7 +93,7 @@ Use lsp-mode as LSP client.
   (with-eval-after-load "lsp-mode"
     (add-hook 'rust-mode-hook 'lsp)
     (add-hook 'typescript-mode-hook 'lsp)
-    (define-key lsp-mode-map (kbd "M-RET") 'lsp-execute-code-action))
+    (define-key lsp-mode-map (kbd "<C-return>") 'lsp-execute-code-action))
 #+end_src
 
 *** Key binding
@@ -227,8 +228,9 @@ Write a command to switch between wasm32 and native target triple.
 
 #+begin_src emacs-lisp
 
-  (defun rust-toggle-lsp-target-and-restart ()
+  (defun rust-toggle-lsp-target ()
     (interactive)
+    (require 'lsp-rust)
     (when
         (y-or-n-p (format "Current target is [%s], switch?"
                              (or lsp-rust-analyzer-cargo-target "default")))
@@ -236,13 +238,10 @@ Write a command to switch between wasm32 and native target triple.
           (setq lsp-rust-analyzer-cargo-target nil
                 cargo-process--command-check "check")
         (setq lsp-rust-analyzer-cargo-target "wasm32-unknown-unknown"
-              cargo-process--command-check "check --target wasm32-unknown-unknown"))
-      (call-interactively #'lsp-restart-workspace)))
-
+              cargo-process--command-check "check --target wasm32-unknown-unknown"))))
 
   (with-eval-after-load "rust-mode"
-    (define-key rust-mode-map (kbd "C-c '") #'rust-toggle-lsp-target-and-restart))
-
+    (define-key rust-mode-map (kbd "C-c '") #'rust-toggle-lsp-target))
 #+end_src
 
 ** COMMENT rustic-mode
