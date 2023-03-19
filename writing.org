@@ -18,6 +18,10 @@ Configuration for writing with Emacs, specifically for Markdown and Org mode.
 
   (setq org-roam-directory (expand-file-name "~/Org"))
 
+  ;; Use builtin sqlite3 in Emacs 29
+  (straight-use-package 'emacsql-sqlite-builtin)
+  (setq org-roam-database-connector 'sqlite-builtin)
+
   (defvar org-roam-keymap
     (let ((keymap (make-keymap)))
       (define-key keymap "l" 'org-roam-buffer-toggle)

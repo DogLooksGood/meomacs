@@ -14,6 +14,7 @@ Straight.el is used for package management.
 Bind some keys for quick operations.
 
 #+begin_src emacs-lisp
+  (setq straight-disable-native-compile t)
   (defvar straight-keymap
     (let ((keymap (make-keymap)))
       (define-key keymap "c" 'straight-check-package)

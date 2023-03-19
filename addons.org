@@ -47,6 +47,7 @@ Enable smerge mode with =C-c t m=.
   (setq default-input-method "rime")
 
   (with-eval-after-load "rime"
+    (define-key rime-mode-map (kbd "C-`") 'rime-send-keybinding)
     (define-key rime-active-mode-map (kbd "TAB") 'rime-inline-ascii))
 #+end_src
 
@@ -152,4 +153,10 @@ Open pass menu with =C-c a p=.
 * Pinentry
 #+begin_src emacs-lisp
   (setq epa-pinentry-mode 'loopback)
+#+end_src
+
+* ChatGPT
+#+begin_src emacs-lisp
+  (straight-use-package '(gptel :host github :repo "karthink/gptel"))
+  (setq gptel-use-curl nil)
 #+end_src
