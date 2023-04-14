@@ -37,8 +37,8 @@
 
 (let ((bg "#FFFFFF")
       (fg "#000000")
-      (cm "#B5B5B5")
-      (hl "#CCCCCC"))
+      (cm "#666666")
+      (hl "#CFCFCF"))
   (custom-theme-set-faces
    `paperlike
    ;; We don't specify default foreground/background in TTY.

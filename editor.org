@@ -153,15 +153,17 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
   (add-to-list 'meow-char-thing-table
                '(?a . angle))
 
-  (add-to-list 'meow-mode-state-list
-               '(cargo-process-mode . motion))
-
   (meow-setup)
 
   (meow-setup-indicator)
 
   (unless (bound-and-true-p meow-global-mode)
     (meow-global-mode 1))
+
+  (add-to-list 'meow-mode-state-list
+               '(cargo-process-mode . motion))
+  (add-to-list 'meow-mode-state-list
+               '(emms-playlist-mode . motion))
 #+end_src
 
 * Window management
@@ -407,7 +409,7 @@ Do "delete" instead of "kill" when pressing =M-DEL=.
 
   (setq company-format-margin-function 'company-text-icons-margin)
 
-  (with-eval-after-load "company"
+  (with-eval-after-load 'company
     (diminish 'company-mode))
 #+end_src
 

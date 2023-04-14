@@ -115,7 +115,8 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
 
   (defun meomacs-dynamic-set-font (&rest ignore)
     (interactive)
-    (when (or (frame-root-window-p (get-buffer-window))
+    (when window-system
+      (when (or (frame-root-window-p (get-buffer-window))
               (frame-root-window-p (window-parent)))
       (let* ((prev-font-style meomacs-font-current-variant)
              (wl (seq-filter (lambda (w) (not (string-prefix-p " " (buffer-name (window-buffer w))))) (window-list)))
@@ -132,7 +133,7 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
         (unless (equal prev-font-style new-variant)
           (setq meomacs-font-current-variant new-variant)
           (set-frame-font new-variant)
-          (meomacs-load-charset-font new-variant)))))
+          (meomacs-load-charset-font new-variant))))))
 
   (setq frame-inhibit-implied-resize t)
   (add-hook 'window-state-change-hook 'meomacs-dynamic-set-font)

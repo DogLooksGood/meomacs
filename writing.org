@@ -19,8 +19,10 @@ Configuration for writing with Emacs, specifically for Markdown and Org mode.
   (setq org-roam-directory (expand-file-name "~/Org"))
 
   ;; Use builtin sqlite3 in Emacs 29
-  (straight-use-package 'emacsql-sqlite-builtin)
-  (setq org-roam-database-connector 'sqlite-builtin)
+  (when (version<= "29" emacs-version)
+    (straight-use-package 'emacsql-sqlite-builtin)
+    (setq org-roam-database-connector 'sqlite-builtin)
+    (require 'emacsql-sqlite-builtin))
 
   (defvar org-roam-keymap
     (let ((keymap (make-keymap)))
@@ -60,7 +62,7 @@ Enable ~variable-pitch-mode~.
      '(org-table ((t :inherit 'fixed-pitch-serif)))
      '(org-code ((t :inherit 'fixed-pitch-serif)))
      '(org-block ((t :inherit 'fixed-pitch-serif)))
-     '(org-checkbox ((t :inherit 'fixed-pitch :background nil :box nil)))
+     '(org-checkbox ((t :inherit 'fixed-pitch :background unspecified :box nil)))
      '(org-latex-and-related ((t (:inherit 'fixed-pitch-serif))))))
 #+end_src
 

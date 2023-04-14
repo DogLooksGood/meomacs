@@ -155,8 +155,18 @@ Open pass menu with =C-c a p=.
   (setq epa-pinentry-mode 'loopback)
 #+end_src
 
+* EMMS - Music
+#+begin_src emacs-lisp
+  (straight-use-package 'emms)
+  (require 'emms-setup)
+  (emms-all)
+  (setq emms-player-list '(emms-player-mpv))
+  (setq emms-source-file-default-directory "~/.telega/cache/music")
+  (define-key toggle-map "e" 'emms)
+#+end_src
+
 * ChatGPT
 #+begin_src emacs-lisp
   (straight-use-package '(gptel :host github :repo "karthink/gptel"))
-  (setq gptel-use-curl nil)
+  (setq gptel-use-curl t)
 #+end_src
