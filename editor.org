@@ -112,7 +112,7 @@ Bind some keys for quick operations.
   (global-subword-mode 1)
   (diminish 'subword-mode)
 
-  (global-hl-line-mode t)
+  ;; (global-hl-line-mode t)
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
 
@@ -224,7 +224,6 @@ Switch window by pressing the number showned in the mode line.
   (straight-use-package 'ace-window)
 
   (define-key mode-specific-map "W" 'ace-swap-window)
-  (define-key mode-specific-map "q" 'ace-delete-window)
 
   (autoload 'ace-swap-window "ace-window" nil t)
   (autoload 'ace-delete-other-window "ace-window" nil t)
@@ -533,4 +532,10 @@ To find files/buffers and apply commands on project, use builtin package ~projec
     (define-key wgrep-mode-map (kbd "C-c C-c") #'wgrep-finish-edit))
 
   (define-key project-prefix-map "r" 'rg-project)
+#+end_src
+
+* Posframe
+#+begin_src emacs-lisp
+  (straight-use-package 'posframe)
+  (require 'posframe)
 #+end_src

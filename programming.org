@@ -6,11 +6,6 @@ Configuration for programming and languages support.
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
-* Emacs Lisp
-#+begin_src emacs-lisp
-  (add-hook 'emacs-lisp-mode-hook 'flycheck-mode)
-#+end_src
-
 * Stick scroll
 #+begin_src emacs-lisp
   (straight-use-package
@@ -201,15 +196,19 @@ Use clojure-mode for basic syntax support.
 
 ** typescript-mode
 #+begin_src emacs-lisp
-  (setq typescript-indent-level 4
-        typescript-ts-mode-indent-offset 4)
+  (setq typescript-indent-level 2
+        typescript-ts-mode-indent-offset 2)
 
   (if (version<= "29" emacs-version)
-      (add-to-list 'auto-mode-alist (cons "\\.tsx\\'" 'tsx-ts-mode))
+      (progn
+        (add-to-list 'auto-mode-alist (cons "\\.ts\\'" 'typescript-ts-mode))
+        (add-to-list 'auto-mode-alist (cons "\\.tsx\\'" 'tsx-ts-mode)))
     (setq tsx-mode-tsx-auto-tags t)
     (straight-use-package '(tsi :type git :host github :repo "orzechowskid/tsi.el"))
     (straight-use-package '(tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el" :branch "emacs28"))
     (add-to-list 'auto-mode-alist (cons "\\.tsx\\'" 'tsx-mode)))
+
+  (setq lsp-typescript-preferences-quote-style "single")
 #+end_src
 
 * Lua
@@ -232,25 +231,16 @@ Use clojure-mode for basic syntax support.
 
 ** rust-mode
 #+begin_src emacs-lisp
-  (if (version<= "29" emacs-version)
-      (progn
-        (autoload 'rust-ts-mode "rust-ts-mode" nil t)
-        (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
-        (with-eval-after-load 'rust-ts-mode
-          (add-hook 'rust-ts-mode-hook 'cargo-minor-mode)))
-
-    (straight-use-package 'rust-mode)
-    (with-eval-after-load "rust-mode"
-      (add-hook 'rust-mode-hook 'cargo-minor-mode)))
+  (straight-use-package 'rust-mode)
+  (with-eval-after-load "rust-mode"
+    (add-hook 'rust-mode-hook 'cargo-minor-mode))
 
   (setq lsp-rust-analyzer-completion-add-call-parenthesis nil)
-
 #+end_src
 
 Write a command to switch between wasm32 and native target triple.
 
 #+begin_src emacs-lisp
-
   (defun rust-toggle-lsp-target ()
     (interactive)
     (require 'lsp-rust)
@@ -270,6 +260,13 @@ Write a command to switch between wasm32 and native target triple.
 ** COMMENT rustic-mode
 #+begin_src emacs-lisp
   (straight-use-package 'rustic)
+#+end_src
+
+* Nix
+
+#+begin_src emacs-lisp
+  (straight-use-package 'nix-mode)
+  (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
 #+end_src
 
 * Restclient
@@ -311,6 +308,11 @@ Write a command to switch between wasm32 and native target triple.
 ** Just-mode
 #+begin_src emacs-lisp
   (straight-use-package 'just-mode)
+
+  (defun +just-mode-hook ()
+    (modify-syntax-entry ?- "_"))
+
+  (add-hook 'just-mode-hook '+just-mode-hook)
 #+end_src
 
 ** Justl

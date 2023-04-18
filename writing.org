@@ -143,6 +143,7 @@ Enable ~variable-pitch-mode~.
 
 #+begin_src emacs-lisp
   (straight-use-package 'markdown-mode)
+  (straight-use-package 'edit-indirect)
 #+end_src
 
 ** Keybindings
