@@ -1,7 +1,10 @@
 tramp
 var
 tangle
-straight
+straight/repos
+straight/build
+straight/build-cache.el
+straight/modified
 projects
 transient
 org-roam.db
