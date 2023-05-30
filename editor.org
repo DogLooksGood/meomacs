@@ -112,7 +112,7 @@ Bind some keys for quick operations.
   (global-subword-mode 1)
   (diminish 'subword-mode)
 
-  ;; (global-hl-line-mode t)
+  (global-hl-line-mode t)
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
 
@@ -397,6 +397,26 @@ Do "delete" instead of "kill" when pressing =M-DEL=.
 
 * Completion at point
 
+** COMMENT Corfu
+#+begin_src emacs-lisp
+  (straight-use-package 'corfu)
+
+  (add-hook 'prog-mode-hook 'corfu-mode)
+  (add-hook 'conf-mode-hook 'corfu-mode)
+
+  (autoload 'corfu-mode "corfu" nil t)
+
+  (setq corfu-cycle t
+        corfu-auto t
+        corfu-preselect 'prompt)
+
+  (with-eval-after-load 'corfu
+    (define-key corfu-map (kbd "TAB") 'corfu-next)
+    (define-key corfu-map [tab] 'corfu-next)
+    (define-key corfu-map (kbd "S-TAB") 'corfu-previous)
+    (define-key corfu-map [backtab] 'corfu-previous))
+#+end_src
+
 ** Company
 
 #+begin_src emacs-lisp
@@ -534,8 +554,13 @@ To find files/buffers and apply commands on project, use builtin package ~projec
   (define-key project-prefix-map "r" 'rg-project)
 #+end_src
 
-* Posframe
+
+* Wrap parentheses
 #+begin_src emacs-lisp
-  (straight-use-package 'posframe)
-  (require 'posframe)
+  (setq meomacs-wrap-keymap
+        (let ((map (make-keymap)))
+          (suppress-keymap map)
+          (dolist (k '("(" "[" "{" "<"))
+            (define-key map k #'insert-pair))
+          map))
 #+end_src

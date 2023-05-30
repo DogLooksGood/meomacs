@@ -86,6 +86,15 @@ Enable ~variable-pitch-mode~.
   (add-hook 'org-mode-hook 'org-indent-mode)
 #+end_src
 
+** COMMENT Org modern
+
+#+begin_src emacs-lisp
+  (straight-use-package 'org-modern)
+
+  (with-eval-after-load 'org
+    (global-org-modern-mode))
+#+end_src
+
 ** Ricing markups
 
 #+begin_src emacs-lisp

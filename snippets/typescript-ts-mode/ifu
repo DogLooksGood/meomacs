@@ -1,0 +1,7 @@
+# -*- mode: typescript-ts-mode -*-
+# name: ifu
+# key: ifu
+# --
+if ($1 === undefined) {
+ $0
+}

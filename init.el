@@ -34,4 +34,3 @@
 (meomacs-load-config "writing")
 (meomacs-load-config "programming")
 (meomacs-load-config "addons" t)
-

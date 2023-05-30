@@ -96,7 +96,7 @@ Use lsp-mode as LSP client.
 
   (with-eval-after-load "lsp-mode"
     (add-hook 'rust-mode-hook 'lsp)
-    (add-hook 'typescript-mode-hook 'lsp)
+    (add-hook 'typescript-ts-mode-hook 'lsp)
     (define-key lsp-mode-map (kbd "<C-return>") 'lsp-execute-code-action)
     (define-key lsp-mode-map (kbd "C-c C-f") 'lsp-format-buffer))
 #+end_src
@@ -159,7 +159,7 @@ Use clojure-mode for basic syntax support.
   (setq cider-offer-to-open-cljs-app-in-browser nil)
 
   (with-eval-after-load "cider"
-    (define-key cider-mode-map (kbd "C-c C-f") nil))
+    (define-key cider-mode-map (kbd "C-c C-f") 'cider-format-buffer))
 #+end_src
 
 ** Linting with flycheck-clj-kondo
@@ -173,7 +173,7 @@ Use clojure-mode for basic syntax support.
   (add-hook 'clojure-mode-hook 'flycheck-mode)
 #+end_src
 
-** Format code with zprint
+** COMMENT Format code with zprint
 
 #+begin_src emacs-lisp
   (straight-use-package '(zprint :type git
@@ -208,7 +208,9 @@ Use clojure-mode for basic syntax support.
     (straight-use-package '(tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el" :branch "emacs28"))
     (add-to-list 'auto-mode-alist (cons "\\.tsx\\'" 'tsx-mode)))
 
-  (setq lsp-typescript-preferences-quote-style "single")
+  (setq lsp-typescript-preferences-quote-style "single"
+        lsp-typescript-surveys-enabled nil
+        lsp-typescript-format-enable nil)
 #+end_src
 
 * Lua
