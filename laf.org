@@ -90,14 +90,9 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
           (cjk-font (meomacs--get-font-family 'cjk))
           (symbol-font (meomacs--get-font-family 'symbol)))
       (set-frame-font default-font)
-      (let ((fontset (create-fontset-from-ascii-font default-font)))
-        ;; Fonts for charsets
-        (dolist (charset '(kana han hangul cjk-misc bopomofo))
-          (set-fontset-font fontset charset cjk-font))
-        (set-fontset-font fontset 'symbol symbol-font)
-        ;; Apply fontset
-        (set-frame-parameter nil 'font fontset)
-        (add-to-list 'default-frame-alist (cons 'font fontset)))))
+      (dolist (charset '(kana han hangul cjk-misc bopomofo))
+        (set-fontset-font t charset cjk-font))
+      (set-fontset-font t 'symbol symbol-font)))
 
   (meomacs-load-default-font)
   (meomacs-load-face-font)
