@@ -229,6 +229,19 @@ Switch window by pressing the number showned in the mode line.
   (autoload 'ace-delete-other-window "ace-window" nil t)
 #+end_src
 
+** winner-mode
+#+begin_src emacs-lisp
+  (require 'winner)
+
+  (winner-mode 1)
+
+  (defun meomacs-toggle-single-window ()
+    (interactive)
+    (if (= 1 (length (window-list-1)))
+        (winner-undo)
+      (delete-other-windows)))
+#+end_src
+
 * Workspace management
 
 ** COMMENT Using frames
