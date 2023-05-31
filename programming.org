@@ -179,7 +179,15 @@ Use clojure-mode for basic syntax support.
     (define-key cider-mode-map (kbd "C-c C-f") 'cider-format-buffer))
 #+end_src
 
-** Linting with flycheck-clj-kondo
+** Lsp
+#+begin_src emacs-lisp
+  (with-eval-after-load 'lsp-mode
+    (add-hook 'clojure-mode-hook 'lsp)
+    (add-hook 'clojurec-mode-hook 'lsp)
+    (add-hook 'clojurescript-mode-hook 'lsp))
+#+end_src
+
+** COMMENT Linting with flycheck-clj-kondo
 
 #+begin_src emacs-lisp
   (straight-use-package 'flycheck-clj-kondo)
