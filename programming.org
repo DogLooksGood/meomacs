@@ -237,7 +237,8 @@ Use clojure-mode for basic syntax support.
   (with-eval-after-load "rust-mode"
     (add-hook 'rust-mode-hook 'cargo-minor-mode))
 
-  (setq lsp-rust-analyzer-completion-add-call-parenthesis nil)
+  (setq lsp-rust-analyzer-completion-add-call-parenthesis nil
+        lsp-rust-analyzer-proc-macro-enable t)
 #+end_src
 
 Write a command to switch between wasm32 and native target triple.
