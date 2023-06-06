@@ -24,9 +24,20 @@ No scroll bars in minibuffer.
                (minibuffer-window frame) 0 nil 0 nil t)))
 #+end_src
 
-* Enable window divider
+* Window divider
+** GUI
 #+begin_src emacs-lisp
   (window-divider-mode 1)
+#+end_src
+
+** Rice TUI window divider
+#+begin_src emacs-lisp
+  (defun meomacs-change-window-divider ()
+    (let ((display-table (or buffer-display-table standard-display-table)))
+      (set-display-table-slot display-table 5 ?│)
+      (set-window-display-table (selected-window) display-table)))
+
+  (add-hook 'window-configuration-change-hook 'meomacs-change-window-divider)
 #+end_src
 
 * Some UI related variables
