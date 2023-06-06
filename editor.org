@@ -164,6 +164,8 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
                '(cargo-process-mode . motion))
   (add-to-list 'meow-mode-state-list
                '(emms-playlist-mode . motion))
+
+  (setq meow-keypad-leader-dispatch "C-c")
 #+end_src
 
 * Window management

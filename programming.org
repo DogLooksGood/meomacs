@@ -135,18 +135,20 @@ Use eglot as LSP client.
 Use clojure-mode for basic syntax support.
 
 #+begin_src emacs-lisp
-    (straight-use-package 'clojure-mode)
+  (straight-use-package 'clojure-mode)
 
-    (setq clojure-toplevel-inside-comment-form t)
+  (setq clojure-toplevel-inside-comment-form t)
 
-    (with-eval-after-load "clojure-mode"
-      (define-clojure-indent
-        (re-frame/reg-event-fx :defn)
-        (re-frame/reg-event-db :defn)
-        (re-frame/reg-sub :defn)
-        (re-frame/reg-fx :defn)
-        (t/async :defn)
-        (thrown-with-msg? :defn)))
+  (add-hook 'clojure-mode-hook 'lsp)
+
+  (with-eval-after-load "clojure-mode"
+    (define-clojure-indent
+      (re-frame/reg-event-fx :defn)
+      (re-frame/reg-event-db :defn)
+      (re-frame/reg-sub :defn)
+      (re-frame/reg-fx :defn)
+      (t/async :defn)
+      (thrown-with-msg? :defn)))
 #+end_src
 
 ** Cider for REPL connection
