@@ -1,5 +1,9 @@
+# -*- mode: snippet -*-
+# name: flake
+# key: flake
+# --
 {
-  description = "Development environment";
+  description = "description for flake";
 
   inputs = {
     nixpkgs = { url = "github:NixOS/nixpkgs/nixpkgs-unstable"; };
@@ -13,24 +17,13 @@
       in
         {
           devShell = pkgs.mkShell {
-            shellHook = ''
-              emacs --daemon
-              cd ~
-            '';
             buildInputs = with pkgs; [
-              emacs29-nox
-              git
-              pass
-              simple-http-server
-              rust-analyzer
-              clojure-lsp
-              ripgrep
             ];
           };
         }
     );
 
   nixConfig = {
-    bash-prompt-prefix = "[dev]";
+    bash-prompt-prefix = "[flake]";
   };
 }
