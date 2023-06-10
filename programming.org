@@ -328,3 +328,12 @@ Write a command to switch between wasm32 and native target triple.
 
   (autoload 'justl-exec-recipe "justl" nil t)
 #+end_src
+
+
+* Treesit grammars
+#+begin_src emacs-lisp
+  (straight-use-package 'treesit-auto)
+  (require 'treesit-auto)
+  (setq treesit-auto-install t)
+  (global-treesit-auto-mode)
+#+end_src

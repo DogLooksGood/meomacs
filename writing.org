@@ -95,7 +95,7 @@ Enable ~variable-pitch-mode~.
     (global-org-modern-mode))
 #+end_src
 
-** Ricing markups
+** COMMENT Ricing markups
 
 #+begin_src emacs-lisp
     (defun meomacs--org-prettify-symbols ()
