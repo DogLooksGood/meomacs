@@ -14,6 +14,7 @@
         {
           devShell = pkgs.mkShell {
             shellHook = ''
+              pkill emacs
               emacs --daemon
               cd ~
             '';
@@ -25,6 +26,7 @@
               rust-analyzer
               clojure-lsp
               ripgrep
+              mosh
             ];
           };
         }

@@ -226,6 +226,7 @@ Use clojure-mode for basic syntax support.
   (straight-use-package 'cargo)
 
   (autoload 'cargo-minor-mode "cargo" nil t)
+  (add-hook 'rust-ts-mode-hook 'cargo-minor-mode)
 
   (with-eval-after-load "cargo"
     (define-key cargo-process-mode-map (kbd "/") 'scroll-down-line)

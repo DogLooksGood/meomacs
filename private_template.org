@@ -217,10 +217,7 @@ Tweaking following table for key bindings in leader keymap.
             (coding-system-for-write 'gbk-dos))
         (with-temp-buffer
           (insert text)
-          (shell-command-on-region
-           (point-min)
-           (point-max)
-           "clip.exe"))))
+          (call-process-region (point-min) (point-max) "clip.exe" nil 0))))
 
     (setq interprogram-cut-function 'win-clip))
 #+end_src
