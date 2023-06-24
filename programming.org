@@ -58,9 +58,8 @@ Configuration for programming and languages support.
 
   (require 'paredit)
 
-  (dolist (km (list clojure-mode-map emacs-lisp-mode-map))
-    (define-key km (kbd "C-c )") 'paredit-forward-slurp-sexp)
-    (define-key km (kbd "C-c (") 'paredit-forward-barf-sexp))
+  (define-key emacs-lisp-mode-map (kbd "C-c )") 'paredit-forward-slurp-sexp)
+  (define-key emacs-lisp-mode-map (kbd "C-c (") 'paredit-forward-barf-sexp)
 #+end_src
 
 * LSP
@@ -154,6 +153,10 @@ Use clojure-mode for basic syntax support.
   (add-hook 'clojure-mode-hook 'lsp)
 
   (with-eval-after-load "clojure-mode"
+
+    (define-key clojure-mode-map (kbd "C-c )") 'paredit-forward-slurp-sexp)
+    (define-key clojure-mode-map (kbd "C-c (") 'paredit-forward-barf-sexp)
+
     (define-clojure-indent
       (re-frame/reg-event-fx :defn)
       (re-frame/reg-event-db :defn)
