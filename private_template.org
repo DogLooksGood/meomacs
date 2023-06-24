@@ -139,6 +139,7 @@ Tweaking following table for key bindings in leader keymap.
 | o   | delete-other-windows    |             |
 | k   | kill-current-buffer     |             |
 | u   | meow-universal-argument |             |
+| q   | delete-window           |             |
 #+TBLFM:
 
 ** Define keys

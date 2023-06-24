@@ -51,6 +51,18 @@ Configuration for programming and languages support.
   (require 'tree-sitter-langs)
 #+end_src
 
+
+* Lisp Parenthese
+#+begin_src emacs-lisp
+  (straight-use-package 'paredit)
+
+  (require 'paredit)
+
+  (dolist (km (list clojure-mode-map emacs-lisp-mode-map))
+    (define-key km (kbd "C-c )") 'paredit-forward-slurp-sexp)
+    (define-key km (kbd "C-c (") 'paredit-forward-barf-sexp))
+#+end_src
+
 * LSP
 
 ** COMMENT lspce
@@ -331,10 +343,11 @@ Write a command to switch between wasm32 and native target triple.
 #+end_src
 
 
-* Treesit grammars
+* COMMENT Treesit grammars
 #+begin_src emacs-lisp
   (straight-use-package 'treesit-auto)
   (require 'treesit-auto)
-  (setq treesit-auto-install t)
+  (setq treesit-auto-install t
+        treesit-auto-langs '(rust html typescript))
   (global-treesit-auto-mode)
 #+end_src
