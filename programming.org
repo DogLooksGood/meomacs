@@ -30,6 +30,8 @@ Configuration for programming and languages support.
 
 #+begin_src emacs-lisp
   (straight-use-package 'flycheck)
+
+  (setq flycheck-display-errors-function nil)
 #+end_src
 
 * Outline
@@ -306,12 +308,10 @@ Write a command to switch between wasm32 and native target triple.
 
 * HTML
 #+begin_src emacs-lisp
-  (straight-use-package '(htmlz
-                          :type git
-                          :host github
-                          :repo "ezekiiel/htmlz-mode"))
+  (straight-use-package 'web-mode)
 
-  (straight-use-package 'websocket)
+  (add-to-list 'auto-mode-alist
+               '("\\.html\\'" . web-mode))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -330,6 +330,25 @@ Write a command to switch between wasm32 and native target triple.
 
   (with-eval-after-load "svelte-mode"
     (define-key svelte-mode-map (kbd "M-RET") 'emmet-expand-line))
+#+end_src
+
+* Move
+
+#+begin_src emacs-lisp
+  (straight-use-package 'move-mode)
+#+end_src
+
+** LSP Support
+#+begin_src emacs-lisp
+  (with-eval-after-load "lsp-mode"
+
+    (add-to-list 'lsp-language-id-configuration '(move-mode . "move"))
+
+    (lsp-register-client
+     (make-lsp-client
+      :new-connection  (lsp-stdio-connection "move-analyzer")
+      :activation-fn (lsp-activate-on "move")
+      :server-id 'move-analyzer)))
 #+end_src
 
 * Just
@@ -354,11 +373,11 @@ Write a command to switch between wasm32 and native target triple.
 #+end_src
 
 
-* COMMENT Treesit grammars
+* Treesit grammars
 #+begin_src emacs-lisp
   (straight-use-package 'treesit-auto)
   (require 'treesit-auto)
   (setq treesit-auto-install t
-        treesit-auto-langs '(rust html typescript))
+        treesit-auto-langs '(rust typescript))
   (global-treesit-auto-mode)
 #+end_src

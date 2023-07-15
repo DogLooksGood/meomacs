@@ -1,5 +1,11 @@
 ;;; -*- lexical-binding: t -*-
 
+;; Early load org-mode
+(straight-use-package 'org)
+(straight-use-package 'diminish)
+(require 'org)
+(require 'diminish)
+
 ;; Define helper command for reloading configuration
 (defun meomacs-refresh ()
   "Refresh and tangle configuration."

@@ -53,6 +53,9 @@ If FORCE-TANGLE is non-nil, always tangle before load."
 (require 'gcmh)
 (gcmh-mode 1)
 
+;; Dump flag
+(defvar meomacs-dump nil)
+
 ;; Load configurations
 (meomacs-load-config "private")
 (meomacs-load-config "laf")

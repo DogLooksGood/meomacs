@@ -102,6 +102,10 @@ Tweaking following table for key bindings in normal state.
 | '        | repeat                    |
 | &        | meow-query-replace-regexp |
 | %        | meow-query-replace        |
+| /        | meow-page-up              |
+| @        | meow-page-down            |
+| ?        | scroll-down-line          |
+| ^        | scroll-up-line            |
 | <escape> | ignore                    |
 
 *** Motion
@@ -208,17 +212,4 @@ Tweaking following table for key bindings in leader keymap.
         `(("http" . ,(format "%s:%s" meomacs-http-proxy-host  meomacs-http-proxy-port))
           ("https" . ,(format "%s:%s" meomacs-http-proxy-host meomacs-http-proxy-port))
           ("no_proxy" . "\\(localhost\\)")))
-#+end_src
-
-* WSL
-#+begin_src emacs-lisp
-  (when (string-match-p ".*WSL2" operating-system-release)
-    (defun win-clip (text)
-      (let ((inhibit-message t)
-            (coding-system-for-write 'gbk-dos))
-        (with-temp-buffer
-          (insert text)
-          (call-process-region (point-min) (point-max) "clip.exe" nil 0))))
-
-    (setq interprogram-cut-function 'win-clip))
 #+end_src

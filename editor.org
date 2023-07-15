@@ -579,3 +579,24 @@ To find files/buffers and apply commands on project, use builtin package ~projec
             (define-key map k #'insert-pair))
           map))
 #+end_src
+
+* TUI Copy
+#+begin_src emacs-lisp
+  (defun ext-copy (text)
+    (cond
+     ((string-match-p ".*WSL2" operating-system-release)
+      (let ((inhibit-message t)
+            (coding-system-for-write 'gbk-dos))
+        (with-temp-buffer
+          (insert text)
+          (call-process-region (point-min) (point-max) "clip.exe" nil 0))))
+
+     ((not window-system)
+      (let ((inhibit-message t))
+        (with-temp-buffer
+          (insert text)
+          (call-process-region (point-min) (point-max) "wl-copy" nil 0))))))
+
+  (unless window-system
+    (setq interprogram-cut-function 'ext-copy))
+#+end_src

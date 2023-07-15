@@ -35,7 +35,7 @@ Enable smerge mode with =C-c t m=.
   (define-key toggle-map "m" 'smerge-mode)
 #+end_src
 
-* Input method with emacs-rime
+* COMMENT Input method with emacs-rime
 
 ~librime~ is required for this feature.
 
@@ -77,7 +77,7 @@ Auto switch to inline ascii state when after a space after a non-ascii character
 #+end_src
 
 
-* Telegram client with Telega
+* COMMENT Telegram client with Telega
 
 ~telegram-libtd~ is required for this feature.
 
@@ -145,7 +145,7 @@ Open pass menu with =C-c a p=.
 
   (setq direnv-always-show-summary nil)
 
-  (define-key toggle-map "e" 'direnv-mode)
+  (define-key toggle-map "d" 'direnv-mode)
 
   (autoload 'direnv-mode "direnv" nil t)
 #+end_src
