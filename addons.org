@@ -147,7 +147,8 @@ Open pass menu with =C-c a p=.
 
   (define-key toggle-map "d" 'direnv-mode)
 
-  (autoload 'direnv-mode "direnv" nil t)
+  (require 'direnv)
+  (direnv-mode)
 #+end_src
 
 * Pinentry

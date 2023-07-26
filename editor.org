@@ -198,7 +198,7 @@ Switch window by pressing the number showned in the mode line.
                      (7 . "⑦")
                      (8 . "⑧")
                      (9 . "⑨")))
-                (number-to-string n)))))
+                (concat "[" (number-to-string n) "] ")))))
 
   (setq window-numbering-assign-func
         (lambda ()

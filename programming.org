@@ -143,6 +143,15 @@ Use eglot as LSP client.
 
 * Clojure
 
+** COMMENT clojure-ts-mode
+
+Use clojure-ts-mode instead of clojure-mode.
+
+#+begin_src emacs-lisp
+  (straight-use-package 'clojure-ts-mode)
+#+end_src
+
+
 ** clojure-mode
 
 Use clojure-mode for basic syntax support.
@@ -165,7 +174,8 @@ Use clojure-mode for basic syntax support.
       (re-frame/reg-sub :defn)
       (re-frame/reg-fx :defn)
       (t/async :defn)
-      (thrown-with-msg? :defn)))
+      (thrown-with-msg? :defn)
+      ))
 #+end_src
 
 ** Cider for REPL connection
@@ -224,16 +234,18 @@ Use clojure-mode for basic syntax support.
 ** typescript-mode
 #+begin_src emacs-lisp
   (setq typescript-indent-level 2
-        typescript-ts-mode-indent-offset 2)
+        typescript-ts-mode-indent-offset 2
+        tsi-css-indent-offset 2
+        tsi-typescript-indent-offset 4)
 
-  (if (version<= "29" emacs-version)
+  (if (featurep 'treesit)
       (progn
         (add-to-list 'auto-mode-alist (cons "\\.ts\\'" 'typescript-ts-mode))
         (add-to-list 'auto-mode-alist (cons "\\.tsx\\'" 'tsx-ts-mode)))
     (setq tsx-mode-tsx-auto-tags t)
     (straight-use-package '(tsi :type git :host github :repo "orzechowskid/tsi.el"))
     (straight-use-package '(tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el" :branch "emacs28"))
-    (add-to-list 'auto-mode-alist (cons "\\.tsx\\'" 'tsx-mode)))
+    (add-to-list 'auto-mode-alist (cons "\\.tsx?\\'" 'tsx-mode)))
 
   (setq lsp-typescript-preferences-quote-style "single"
         lsp-typescript-surveys-enabled nil
@@ -333,22 +345,8 @@ Write a command to switch between wasm32 and native target triple.
 #+end_src
 
 * Move
-
 #+begin_src emacs-lisp
   (straight-use-package 'move-mode)
-#+end_src
-
-** LSP Support
-#+begin_src emacs-lisp
-  (with-eval-after-load "lsp-mode"
-
-    (add-to-list 'lsp-language-id-configuration '(move-mode . "move"))
-
-    (lsp-register-client
-     (make-lsp-client
-      :new-connection  (lsp-stdio-connection "move-analyzer")
-      :activation-fn (lsp-activate-on "move")
-      :server-id 'move-analyzer)))
 #+end_src
 
 * Just
@@ -375,9 +373,15 @@ Write a command to switch between wasm32 and native target triple.
 
 * Treesit grammars
 #+begin_src emacs-lisp
-  (straight-use-package 'treesit-auto)
-  (require 'treesit-auto)
-  (setq treesit-auto-install t
-        treesit-auto-langs '(rust typescript))
-  (global-treesit-auto-mode)
+  (when (featurep 'treesit)
+    (straight-use-package 'treesit-auto)
+    (require 'treesit-auto)
+    (setq treesit-auto-install t
+          treesit-auto-langs '(rust html typescript))
+    (global-treesit-auto-mode))
+#+end_src
+
+* YAML
+#+begin_src emacs-lisp
+  (straight-use-package 'yaml-mode)
 #+end_src
