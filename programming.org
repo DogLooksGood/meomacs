@@ -159,7 +159,8 @@ Use clojure-mode for basic syntax support.
 #+begin_src emacs-lisp
   (straight-use-package 'clojure-mode)
 
-  (setq clojure-toplevel-inside-comment-form t)
+  (setq clojure-toplevel-inside-comment-form t
+        clojure-defun-style-default-indent t)
 
   (add-hook 'clojure-mode-hook 'lsp)
 
@@ -186,9 +187,6 @@ Use clojure-mode for basic syntax support.
   (autoload 'cider-jack-in "cider" nil t)
 
   (setq cider-offer-to-open-cljs-app-in-browser nil)
-
-  (with-eval-after-load "cider"
-    (define-key cider-mode-map (kbd "C-c C-f") 'cider-format-buffer))
 #+end_src
 
 ** Lsp
@@ -266,8 +264,10 @@ Use clojure-mode for basic syntax support.
   (add-hook 'rust-ts-mode-hook 'cargo-minor-mode)
 
   (with-eval-after-load "cargo"
-    (define-key cargo-process-mode-map (kbd "/") 'scroll-down-line)
-    (define-key cargo-process-mode-map (kbd "@") 'scroll-up-line)
+    (define-key cargo-process-mode-map (kbd "/") 'scroll-down)
+    (define-key cargo-process-mode-map (kbd "?") 'scroll-down-line)
+    (define-key cargo-process-mode-map (kbd "@") 'scroll-up)
+    (define-key cargo-process-mode-map (kbd "^") 'scroll-up-line)
     (define-key cargo-process-mode-map (kbd "\\") 'toggle-truncate-lines))
 #+end_src
 

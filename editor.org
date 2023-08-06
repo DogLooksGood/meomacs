@@ -105,7 +105,14 @@ Bind some keys for quick operations.
    indent-tabs-mode nil
 
    ;; Don't echo multiline eldoc
-   eldoc-echo-area-use-multiline-p nil)
+   eldoc-echo-area-use-multiline-p nil
+
+   ;; No cursor blink in TUI
+   visible-cursor nil
+
+   ;; Vim-like scrolling
+   scroll-step 1
+   scroll-margin 5)
 
   (show-paren-mode -1)
 

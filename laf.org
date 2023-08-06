@@ -30,6 +30,22 @@ No scroll bars in minibuffer.
   (window-divider-mode 1)
 #+end_src
 
+** TUI
+#+begin_src emacs-lisp
+  (set-display-table-slot standard-display-table
+                          'vertical-border
+                          (make-glyph-code ?│))
+#+end_src
+
+* Highlight Numbers
+#+begin_src emacs-lisp
+  (straight-use-package 'highlight-numbers)
+
+  (require 'highlight-numbers)
+
+  (add-hook 'prog-mode-hook 'highlight-numbers-mode)
+#+end_src
+
 * Some UI related variables
 
 #+begin_src emacs-lisp
