@@ -231,19 +231,11 @@ Use clojure-mode for basic syntax support.
 
 ** typescript-mode
 #+begin_src emacs-lisp
-  (setq typescript-indent-level 2
-        typescript-ts-mode-indent-offset 2
-        tsi-css-indent-offset 2
-        tsi-typescript-indent-offset 4)
+  (setq typescript-indent-level 4
+        typescript-ts-mode-indent-offset 4)
 
-  (if (featurep 'treesit)
-      (progn
-        (add-to-list 'auto-mode-alist (cons "\\.ts\\'" 'typescript-ts-mode))
-        (add-to-list 'auto-mode-alist (cons "\\.tsx\\'" 'tsx-ts-mode)))
-    (setq tsx-mode-tsx-auto-tags t)
-    (straight-use-package '(tsi :type git :host github :repo "orzechowskid/tsi.el"))
-    (straight-use-package '(tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el" :branch "emacs28"))
-    (add-to-list 'auto-mode-alist (cons "\\.tsx?\\'" 'tsx-mode)))
+  (add-to-list 'auto-mode-alist (cons "\\.ts\\'" 'typescript-ts-mode))
+  (add-to-list 'auto-mode-alist (cons "\\.tsx\\'" 'tsx-ts-mode))
 
   (setq lsp-typescript-preferences-quote-style "single"
         lsp-typescript-surveys-enabled nil
