@@ -6,6 +6,21 @@ Configuration for programming and languages support.
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
+* Custom format buffer function
+#+begin_src emacs-lisp
+  (defun meomacs-default-format-buffer ()
+    (interactive)
+    (save-mark-and-excursion
+      (indent-region-line-by-line (point-min) (point-max))))
+
+  (defun meomacs-format-buffer ()
+    "Format whole buffer with LSP and fallback behavior."
+    (interactive)
+    (if (bound-and-true-p lsp-mode)
+        (call-interactively #'lsp-format-buffer)
+      (call-interactively 'meomacs-default-format-buffer)))
+#+end_src
+
 * Stick scroll
 #+begin_src emacs-lisp
   (straight-use-package

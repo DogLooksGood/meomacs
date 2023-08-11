@@ -19,9 +19,9 @@ If FORCE-TANGLE is non-nil, always tangle before load."
     (when (file-exists-p source)
       (make-directory tangle-dir t)
       (when (or force-tangle (not (file-exists-p target)))
-	(require 'org)
-	(require 'ob)
-	(org-babel-tangle-file source target))
+        (require 'org)
+        (require 'ob)
+        (org-babel-tangle-file source target))
       (load-file target))))
 
 ;; Prepare private.org when not exist.

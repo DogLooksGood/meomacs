@@ -108,11 +108,7 @@ Bind some keys for quick operations.
    eldoc-echo-area-use-multiline-p nil
 
    ;; No cursor blink in TUI
-   visible-cursor nil
-
-   ;; Vim-like scrolling
-   scroll-step 1
-   scroll-margin 5)
+   visible-cursor nil)
 
   (show-paren-mode -1)
 
