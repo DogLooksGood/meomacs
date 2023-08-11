@@ -353,16 +353,6 @@ Write a command to switch between wasm32 and native target triple.
   (add-hook 'just-mode-hook '+just-mode-hook)
 #+end_src
 
-** Justl
-#+begin_src emacs-lisp
-  (straight-use-package 'justl)
-
-  (global-set-key (kbd "C-c j") 'justl-exec-recipe)
-
-  (autoload 'justl-exec-recipe "justl" nil t)
-#+end_src
-
-
 * Treesit grammars
 #+begin_src emacs-lisp
   (when (featurep 'treesit)
