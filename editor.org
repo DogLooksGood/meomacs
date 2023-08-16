@@ -115,7 +115,9 @@ Bind some keys for quick operations.
   (global-subword-mode 1)
   (diminish 'subword-mode)
 
-  (global-hl-line-mode t)
+  ;; (global-hl-line-mode t)
+  (blink-cursor-mode -1)
+  (scroll-bar-mode -1)
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
 
