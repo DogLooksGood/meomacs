@@ -121,7 +121,7 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
                 (meomacs-load-charset-font))))
 #+end_src
 
-*** COMMENT Variants used when spliting window
+*** Variants used when spliting window
 #+begin_src emacs-lisp
   (defvar meomacs-font-current-variant nil)
 
