@@ -323,7 +323,8 @@ Use clojure-mode for basic syntax support.
      (d/polygon :defn)
      (d/radial :defn)
      (d/stop :defn)
-     (d/tspan :defn)))
+     (d/tspan :defn)
+     (js-await 1)))
 #+end_src
 
 ** Cider for REPL connection
@@ -403,8 +404,7 @@ Use clojure-mode for basic syntax support.
   (add-hook 'rust-ts-mode-hook 'cargo-minor-mode)
 
   (with-eval-after-load "cargo"
-    (define-key cargo-process-mode-map (kbd "/") 'scroll-down)
-    (define-key cargo-process-mode-map (kbd "?") 'scroll-down-line)
+    (define-key cargo-process-mode-map (kbd "/") 'scroll-down)    (define-key cargo-process-mode-map (kbd "?") 'scroll-down-line)
     (define-key cargo-process-mode-map (kbd "@") 'scroll-up)
     (define-key cargo-process-mode-map (kbd "^") 'scroll-up-line)
     (define-key cargo-process-mode-map (kbd "\\") 'toggle-truncate-lines))
@@ -449,6 +449,15 @@ Write a command to switch between wasm32 and native target triple.
 #+begin_src emacs-lisp
   (straight-use-package 'nix-mode)
   (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
+#+end_src
+
+* Solidity
+#+begin_src emacs-lisp
+  (straight-use-package 'solidity-mode)
+
+  (with-eval-after-load "solidity-mode"
+    (require 'company-solidity)
+    (require 'solidity-flycheck))
 #+end_src
 
 * Restclient
