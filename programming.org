@@ -455,6 +455,9 @@ Write a command to switch between wasm32 and native target triple.
 #+begin_src emacs-lisp
   (straight-use-package 'solidity-mode)
 
+  (straight-use-package 'company-solidity)
+  (straight-use-package 'solidity-flycheck)
+
   (with-eval-after-load "solidity-mode"
     (require 'company-solidity)
     (require 'solidity-flycheck))
