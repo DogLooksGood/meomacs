@@ -117,7 +117,6 @@ Bind some keys for quick operations.
 
   ;; (global-hl-line-mode t)
   (blink-cursor-mode -1)
-  (scroll-bar-mode -1)
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
 
@@ -604,4 +603,17 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 
   (unless window-system
     (setq interprogram-cut-function 'ext-copy))
+#+end_src
+
+
+* COMMENT Frame associated buffers
+#+begin_src emacs-lisp
+  (straight-use-package 'beframe)
+
+  (require 'beframe)
+  (beframe-mode 1)
+
+  (setq beframe-functions-in-frames '(project-prompt-project-dir))
+
+  (define-key global-map [remap switch-to-buffer] 'beframe-switch-buffer)
 #+end_src
