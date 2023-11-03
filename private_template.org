@@ -194,7 +194,6 @@ Tweaking following table for key bindings in leader keymap.
   (setq meomacs-themes
         (thread-last
           themes
-          (mapcar 'car)
           (cl-remove-if-not (lambda (s) (string-prefix-p "[X] " s)))
           (mapcar (lambda (s) (intern (substring s 4))))))
 #+end_src
