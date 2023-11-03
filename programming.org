@@ -182,8 +182,6 @@ Use clojure-mode for basic syntax support.
   (setq clojure-toplevel-inside-comment-form t
         clojure-defun-style-default-indent t)
 
-  (add-hook 'clojure-mode-hook 'lsp)
-
   (with-eval-after-load "clojure-mode"
 
     (define-key clojure-mode-map (kbd "C-c )") 'paredit-forward-slurp-sexp)
@@ -342,14 +340,6 @@ Use clojure-mode for basic syntax support.
   (setq cider-offer-to-open-cljs-app-in-browser nil)
 #+end_src
 
-** Lsp
-#+begin_src emacs-lisp
-  (with-eval-after-load 'lsp-mode
-    (add-hook 'clojure-mode-hook 'lsp)
-    (add-hook 'clojurec-mode-hook 'lsp)
-    (add-hook 'clojurescript-mode-hook 'lsp))
-#+end_src
-
 ** COMMENT Linting with flycheck-clj-kondo
 
 #+begin_src emacs-lisp
@@ -395,6 +385,7 @@ Use clojure-mode for basic syntax support.
         lsp-typescript-format-enable nil)
 
   (make-variable-buffer-local 'lsp-enable-indentation)
+  (setq-default lsp-enable-indentation t)
 
   (add-hook 'tsx-ts-mode-hook
             (lambda ()
@@ -483,6 +474,8 @@ Write a command to switch between wasm32 and native target triple.
 * HTML
 #+begin_src emacs-lisp
   (straight-use-package 'web-mode)
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2)
 
   (add-to-list 'auto-mode-alist
                '("\\.html\\'" . web-mode))
@@ -528,7 +521,7 @@ Write a command to switch between wasm32 and native target triple.
   (when (featurep 'treesit)
     (straight-use-package 'treesit-auto)
     (require 'treesit-auto)
-    (setq treesit-auto-install t
+    (setq treesit-auto-install nil
           treesit-auto-langs '(rust html typescript))
     (global-treesit-auto-mode))
 #+end_src

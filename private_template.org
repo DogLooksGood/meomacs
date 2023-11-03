@@ -135,8 +135,7 @@ Tweaking following table for key bindings in leader keymap.
 | key | command                 | description |
 |-----+-------------------------+-------------|
 | e   | dispatch: C-x C-e       |             |
-| s   | split-window-right      |             |
-| v   | split-window-below      |             |
+| s   | split-window-below      |             |
 | w   | other-window            |             |
 | i   | imenu                   |             |
 | b   | switch-to-buffer        |             |
