@@ -35,7 +35,7 @@ Enable smerge mode with =C-c t m=.
   (define-key toggle-map "m" 'smerge-mode)
 #+end_src
 
-* COMMENT Input method with emacs-rime
+* Input method with emacs-rime
 
 ~librime~ is required for this feature.
 
