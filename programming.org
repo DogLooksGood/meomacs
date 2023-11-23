@@ -392,6 +392,18 @@ Use clojure-mode for basic syntax support.
               (setq-local lsp-enable-indentation nil)))
 #+end_src
 
+** prisma
+#+begin_src emacs-lisp
+  (straight-use-package '(prisma-mode :host github
+                                      :repo "davidarenas/prisma-mode"))
+
+  (autoload 'prisma-mode "prisma-mode" nil t)
+  (add-to-list 'auto-mode-alist '("\\.prisma\\'" . prisma-mode))
+
+  (with-eval-after-load "prisma-mode"
+    (define-key prisma-mode-map (kbd "C-c C-f") 'prisma-fmt-buffer))
+#+end_src
+
 * Lua
 #+begin_src emacs-lisp
   (straight-use-package 'lua-mode)
