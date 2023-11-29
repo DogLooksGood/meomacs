@@ -95,9 +95,11 @@ Enable ~variable-pitch-mode~.
     (global-org-modern-mode))
 #+end_src
 
-** COMMENT Ricing markups
+** Ricing markups
 
 #+begin_src emacs-lisp
+  (when window-system
+
     (defun meomacs--org-prettify-symbols ()
       (setq-local prettify-symbols-alist
                   '(("#+begin_src" . "»")
@@ -116,7 +118,7 @@ Enable ~variable-pitch-mode~.
     (setq org-hide-emphasis-markers t)
 
     (with-eval-after-load "org"
-      (add-to-list 'org-emphasis-alist '("=" (:box (:line-width -2 :color "gray50" :style released-button) :inherit org-verbatim))))
+      (add-to-list 'org-emphasis-alist '("=" (:box (:line-width -2 :color "gray50" :style released-button) :inherit org-verbatim)))))
 #+end_src
 
 ** Babel
