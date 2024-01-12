@@ -89,8 +89,7 @@ Use Telega as Telegram client.
 #+begin_src emacs-lisp
   (straight-use-package '(telega
                           :host github
-                          :repo "zevlg/telega.el"
-                          :branch "release-0.8.0"))
+                          :repo "zevlg/telega.el"))
 
   (autoload 'telega "telega" nil t)
 

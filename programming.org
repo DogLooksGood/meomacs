@@ -534,7 +534,7 @@ Write a command to switch between wasm32 and native target triple.
     (straight-use-package 'treesit-auto)
     (require 'treesit-auto)
     (setq treesit-auto-install nil
-          treesit-auto-langs '(rust html typescript))
+          treesit-auto-langs '(rust html typescript tsx))
     (global-treesit-auto-mode))
 #+end_src
 

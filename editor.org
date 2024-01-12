@@ -111,6 +111,7 @@ Bind some keys for quick operations.
    visible-cursor nil)
 
   (show-paren-mode -1)
+  (scroll-bar-mode -1)
 
   (global-subword-mode 1)
   (diminish 'subword-mode)
