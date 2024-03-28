@@ -47,7 +47,7 @@ Enable smerge mode with =C-c t m=.
   (setq default-input-method "rime"
         rime-emacs-module-header-root "~/.nix-profile/include"
         rime-librime-root "~/.nix-profile"
-        rime-share-data-dir "/usr/share/rime-data")
+        rime-share-data-dir "~/.local/share/fcitx5/rime")
 
   (with-eval-after-load "rime"
     (define-key rime-mode-map (kbd "C-`") 'rime-send-keybinding)
