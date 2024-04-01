@@ -171,6 +171,12 @@ Open pass menu with =C-c a p=.
                  (:exclude ".dir-locals.el" "*-tests.el"))))
 #+end_src
 
+** Key bindings
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c t e") 'eat-project)
+  (global-set-key (kbd "C-c t E") 'eat)
+#+end_src
+
 ** Integration with Meow
 Use ~char~ mode in ~INSERT~ state, and ~emacs~ mode in ~NORMAL~ state.  When
 switching to ~INSERT~ state, move the cursor to the end of buffer.
@@ -190,16 +196,6 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
     (advice-add 'eat-semi-char-mode :after 'eat-emacs-mode)
     (add-hook 'eat-mode-hook 'eat-emacs-mode)
     (add-hook 'eat-mode-hook 'meomacs-eat-meow-setup))
-#+end_src
-
-* EMMS - Music
-#+begin_src emacs-lisp
-  (straight-use-package 'emms)
-  (require 'emms-setup)
-  (emms-all)
-  (setq emms-player-list '(emms-player-mpv))
-  (setq emms-source-file-default-directory "~/.telega/cache/music")
-  (define-key toggle-map "e" 'emms)
 #+end_src
 
 * ChatGPT
