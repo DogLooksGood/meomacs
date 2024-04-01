@@ -158,6 +158,40 @@ Open pass menu with =C-c a p=.
   (setq epa-pinentry-mode 'loopback)
 #+end_src
 
+* EAT
+#+begin_src emacs-lisp
+  (straight-use-package
+   '(eat :type git
+         :host codeberg
+         :repo "akib/emacs-eat"
+         :files ("*.el" ("term" "term/*.el") "*.texi"
+                 "*.ti" ("terminfo/e" "terminfo/e/*")
+                 ("terminfo/65" "terminfo/65/*")
+                 ("integration" "integration/*")
+                 (:exclude ".dir-locals.el" "*-tests.el"))))
+#+end_src
+
+** Integration with Meow
+Use ~char~ mode in ~INSERT~ state, and ~emacs~ mode in ~NORMAL~ state.  When
+switching to ~INSERT~ state, move the cursor to the end of buffer.
+
+#+begin_src emacs-lisp
+  (defun meomacs-eat-meow-setup ()
+    (add-hook 'meow-normal-mode-hook 'eat-emacs-mode nil t)
+    (add-hook 'meow-insert-mode-hook
+              (lambda ()
+                (goto-char (point-max))
+                (eat-char-mode))
+              nil
+              t))
+
+  (with-eval-after-load "eat"
+    ;; Replace semi-char mode with emacs mode
+    (advice-add 'eat-semi-char-mode :after 'eat-emacs-mode)
+    (add-hook 'eat-mode-hook 'eat-emacs-mode)
+    (add-hook 'eat-mode-hook 'meomacs-eat-meow-setup))
+#+end_src
+
 * EMMS - Music
 #+begin_src emacs-lisp
   (straight-use-package 'emms)

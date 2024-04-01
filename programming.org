@@ -169,6 +169,12 @@ Use clojure-ts-mode instead of clojure-mode.
 
 #+begin_src emacs-lisp
   (straight-use-package 'clojure-ts-mode)
+
+  (setq clojure-ts-toplevel-inside-comment-form t)
+
+  (with-eval-after-load "clojure-ts-mode"
+    (define-key clojure-ts-mode-map (kbd "C-c M-j") 'cider-jack-in)
+    (define-key clojure-ts-mode-map (kbd "C-c M-J") 'cider-jack-in-cljs))
 #+end_src
 
 
@@ -337,7 +343,9 @@ Use clojure-mode for basic syntax support.
 
   (autoload 'cider-jack-in "cider" nil t)
 
-  (setq cider-offer-to-open-cljs-app-in-browser nil)
+  (setq cider-offer-to-open-cljs-app-in-browser nil
+        cider-preferred-build-tool 'shadow-cljs
+        cider-repl-type 'shadow)
 #+end_src
 
 ** COMMENT Linting with flycheck-clj-kondo
@@ -412,13 +420,18 @@ Use clojure-mode for basic syntax support.
 * Rust
 ** cargo.el
 #+begin_src emacs-lisp
-  (straight-use-package 'cargo)
+  (straight-use-package '(cargo :host github
+                                :repo "DogLooksGood/cargo.el"))
 
   (autoload 'cargo-minor-mode "cargo" nil t)
   (add-hook 'rust-ts-mode-hook 'cargo-minor-mode)
 
+  (setq cargo-process--custom-path-to-bin nil
+        cargo-process--rustc-cmd nil)
+
   (with-eval-after-load "cargo"
-    (define-key cargo-process-mode-map (kbd "/") 'scroll-down)    (define-key cargo-process-mode-map (kbd "?") 'scroll-down-line)
+    (define-key cargo-process-mode-map (kbd "/") 'scroll-down)
+    (define-key cargo-process-mode-map (kbd "?") 'scroll-down-line)
     (define-key cargo-process-mode-map (kbd "@") 'scroll-up)
     (define-key cargo-process-mode-map (kbd "^") 'scroll-up-line)
     (define-key cargo-process-mode-map (kbd "\\") 'toggle-truncate-lines))
@@ -427,11 +440,10 @@ Use clojure-mode for basic syntax support.
 ** rust-mode
 #+begin_src emacs-lisp
   (straight-use-package 'rust-mode)
-  (with-eval-after-load "rust-mode"
-    (add-hook 'rust-mode-hook 'cargo-minor-mode))
 
   (setq lsp-rust-analyzer-completion-add-call-parenthesis nil
         lsp-rust-analyzer-proc-macro-enable t)
+
 #+end_src
 
 Write a command to switch between wasm32 and native target triple.
@@ -463,6 +475,15 @@ Write a command to switch between wasm32 and native target triple.
 #+begin_src emacs-lisp
   (straight-use-package 'nix-mode)
   (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
+#+end_src
+
+** nixpkgs-fmt
+#+begin_src emacs-lisp
+  (straight-use-package 'nixpkgs-fmt)
+
+  (with-eval-after-load "nixpkgs-fmt"
+    (define-key nix-mode-map (kbd "C-c C-f") 'nixpkgs-fmt)
+    (add-hook 'nix-mode-hook 'nixpkgs-fmt-on-save-mode))
 #+end_src
 
 * Solidity
@@ -530,12 +551,11 @@ Write a command to switch between wasm32 and native target triple.
 
 * Treesit grammars
 #+begin_src emacs-lisp
-  (when (featurep 'treesit)
-    (straight-use-package 'treesit-auto)
-    (require 'treesit-auto)
-    (setq treesit-auto-install nil
-          treesit-auto-langs '(rust html typescript tsx))
-    (global-treesit-auto-mode))
+  (straight-use-package 'treesit-auto)
+  (require 'treesit-auto)
+  (setq treesit-auto-install nil
+        treesit-auto-langs '(rust html clojure typescript tsx))
+  (global-treesit-auto-mode)
 #+end_src
 
 * YAML

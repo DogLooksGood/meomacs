@@ -62,14 +62,11 @@ Default variables
   (defvar meomacs-font-size 12
     "Current font size.")
 
-  (defvar meomacs-fonts '((default . "Monospace")
+  (defvar meomacs-fonts '((mono . "Monospace")
+                          (sans . "Monospace")
+                          (serif . "Monospace")
                           (cjk . "Unifont")
-                          (symbol . "Unifont")
-                          (fixed . "Monospace")
-                          (fixed-serif . "Monospace Serif")
-                          (variable . "Sans Serif")
-                          (wide . "Monospace")
-                          (tall . "Monospace"))
+                          (symbol . "Unifont"))
     "Fonts to use.")
 #+end_src
 
@@ -80,29 +77,30 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
   (defun meomacs--get-font-family (key)
     (let ((font (alist-get key meomacs-fonts)))
       (if (string-empty-p font)
-          (alist-get 'default meomacs-fonts)
+          (alist-get 'mono meomacs-fonts)
         font)))
 
   (defun meomacs-load-default-font ()
     "Load default font configuration."
     (let ((default-font (format "%s-%s"
-                                (meomacs--get-font-family 'default)
+                                (meomacs--get-font-family 'mono)
                                 meomacs-font-size)))
       (add-to-list 'default-frame-alist (cons 'font default-font))))
 
   (defun meomacs-load-face-font ()
     "Load face font configuration."
-    (let ((variable-font (meomacs--get-font-family 'variable))
-          (fixed-font (meomacs--get-font-family 'fixed))
-          (fixed-serif-font (meomacs--get-font-family 'fixed-serif)))
-      (set-face-attribute 'variable-pitch nil :family variable-font)
-      (set-face-attribute 'fixed-pitch nil :family fixed-font)
-      (set-face-attribute 'fixed-pitch-serif nil :family fixed-serif-font)))
+    (let ((sans (meomacs--get-font-family 'sans))
+          (mono (meomacs--get-font-family 'mono))
+          (serif (meomacs--get-font-family 'serif)))
+      (set-face-attribute 'variable-pitch nil :family sans)
+      (set-face-attribute 'variable-pitch-text nil :family serif)
+      (set-face-attribute 'fixed-pitch nil :family mono)
+      (set-face-attribute 'fixed-pitch-serif nil :family mono)))
 
   (defun meomacs-load-charset-font (&optional font)
     "Load charset font configuration."
     (let ((default-font (or font (format "%s-%s"
-                                         (meomacs--get-font-family 'default)
+                                         (meomacs--get-font-family 'mono)
                                          meomacs-font-size)))
           (cjk-font (meomacs--get-font-family 'cjk))
           (symbol-font (meomacs--get-font-family 'symbol)))
@@ -121,7 +119,7 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
                 (meomacs-load-charset-font))))
 #+end_src
 
-*** Variants used when spliting window
+*** COMMENT Variants used when spliting window
 #+begin_src emacs-lisp
   (defvar meomacs-font-current-variant nil)
 
