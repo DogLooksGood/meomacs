@@ -115,6 +115,8 @@ Use lspce as LSP client.
 Use lsp-mode as LSP client.
 
 #+begin_src emacs-lisp
+  (setenv "LSP_USE_PLISTS" "true")
+
   (straight-use-package 'lsp-mode)
 
   (setq lsp-keymap-prefix "C-c l"
@@ -138,6 +140,39 @@ Use lsp-mode as LSP client.
 
 #+begin_src emacs-lisp
   (define-key toggle-map "L" 'lsp)
+#+end_src
+
+*** Lsp Booster
+#+begin_src emacs-lisp
+  (defun lsp-booster--advice-json-parse (old-fn &rest args)
+    "Try to parse bytecode instead of json."
+    (or
+     (when (equal (following-char) ?#)
+       (let ((bytecode (read (current-buffer))))
+         (when (byte-code-function-p bytecode)
+           (funcall bytecode))))
+     (apply old-fn args)))
+  (advice-add (if (progn (require 'json)
+                         (fboundp 'json-parse-buffer))
+                  'json-parse-buffer
+                'json-read)
+              :around
+              #'lsp-booster--advice-json-parse)
+
+  (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
+    "Prepend emacs-lsp-booster command to lsp CMD."
+    (let ((orig-result (funcall old-fn cmd test?)))
+      (if (and (not test?)                             ;; for check lsp-server-present?
+               (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
+               lsp-use-plists
+               (not (functionp 'json-rpc-connection))  ;; native json-rpc
+               (executable-find "emacs-lsp-booster"))
+          (progn
+            (message "Using emacs-lsp-booster for %s!" orig-result)
+            (cons "emacs-lsp-booster" orig-result))
+        orig-result)))
+
+  (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
 #+end_src
 
 ** COMMENT Eglot
@@ -442,8 +477,10 @@ Use clojure-mode for basic syntax support.
   (straight-use-package 'rust-mode)
 
   (setq lsp-rust-analyzer-completion-add-call-parenthesis nil
-        lsp-rust-analyzer-proc-macro-enable t)
+        lsp-rust-analyzer-proc-macro-enable t
+        lsp-rust-analyzer-server-format-inlay-hints nil)
 
+  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 #+end_src
 
 Write a command to switch between wasm32 and native target triple.
@@ -537,6 +574,17 @@ Write a command to switch between wasm32 and native target triple.
   (straight-use-package 'move-mode)
 #+end_src
 
+* KDL
+** kdl-mode
+#+begin_src emacs-lisp
+  (straight-use-package '(kdl-mode :host github
+                                   :repo "bobuk/kdl-mode"))
+
+  (add-to-list 'auto-mode-alist '("\\.kdl\\'" . kdl-mode))
+  (add-hook 'kdl-mode-hook (lambda () (setq-local tab-width 2)))
+  (autoload 'kdl-mode "kdl-mode")
+#+end_src
+
 * Just
 
 ** Just-mode
@@ -554,7 +602,7 @@ Write a command to switch between wasm32 and native target triple.
   (straight-use-package 'treesit-auto)
   (require 'treesit-auto)
   (setq treesit-auto-install nil
-        treesit-auto-langs '(rust html clojure typescript tsx))
+        treesit-auto-langs '(html clojure typescript tsx))
   (global-treesit-auto-mode)
 #+end_src
 

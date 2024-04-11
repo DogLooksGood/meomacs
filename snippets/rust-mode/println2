@@ -1,5 +1,5 @@
 # -*- mode: rust-mode -*-
-# name: println
+# name: println2
 # key: pl
 # --
 println!("$1: {:?}", $1);$0
