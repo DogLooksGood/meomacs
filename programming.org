@@ -128,6 +128,9 @@ Use lsp-mode as LSP client.
         lsp-auto-execute-action nil)
 
 
+  (setq-default lsp-rust-analyzer-cargo-watch-command "clippy"
+                lsp-eldoc-render-all t)
+
   (autoload 'lsp "lsp-mode" nil t)
 
   (with-eval-after-load "lsp-mode"

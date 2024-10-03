@@ -108,7 +108,9 @@ Bind some keys for quick operations.
    eldoc-echo-area-use-multiline-p t
 
    ;; No cursor blink in TUI
-   visible-cursor nil)
+   visible-cursor nil
+
+   compilation-scroll-output 'first-error)
 
   (show-paren-mode -1)
   (scroll-bar-mode -1)
@@ -142,11 +144,11 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
   ;; custom indicator
   (when window-system
     (setq meow-replace-state-name-list
-          '((normal . "NORMAL")
-            (beacon . "BEACON")
-            (insert . "INSERT")
-            (motion . "MOTION")
-            (keypad . "KEYPAD"))))
+          '((normal . "N")
+            (beacon . "B")
+            (insert . "I")
+            (motion . "M")
+            (keypad . "K"))))
 
   ;; custom variables
   (setq meow-esc-delay 0.001)
@@ -448,7 +450,8 @@ Do "delete" instead of "kill" when pressing =M-DEL=.
   (autoload 'company-mode "company" nil t)
 
   (setq company-format-margin-function 'company-text-icons-margin
-        company-dabbrev-downcase nil)
+        company-dabbrev-downcase nil
+        company-idle-delay 0.1)
 
   (with-eval-after-load 'company
     (diminish 'company-mode))

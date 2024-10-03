@@ -12,6 +12,16 @@ Configuration for writing with Emacs, specifically for Markdown and Org mode.
   (with-eval-after-load "org"
     (define-key org-mode-map (kbd "C-c v") 'visible-mode))
 #+end_src
+
+** More TODO state changes
+
+#+begin_src emacs-lisp
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)"))
+        ;; LOGBOOK
+        org-log-into-drawer t)
+#+end_src
+
 ** Org Roam
 #+begin_src emacs-lisp
   (straight-use-package 'org-roam)
