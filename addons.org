@@ -45,8 +45,8 @@ Enable smerge mode with =C-c t m=.
   (straight-use-package 'rime)
 
   (setq default-input-method "rime"
-        rime-emacs-module-header-root "~/.nix-profile/include"
-        rime-librime-root "~/.nix-profile"
+        rime-emacs-module-header-root (file-name-directory (getenv "EMACS_MODULE_HEADER"))
+        rime-librime-root (getenv "LIBRIME_ROOT")
         rime-share-data-dir "~/.local/share/fcitx5/rime")
 
   (with-eval-after-load "rime"
@@ -197,4 +197,11 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
 #+begin_src emacs-lisp
   (straight-use-package '(gptel :host github :repo "karthink/gptel"))
   (setq gptel-use-curl t)
+#+end_src
+
+** Keybindings
+#+begin_src emacs-lisp
+  (with-eval-after-load "gptel"
+    (define-key gptel-mode-map (kbd "C-<return>") 'gptel-send)
+    (define-key gptel-mode-map (kbd "M-RET") 'gptel-menu))
 #+end_src
