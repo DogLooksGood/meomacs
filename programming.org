@@ -469,21 +469,22 @@ Use clojure-mode for basic syntax support.
 
   (with-eval-after-load "cargo"
     (define-key cargo-process-mode-map (kbd "/") 'scroll-down)
-    (define-key cargo-process-mode-map (kbd "?") 'scroll-down-line)
     (define-key cargo-process-mode-map (kbd "@") 'scroll-up)
-    (define-key cargo-process-mode-map (kbd "^") 'scroll-up-line)
     (define-key cargo-process-mode-map (kbd "\\") 'toggle-truncate-lines))
 #+end_src
 
-** rust-mode
+** rust-ts-mode
 #+begin_src emacs-lisp
   (straight-use-package 'rust-mode)
+  (straight-use-package 'rust-ts-mode)
+
+  (require 'rust-compile)
+
+  (add-to-list 'auto-mode-alist (cons "\\.rs\\'" 'rust-ts-mode))
 
   (setq lsp-rust-analyzer-completion-add-call-parenthesis nil
         lsp-rust-analyzer-proc-macro-enable t
         lsp-rust-analyzer-server-format-inlay-hints nil)
-
-  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 #+end_src
 
 Write a command to switch between wasm32 and native target triple.
@@ -500,14 +501,6 @@ Write a command to switch between wasm32 and native target triple.
                 cargo-process--command-check "check")
         (setq lsp-rust-analyzer-cargo-target "wasm32-unknown-unknown"
               cargo-process--command-check "check --target wasm32-unknown-unknown"))))
-
-  (with-eval-after-load "rust-mode"
-    (define-key rust-mode-map (kbd "C-c '") #'rust-toggle-lsp-target))
-#+end_src
-
-** COMMENT rustic-mode
-#+begin_src emacs-lisp
-  (straight-use-package 'rustic)
 #+end_src
 
 * Nix

@@ -175,6 +175,15 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
   (setq meow-keypad-leader-dispatch "C-c")
 #+end_src
 
+** Tree-sitter integration
+
+#+begin_src emacs-lisp
+  (straight-use-package 'meow-tree-sitter)
+
+  (require 'meow-tree-sitter)
+  (meow-tree-sitter-register-defaults)
+#+end_src
+
 * Window management
 
 Switch window by pressing the number showned in the mode line.
