@@ -478,7 +478,10 @@ Use clojure-mode for basic syntax support.
   (straight-use-package 'rust-mode)
   (straight-use-package 'rust-ts-mode)
 
-  (require 'rust-compile)
+  (add-hook 'rust-ts-mode-hook
+            (lambda ()
+              (require 'rust-mode)
+              (require 'rust-compile)))
 
   (add-to-list 'auto-mode-alist (cons "\\.rs\\'" 'rust-ts-mode))
 
