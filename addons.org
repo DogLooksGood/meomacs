@@ -42,16 +42,22 @@ Enable smerge mode with =C-c t m=.
 ~emacs-rime~ is the frontend of rime built with emacs input method API.
 
 #+begin_src emacs-lisp
-  (straight-use-package 'rime)
+  (when (and (getenv "EMACS_MODULE_HEADER")
+             (getenv "LIBRIME_ROOT"))
+    (straight-use-package 'rime)
 
-  (setq default-input-method "rime"
-        rime-emacs-module-header-root (file-name-directory (getenv "EMACS_MODULE_HEADER"))
-        rime-librime-root (getenv "LIBRIME_ROOT")
-        rime-share-data-dir "~/.local/share/fcitx5/rime")
+    (setq default-input-method "rime"
+          rime-emacs-module-header-root (file-name-directory (getenv "EMACS_MODULE_HEADER"))
+          rime-librime-root (getenv "LIBRIME_ROOT")
+          rime-share-data-dir "~/.local/share/fcitx5/rime")
 
-  (with-eval-after-load "rime"
-    (define-key rime-mode-map (kbd "C-`") 'rime-send-keybinding)
-    (define-key rime-active-mode-map (kbd "TAB") 'rime-inline-ascii))
+    (with-eval-after-load "rime"
+      (define-key rime-mode-map (kbd "C-`") 'rime-send-keybinding)
+
+      (dolist (k '("TAB" "C-p" "C-n" "C-v" "C-y"))
+        (define-key rime-active-mode-map (kbd k) 'rime-send-keybinding))
+
+      (define-key rime-active-mode-map (kbd "C-a") 'rime-inline-ascii)))
 #+end_src
 
 Disable input method in non-insert state.
@@ -173,8 +179,14 @@ Open pass menu with =C-c a p=.
 
 ** Key bindings
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-c t e") 'eat-project)
+  (global-set-key (kbd "C-c t e") 'eshell)
   (global-set-key (kbd "C-c t E") 'eat)
+#+end_src
+
+** Eshell support
+#+begin_src emacs-lisp
+  (add-hook 'eshell-load-hook #'eat-eshell-mode)
+  (add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
 #+end_src
 
 ** Integration with Meow
