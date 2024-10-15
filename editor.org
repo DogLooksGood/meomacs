@@ -377,7 +377,7 @@ Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
 #+end_src
 
 * Minibuffer completion reading
-** Vertico & Orderless
+** Vertico & Precient
 
 - Vertico provides a better UX for completion reading.
 - Use prescient to support fuzzy search
@@ -619,7 +619,6 @@ To find files/buffers and apply commands on project, use builtin package ~projec
   (unless window-system
     (setq interprogram-cut-function 'ext-copy))
 #+end_src
-
 
 * COMMENT Frame associated buffers
 #+begin_src emacs-lisp

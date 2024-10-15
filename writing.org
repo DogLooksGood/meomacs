@@ -26,13 +26,20 @@ Configuration for writing with Emacs, specifically for Markdown and Org mode.
 #+begin_src emacs-lisp
   (straight-use-package 'org-roam)
 
-  (setq org-roam-directory (expand-file-name "~/Org"))
+  (setq org-roam-directory (expand-file-name "~/org/roam"))
+  (setq org-roam-dailies-directory (expand-file-name "~/org/daily"))
 
-  ;; Use builtin sqlite3 in Emacs 29
-  ;; (when (version<= "29" emacs-version)
-  ;;   (straight-use-package 'emacsql-sqlite-builtin)
-  ;;   (setq org-roam-database-connector 'sqlite-builtin)
-  ;;   (require 'emacsql-sqlite-builtin))
+  ;; Use gpg encryption for files
+  (setq org-roam-capture-templates '(("d" "default" plain "%?"
+       :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org.gpg"
+                          "#+title: ${title}\n")
+       :unnarrowed t)))
+
+  (setq org-roam-dailies-capture-templates
+        '(("d" "default" entry
+           "* %?"
+           :target (file+head "%<%Y-%m-%d>.org.gpg"
+                              "#+title: %<%Y-%m-%d>\n"))))
 
   (defvar org-roam-keymap
     (let ((keymap (make-keymap)))
@@ -42,14 +49,21 @@ Configuration for writing with Emacs, specifically for Markdown and Org mode.
       (define-key keymap "i" 'org-roam-node-insert)
       (define-key keymap "c" 'org-roam-capture)
       (define-key keymap "s" 'org-roam-db-sync)
+      (define-key keymap "t" 'org-roam-dailies-goto-today)
+      (define-key keymap "y" 'org-roam-dailies-goto-yesterday)
+      (define-key keymap "T" 'org-roam-dailies-goto-tomorrow)
+      (define-key keymap "d" 'org-roam-dailies-goto-date)
       keymap))
 
   (defalias 'org-roam-keymap org-roam-keymap)
 
   (global-set-key (kbd "C-c r") 'org-roam-keymap)
 
+  (setq org-roam-db-gc-threshold most-positive-fixnum)
+
   (with-eval-after-load "org-roam"
-    (org-roam-setup))
+    (org-roam-setup)
+    (org-roam-db-autosync-mode))
 #+end_src
 
 ** Good old template shortcut
@@ -81,28 +95,13 @@ Enable ~variable-pitch-mode~.
 ~org-visual-outline~ provides a better visual feedback for document structure.
 
 #+begin_src emacs-lisp
-  ;; (straight-use-package '(org-visual-outline
-  ;;                         :repo "legalnonsense/org-visual-outline"
-  ;;                         :host github
-  ;;                         :type git))
+  (straight-use-package '(org-visual-outline :host github
+                                             :repo "egalnonsense/org-visual-outline"))
 
-  ;; (custom-set-faces
-  ;;  '(org-visual-indent-pipe-face ((t :foreground "gray50" :background "gray50" :height .1))))
+  (autoload 'org-visual-indent-mode "org-visual-indent")
 
-  ;; (autoload 'org-visual-indent-mode "org-visual-indent")
-
-  ;; (add-hook 'org-mode-hook 'org-visual-indent-mode)
-
-  (add-hook 'org-mode-hook 'org-indent-mode)
-#+end_src
-
-** COMMENT Org modern
-
-#+begin_src emacs-lisp
-  (straight-use-package 'org-modern)
-
-  (with-eval-after-load 'org
-    (global-org-modern-mode))
+  (add-hook 'org-mode-hook 'org-visual-indent-mode)
+  (add-hook 'org-mode-hook 'org-dynamic-bullets-mode)
 #+end_src
 
 ** Ricing markups
@@ -172,4 +171,23 @@ Enable ~variable-pitch-mode~.
 #+begin_src emacs-lisp
   (with-eval-after-load "markdown-mode"
     (define-key markdown-mode-map (kbd "C-c v") 'markdown-toggle-markup-hiding))
+#+end_src
+
+* Uniline
+
+Draw graphics with unicode
+
+#+begin_src emacs-lisp
+  (straight-use-package '(uniline :host github
+                                  :repo "tbanel/uniline"))
+#+end_src
+
+** Meow integration
+
+#+begin_src emacs-lisp
+  (add-hook 'uniline-mode-hook
+            (lambda ()
+              (if (bound-and-true-p uniline-mode)
+                  (meow--switch-to-motion)
+                (meow--switch-to-normal))))
 #+end_src

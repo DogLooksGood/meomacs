@@ -199,6 +199,11 @@ Tweaking following table for key bindings in leader keymap.
           (mapcar (lambda (s) (intern (substring s 4))))))
 #+end_src
 
+* ChatGPT
+#+begin_src emacs-lisp
+  (setq gptel-api-key "")
+#+end_src
+
 * Network settings
 
 #+begin_src emacs-lisp

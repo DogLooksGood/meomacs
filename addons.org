@@ -60,6 +60,14 @@ Enable smerge mode with =C-c t m=.
       (define-key rime-active-mode-map (kbd "C-a") 'rime-inline-ascii)))
 #+end_src
 
+Auto switch to inline ascii state when after a space after a non-ascii character.
+
+#+begin_src emacs-lisp
+  (setq rime-inline-predicates '(rime-predicate-space-after-cc-p))
+#+end_src
+
+** Meow Integration                                                  :modal:
+
 Disable input method in non-insert state.
 
 #+begin_src emacs-lisp
@@ -67,12 +75,6 @@ Disable input method in non-insert state.
                                   meow-keypad-mode-p
                                   meow-motion-mode-p
                                   meow-beacon-mode-p))
-#+end_src
-
-Auto switch to inline ascii state when after a space after a non-ascii character.
-
-#+begin_src emacs-lisp
-  (setq rime-inline-predicates '(rime-predicate-space-after-cc-p))
 #+end_src
 
 * Matrix client with ement
