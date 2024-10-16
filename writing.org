@@ -103,8 +103,9 @@ Enable ~variable-pitch-mode~.
 ~org-visual-outline~ provides a better visual feedback for document structure.
 
 #+begin_src emacs-lisp
-  (straight-use-package '(org-visual-outline :host github
-                                             :repo "egalnonsense/org-visual-outline"))
+  (straight-use-package '(org-visual-outline
+                          :host github
+                          :repo "legalnonsense/org-visual-outline"))
 
   (autoload 'org-visual-indent-mode "org-visual-indent")
 
@@ -195,11 +196,6 @@ Draw graphics with unicode
 ** Meow integration
 
 #+begin_src emacs-lisp
-  (setq meow--kbd-forward-char "<right>"
-        meow--kbd-backward-char "<left>"
-        meow--kbd-forward-line "<down>"
-        meow--kbd-backward-line "<up>")
-
   (with-eval-after-load "uniline"
     (keymap-set uniline-mode-map "C-c /" 'uniline-hydra-choose-body)
     (keymap-set uniline-mode-map "C-c u" 'uniline--set-brush-0)
