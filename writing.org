@@ -188,14 +188,27 @@ Draw graphics with unicode
 #+begin_src emacs-lisp
   (straight-use-package '(uniline :host github
                                   :repo "tbanel/uniline"))
+
+  (keymap-set toggle-map "u" 'uniline-mode)
 #+end_src
 
 ** Meow integration
 
 #+begin_src emacs-lisp
-  (add-hook 'uniline-mode-hook
-            (lambda ()
-              (if (bound-and-true-p uniline-mode)
-                  (meow--switch-to-motion)
-                (meow--switch-to-normal))))
+  (setq meow--kbd-forward-char "<right>"
+        meow--kbd-backward-char "<left>"
+        meow--kbd-forward-line "<down>"
+        meow--kbd-backward-line "<up>")
+
+  (eval-after-load "uniline"
+    (keymap-set uniline-mode-map "C-c /" 'uniline-hydra-choose-body)
+    (keymap-set uniline-mode-map "C-c u" 'uniline--set-brush-0)
+    (keymap-set uniline-mode-map "C-c -" 'uniline--set-brush-1)
+    (keymap-set uniline-mode-map "C-c +" 'uniline--set-brush-2)
+    (keymap-set uniline-mode-map "C-c =" 'uniline--set-brush-3)
+    (keymap-set uniline-mode-map "C-c #" 'uniline--set-brush-block)
+    (keymap-set uniline-mode-map "-" nil)
+    (keymap-set uniline-mode-map "+" nil)
+    (keymap-set uniline-mode-map "#" nil)
+    (keymap-set uniline-mode-map "=" nil))
 #+end_src

@@ -121,7 +121,8 @@ Straight.el is used for package management.
 
    compilation-scroll-output 'first-error)
 
-  (show-paren-mode -1)
+  (setq show-paren-when-point-inside-paren t)
+  (show-paren-mode 1)
   (scroll-bar-mode -1)
 
   (global-subword-mode 1)
