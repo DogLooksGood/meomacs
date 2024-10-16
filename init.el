@@ -32,6 +32,15 @@
 				 t)))
     (find-file (expand-file-name (format "%s.org" config) user-emacs-directory))))
 
+;; Define helper macro to parse key binding tables
+(defmacro meomacs-keymap-table (keymap table)
+  `(progn
+     (defvar ,keymap (make-keymap))
+     (let ((parse-and-def (lambda (x)
+                            (keymap-set ,keymap (car x) (intern (cadr x))))))
+       (mapcar parse-and-def ,table))
+     (defalias (quote ,keymap) ,keymap)))
+
 (global-set-key (kbd "<f9>") 'meomacs-open-configuration)
 (global-set-key (kbd "<f12>") 'meomacs-refresh)
 

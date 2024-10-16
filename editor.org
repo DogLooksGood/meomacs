@@ -11,21 +11,30 @@ Configuration for editor basics.
 ** Straight
 
 Straight.el is used for package management.
-Bind some keys for quick operations.
+
+*** Disable native compilation
 
 #+begin_src emacs-lisp
   (setq straight-disable-native-compile t)
-  (defvar straight-keymap
-    (let ((keymap (make-keymap)))
-      (define-key keymap "c" 'straight-check-package)
-      (define-key keymap "C" 'straight-check-all)
-      (define-key keymap "p" 'straight-pull-package)
-      (define-key keymap "P" 'straight-pull-all)
-      (define-key keymap "b" 'straight-rebuild-package)
-      (define-key keymap "B" 'straight-rebuild-all)
-      keymap))
+#+end_src
 
-  (defalias 'straight-keymap straight-keymap)
+
+*** Key bindings
+
+#+TBLNAME: straight-keymap-table
+| Key | Command                  |
+|-----+--------------------------|
+| c   | straight-check-package   |
+| C   | straight-check-all       |
+| p   | straight-pull-package    |
+| P   | straight-pull-all        |
+| b   | straight-rebuild-package |
+| B   | straight-rebuild-all     |
+| v   | straight-free-versions   |
+
+#+HEADER: :var straight-keymap-table=straight-keymap-table
+#+begin_src emacs-lisp
+  (meomacs-keymap-table straight-keymap straight-keymap-table)
   (global-set-key (kbd "C-c P") 'straight-keymap)
 #+end_src
 

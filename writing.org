@@ -27,7 +27,7 @@ Configuration for writing with Emacs, specifically for Markdown and Org mode.
   (straight-use-package 'org-roam)
 
   (setq org-roam-directory (expand-file-name "~/org/roam"))
-  (setq org-roam-dailies-directory (expand-file-name "~/org/daily"))
+  (setq org-roam-dailies-directory (expand-file-name "~/org/journal"))
 
   ;; Use gpg encryption for files
   (setq org-roam-capture-templates '(("d" "default" plain "%?"
@@ -41,6 +41,14 @@ Configuration for writing with Emacs, specifically for Markdown and Org mode.
            :target (file+head "%<%Y-%m-%d>.org.gpg"
                               "#+title: %<%Y-%m-%d>\n"))))
 
+
+  (with-eval-after-load "org-roam"
+    (org-roam-setup)
+    (org-roam-db-autosync-mode))
+#+end_src
+
+*** Key bindings
+#+begin_src emacs-lisp
   (defvar org-roam-keymap
     (let ((keymap (make-keymap)))
       (define-key keymap "l" 'org-roam-buffer-toggle)
@@ -58,12 +66,12 @@ Configuration for writing with Emacs, specifically for Markdown and Org mode.
   (defalias 'org-roam-keymap org-roam-keymap)
 
   (global-set-key (kbd "C-c r") 'org-roam-keymap)
+#+end_src
 
+*** Bigger GC threshold during sync.
+
+#+begin_src emacs-lisp
   (setq org-roam-db-gc-threshold most-positive-fixnum)
-
-  (with-eval-after-load "org-roam"
-    (org-roam-setup)
-    (org-roam-db-autosync-mode))
 #+end_src
 
 ** Good old template shortcut
@@ -157,7 +165,7 @@ Enable ~variable-pitch-mode~.
 ** Agenda
 
 #+begin_src emacs-lisp
-  (setq org-agenda-files (list (expand-file-name "~/Org")))
+  (setq org-agenda-files (list (expand-file-name "~/org/agenda")))
 #+end_src
 * Markdown
 
