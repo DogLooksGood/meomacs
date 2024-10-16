@@ -30,7 +30,7 @@ Straight.el is used for package management.
 | P   | straight-pull-all        |
 | b   | straight-rebuild-package |
 | B   | straight-rebuild-all     |
-| v   | straight-free-versions   |
+| v   | straight-freeze-versions |
 
 #+HEADER: :var straight-keymap-table=straight-keymap-table
 #+begin_src emacs-lisp
