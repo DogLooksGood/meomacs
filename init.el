@@ -35,7 +35,8 @@
 ;; Define helper macro to parse key binding tables
 (defmacro meomacs-keymap-table (keymap table)
   `(progn
-     (defvar ,keymap (make-keymap))
+     (unless (boundp (quote ,keymap))
+       (defvar ,keymap (make-keymap)))
      (let ((parse-and-def (lambda (x)
                             (keymap-set ,keymap (car x) (intern (cadr x))))))
        (mapcar parse-and-def ,table))

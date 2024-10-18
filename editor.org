@@ -18,7 +18,6 @@ Straight.el is used for package management.
   (setq straight-disable-native-compile t)
 #+end_src
 
-
 *** Key bindings
 
 #+TBLNAME: straight-keymap-table
@@ -119,6 +118,9 @@ Straight.el is used for package management.
    ;; No cursor blink in TUI
    visible-cursor nil
 
+   isearch-lazy-count t
+   isearch-lazy-highlight t
+
    compilation-scroll-output 'first-error)
 
   (setq show-paren-when-point-inside-paren t)
@@ -131,6 +133,14 @@ Straight.el is used for package management.
   ;; (global-hl-line-mode t)
   (blink-cursor-mode -1)
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+end_src
+
+* Start a emacs server
+
+#+begin_src emacs-lisp
+  (require 'server)
+  (unless (server-running-p)
+    (server-start))
 #+end_src
 
 * Meow
@@ -154,11 +164,11 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
   ;; custom indicator
   (when window-system
     (setq meow-replace-state-name-list
-          '((normal . "N")
-            (beacon . "B")
-            (insert . "I")
-            (motion . "M")
-            (keypad . "K"))))
+          '((normal . "🅝")
+            (beacon . "🅑")
+            (insert . "🅘")
+            (motion . "🅜")
+            (keypad . "🅚"))))
 
   ;; custom variables
   (setq meow-esc-delay 0.001)
@@ -238,8 +248,7 @@ Switch window by pressing the number showned in the mode line.
       (setq-default mode-line-format (cons modeline-segment mode-line-format))))
 #+end_src
 
-
-** golden-ratio
+** COMMENT golden-ratio
 #+begin_src emacs-lisp
   (straight-use-package 'golden-ratio)
 
@@ -631,6 +640,7 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 #+end_src
 
 * COMMENT Frame associated buffers
+
 #+begin_src emacs-lisp
   (straight-use-package 'beframe)
 

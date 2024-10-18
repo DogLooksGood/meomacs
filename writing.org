@@ -48,24 +48,30 @@ Configuration for writing with Emacs, specifically for Markdown and Org mode.
 #+end_src
 
 *** Key bindings
+#+TBLNAME: org-roam-keymap-table
+| Key | Command                         |
+|-----+---------------------------------|
+| l   | org-roam-buffer-toggle          |
+| f   | org-roam-node-find              |
+| g   | org-roam-graph                  |
+| i   | org-roam-node-insert            |
+| c   | org-roam-capture                |
+| s   | org-roam-db-sync                |
+| t   | org-roam-dailies-goto-today     |
+| y   | org-roam-dailies-goto-yesterday |
+| T   | org-roam-dailies-goto-tomorrow  |
+| d   | org-roam-dailies-goto-date      |
+
+#+HEADER: :var org-roam-keymap-table=org-roam-keymap-table
 #+begin_src emacs-lisp
-  (defvar org-roam-keymap
-    (let ((keymap (make-keymap)))
-      (define-key keymap "l" 'org-roam-buffer-toggle)
-      (define-key keymap "f" 'org-roam-node-find)
-      (define-key keymap "g" 'org-roam-graph)
-      (define-key keymap "i" 'org-roam-node-insert)
-      (define-key keymap "c" 'org-roam-capture)
-      (define-key keymap "s" 'org-roam-db-sync)
-      (define-key keymap "t" 'org-roam-dailies-goto-today)
-      (define-key keymap "y" 'org-roam-dailies-goto-yesterday)
-      (define-key keymap "T" 'org-roam-dailies-goto-tomorrow)
-      (define-key keymap "d" 'org-roam-dailies-goto-date)
-      keymap))
-
-  (defalias 'org-roam-keymap org-roam-keymap)
-
+  (meomacs-keymap-table org-roam-keymap org-roam-keymap-table)
   (global-set-key (kbd "C-c r") 'org-roam-keymap)
+#+end_src
+
+*** A shortcut to create ID
+
+#+begin_src emacs-lisp
+  (keymap-set org-mode-map "C-c I" 'org-id-get-create)
 #+end_src
 
 *** Bigger GC threshold during sync.
@@ -124,8 +130,8 @@ Enable ~variable-pitch-mode~.
                     ("#+end_src" . "«")
                     ("#+begin_example" . "❯")
                     ("#+end_example" . "❮")
-                    ("#+begin_quote" . "‟")
-                    ("#+end_quote" . "‟")
+                    ("#+begin_quote" . "“")
+                    ("#+end_quote" . "”")
                     ("[X]" . "⦿")
                     ("[ ]" . "🞆")
                     ("[-]" . "⦾")))
@@ -133,10 +139,7 @@ Enable ~variable-pitch-mode~.
 
     (add-hook 'org-mode-hook 'meomacs--org-prettify-symbols)
 
-    (setq org-hide-emphasis-markers t)
-
-    (with-eval-after-load "org"
-      (add-to-list 'org-emphasis-alist '("=" (:box (:line-width -2 :color "gray50" :style released-button) :inherit org-verbatim)))))
+    (setq org-hide-emphasis-markers t))
 #+end_src
 
 ** Babel
@@ -187,24 +190,34 @@ Enable ~variable-pitch-mode~.
 Draw graphics with unicode
 
 #+begin_src emacs-lisp
-  (straight-use-package '(uniline :host github
-                                  :repo "tbanel/uniline"))
+  (straight-use-package '(uniline :host github :repo "tbanel/uniline"))
+#+end_src
 
+** Trigger key
+
+To finish draw, use =C-c C-c=.
+
+#+begin_src emacs-lisp
   (keymap-set toggle-map "u" 'uniline-mode)
 #+end_src
 
 ** Meow integration
 
+#+TBLNAME: uniline-keymap-table
+| Key     | Command                   |
+|---------+---------------------------|
+| C-c SPC | uniline-hydra-choose-body |
+| C-c -   | uniline--set-brush-1      |
+| C-c +   | uniline--set-brush-2      |
+| C-c =   | uniline--set-brush-3      |
+| C-c #   | uniline--set-brush-block  |
+| -       | nil                       |
+| +       | nil                       |
+| =       | nil                       |
+| *       | nil                       |
+
+#+HEADER: :var uniline-keymap-table=uniline-keymap-table
 #+begin_src emacs-lisp
   (with-eval-after-load "uniline"
-    (keymap-set uniline-mode-map "C-c /" 'uniline-hydra-choose-body)
-    (keymap-set uniline-mode-map "C-c u" 'uniline--set-brush-0)
-    (keymap-set uniline-mode-map "C-c -" 'uniline--set-brush-1)
-    (keymap-set uniline-mode-map "C-c +" 'uniline--set-brush-2)
-    (keymap-set uniline-mode-map "C-c =" 'uniline--set-brush-3)
-    (keymap-set uniline-mode-map "C-c #" 'uniline--set-brush-block)
-    (keymap-set uniline-mode-map "-" nil)
-    (keymap-set uniline-mode-map "+" nil)
-    (keymap-set uniline-mode-map "#" nil)
-    (keymap-set uniline-mode-map "=" nil))
+    (meomacs-keymap-table uniline-mode-map uniline-keymap-table))
 #+end_src

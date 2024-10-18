@@ -19,7 +19,7 @@ Private configuration.
   (define-key mode-specific-map "a" addon-map)
 #+end_src
 
-* Modal editing key bindings
+* Modal editing key bindings                                          :modal:
 
 ** Programmer Dvorak
 
@@ -40,16 +40,6 @@ Tweaking following table for key bindings in normal state.
 | }        | meow-expand-3             |
 | )        | meow-expand-2             |
 | (        | meow-expand-1             |
-| 1        | select-window-1           |
-| 2        | select-window-2           |
-| 3        | select-window-3           |
-| 4        | select-window-4           |
-| 5        | select-window-5           |
-| 6        | select-window-6           |
-| 7        | select-window-7           |
-| 8        | select-window-8           |
-| 9        | select-window-9           |
-| 0        | select-window-0           |
 | -        | negative-argument         |
 | ;        | meow-reverse              |
 | ,        | meow-inner-of-thing       |
@@ -107,6 +97,9 @@ Tweaking following table for key bindings in normal state.
 | ?        | scroll-down-line          |
 | ^        | scroll-up-line            |
 | <escape> | ignore                    |
+| C-,      | meow-pop-to-mark          |
+| C-.      | meow-unpop-to-mark        |
+#+TBLFM:
 
 *** Motion
 
@@ -116,16 +109,6 @@ Tweaking following table for key bindings in motion state.
 |      key | command         |
 |----------+-----------------|
 | <escape> | ignore          |
-|        1 | select-window-1 |
-|        2 | select-window-2 |
-|        3 | select-window-3 |
-|        4 | select-window-4 |
-|        5 | select-window-5 |
-|        6 | select-window-6 |
-|        7 | select-window-7 |
-|        8 | select-window-8 |
-|        9 | select-window-9 |
-|        0 | select-window-0 |
 
 *** Leader
 
@@ -135,30 +118,28 @@ Tweaking following table for key bindings in leader keymap.
 | key | command                 | description |
 |-----+-------------------------+-------------|
 | e   | dispatch: C-x C-e       |             |
-| s   | split-window-below      |             |
+| s   | split-window-right      |             |
+| z   | split-window-below      |             |
 | w   | other-window            |             |
 | i   | imenu                   |             |
 | b   | switch-to-buffer        |             |
-| o   | delete-other-windows    |             |
+| f   | delete-other-windows    |             |
+| o   | other-window            |             |
 | k   | kill-current-buffer     |             |
 | u   | meow-universal-argument |             |
 | q   | delete-window           |             |
+| 1   | select-window-1         |             |
+| 2   | select-window-2         |             |
+| 3   | select-window-3         |             |
+| 4   | select-window-4         |             |
+| 5   | select-window-5         |             |
+| 6   | select-window-6         |             |
+| 7   | select-window-7         |             |
+| 8   | select-window-8         |             |
+| 9   | select-window-9         |             |
+| 0   | select-window-0         |             |
 #+TBLFM:
 
-** Define keys
-
-#+header: :var normal-keybindings=normal-keybindings :var motion-keybindings=motion-keybindings :var leader-keybindings=leader-keybindings
-#+begin_src emacs-lisp
-  (defun meow-setup ()
-    (let ((parse-def (lambda (x)
-                       (cons (format "%s" (car x))
-                             (if (string-prefix-p "dispatch:" (cadr x))
-                                 (string-trim (substring (cadr x) 9))
-                               (intern (cadr x)))))))
-      (apply #'meow-normal-define-key (mapcar parse-def normal-keybindings))
-      (apply #'meow-motion-overwrite-define-key (mapcar parse-def motion-keybindings))
-      (apply #'meow-leader-define-key (mapcar parse-def leader-keybindings))))
-#+end_src
 
 * Fonts                                                            :required:
 

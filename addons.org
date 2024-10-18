@@ -215,6 +215,8 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
 
 ** Keybindings
 #+begin_src emacs-lisp
+  (global-set-key (kbd "C-c a g") 'gptel)
+
   (with-eval-after-load "gptel"
     (define-key gptel-mode-map (kbd "C-<return>") 'gptel-send)
     (define-key gptel-mode-map (kbd "M-RET") 'gptel-menu))
