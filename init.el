@@ -39,7 +39,8 @@
        (defvar ,keymap (make-keymap)))
      (let ((parse-and-def (lambda (x)
                             (keymap-set ,keymap (car x) (intern (cadr x))))))
-       (mapcar parse-and-def ,table))))
+       (mapcar parse-and-def ,table))
+     (defalias (quote ,keymap) ,keymap)))
 
 (global-set-key (kbd "<f9>") 'meomacs-open-configuration)
 (global-set-key (kbd "<f12>") 'meomacs-refresh)

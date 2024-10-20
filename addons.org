@@ -152,16 +152,11 @@ Open pass menu with =C-c a p=.
 
 #+header: :var pass-table=private.org:pass-table
 #+begin_src emacs-lisp
-  (defvar meomacs-pass-table-loaded nil)
-
   (defun meomacs-load-vars-from-pass (&rest ignore)
-    (unless meomacs-pass-table-loaded
-      (dolist (row pass-table)
+    (dolist (row pass-table)
         (let ((var-name (intern (car row)))
               (entry-name (cadr row)))
           (set var-name (password-store-get entry-name)))))
-    (setq meomacs-pass-table-loaded t))
-
 #+end_src
 
 * Directory environment support with direnv
