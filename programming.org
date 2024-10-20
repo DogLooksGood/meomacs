@@ -25,12 +25,15 @@ Configuration for programming and languages support.
   (global-set-key (kbd "C-c C-f") 'meomacs-format-buffer)
 #+end_src
 
-* Stick scroll
+* Topsy
+
+Show current function signature in header line.
+
 #+begin_src emacs-lisp
   (straight-use-package
    '(topsy :host github :repo "alphapapa/topsy.el"))
 
-  (define-key toggle-map "s" 'topsy-mode)
+  (keymap-set prog-mode-map "C-c t s" 'topsy-mode)
 #+end_src
 
 * Force save file
@@ -41,8 +44,7 @@ Configuration for programming and languages support.
     (set-buffer-modified-p t)
     (save-buffer))
 
-  (global-set-key (kbd "<f5>") 'save-buffer-always)
-  (global-set-key (kbd "C-c y") 'save-buffer-always)
+  (global-set-key (kbd "C-c w") 'save-buffer-always)
 #+end_src
 
 * Flycheck
@@ -52,26 +54,6 @@ Configuration for programming and languages support.
 
   (setq flycheck-display-errors-function nil)
 #+end_src
-
-* Outline
-#+begin_src emacs-lisp
-  (straight-use-package 'imenu-list)
-
-  (require 'imenu-list)
-
-  (define-key toggle-map "i" 'imenu-list)
-#+end_src
-
-* COMMENT Tree-sitter
-
-#+begin_src emacs-lisp
-  (straight-use-package 'tree-sitter)
-  (straight-use-package 'tree-sitter-langs)
-
-  (require 'tree-sitter)
-  (require 'tree-sitter-langs)
-#+end_src
-
 
 * Lisp Parenthese
 #+begin_src emacs-lisp
@@ -107,10 +89,10 @@ Use lspce as LSP client.
 *** Key binding
 
 #+begin_src emacs-lisp
-  (define-key toggle-map "L" 'lspce-mode)
+  (keymap-set prog-mode-map "C-c L" 'lspce-mode)
 #+end_src
 
-** lsp-mode
+** COMMENT Lsp-mode
 
 Use lsp-mode as LSP client.
 
@@ -136,13 +118,13 @@ Use lsp-mode as LSP client.
   (with-eval-after-load "lsp-mode"
     (add-hook 'rust-mode-hook 'lsp)
     (add-hook 'typescript-ts-mode-hook 'lsp)
-    (define-key lsp-mode-map (kbd "<C-return>") 'lsp-execute-code-action))
+    (keymap-set lsp-mode-map "M-RET" 'lsp-execute-code-action))
 #+end_src
 
 *** Key binding
 
 #+begin_src emacs-lisp
-  (define-key toggle-map "L" 'lsp)
+  (keymap-set prog-mode-map "C-c L" 'lsp)
 #+end_src
 
 *** Lsp Booster
@@ -178,25 +160,36 @@ Use lsp-mode as LSP client.
   (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
 #+end_src
 
-** COMMENT Eglot
+** Eglot
 
 Use eglot as LSP client.
 
 #+begin_src emacs-lisp
-  (straight-use-package 'eglot)
-
   (autoload 'eglot "eglot" nil t)
 
-  (setq eglot-confirm-server-initiated-edits nil)
+  (setq eglot-ignored-server-capabilities
+        '(:documentHighlightProvider
+          :inlayHintProvider
+          :workspaceSymbolProvider))
 
   (with-eval-after-load "eglot"
     (define-key eglot-mode-map (kbd "<C-return>") 'eglot-code-actions))
 #+end_src
 
+*** Use lsp-booster
+
+#+begin_src emacs-lisp
+  (straight-use-package
+   '(eglot-booster :host github
+                   :repo "jdtsmith/eglot-booster"))
+
+  (add-hook 'eglot-mode-hook 'eglot-booster-mode)
+#+end_src
+
 *** Key Binding
 
 #+begin_src emacs-lisp
-  (define-key toggle-map "L" 'eglot)
+  (keymap-set prog-mode-map "C-c L" 'eglot)
 #+end_src
 
 * Clojure
@@ -596,7 +589,37 @@ Write a command to switch between wasm32 and native target triple.
   (add-hook 'just-mode-hook '+just-mode-hook)
 #+end_src
 
-* Treesit grammars
+** Justl
+
+Execute recipes in Justfile.
+
+#+begin_src emacs-lisp
+  (straight-use-package 'justl)
+
+  (keymap-set global-map "C-c j" 'justl)
+#+end_src
+
+** Rerun
+
+Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile~.
+
+#+begin_src emacs-lisp
+  (defun justl-execute-last-recipe ()
+    (interactive)
+    (when-let* ((curr-win (selected-window))
+                (just-buf (get-buffer "*just*")))
+      (with-current-buffer just-buf
+        (direnv-update-directory-environment)
+        (call-interactively 'justl-recompile))
+      (select-window curr-win)))
+
+  (keymap-set global-map "C-c J" 'justl-execute-last-recipe)
+#+end_src
+
+* Treesit-auto
+
+Install tree-sitter modules automatically.
+
 #+begin_src emacs-lisp
   (straight-use-package 'treesit-auto)
   (require 'treesit-auto)

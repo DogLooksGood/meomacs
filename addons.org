@@ -2,7 +2,7 @@
 
 Configuration for addons, additional features provided by individual packages.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :exports none
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
@@ -32,7 +32,7 @@ Enable diff-hl in based on major modes.
 Enable smerge mode with =C-c t m=.
 
 #+begin_src emacs-lisp
-  (define-key toggle-map "m" 'smerge-mode)
+  (keymap-set global-map "C-c t m" 'smerge-mode)
 #+end_src
 
 * Input method with emacs-rime
@@ -84,7 +84,7 @@ Disable input method in non-insert state.
 
   (autoload 'ement-connect "ement" nil t)
 
-  (global-set-key (kbd "C-c a m") 'ement-connect)
+  (keymap-set global-map "C-c a m" 'ement-connect)
 #+end_src
 
 
@@ -101,12 +101,12 @@ Use Telega as Telegram client.
 
   (autoload 'telega "telega" nil t)
 
-  (global-set-key (kbd "C-c a t") 'telega)
+  (keymap-set global-map "C-c a t" 'telega)
 
   (with-eval-after-load "telega"
     (set-face-attribute 'telega-entity-type-code nil :family 'unspecfied :inherit 'fixed-pitch-serif)
     (set-face-attribute 'telega-entity-type-pre nil :family 'unspecfied :inherit 'fixed-pitch-serif)
-    (define-key telega-msg-button-map (kbd "SPC") nil))
+    (keymap-set telega-msg-button-map "SPC" nil))
 #+end_src
 
 Proxy setup
@@ -142,10 +142,26 @@ Open pass menu with =C-c a p=.
 
   (autoload #'pass "pass" nil t)
 
-  (global-set-key (kbd "C-c a p") 'pass)
+  (keymap-set global-map "C-c a p" 'pass)
 
   (with-eval-after-load "pass"
     (pinentry-start))
+#+end_src
+
+** Load variable values from pass
+
+#+header: :var pass-table=private.org:pass-table
+#+begin_src emacs-lisp
+  (defvar meomacs-pass-table-loaded nil)
+
+  (defun meomacs-load-vars-from-pass (&rest ignore)
+    (unless meomacs-pass-table-loaded
+      (dolist (row pass-table)
+        (let ((var-name (intern (car row)))
+              (entry-name (cadr row)))
+          (set var-name (password-store-get entry-name)))))
+    (setq meomacs-pass-table-loaded t))
+
 #+end_src
 
 * Directory environment support with direnv
@@ -155,7 +171,7 @@ Open pass menu with =C-c a p=.
 
   (setq direnv-always-show-summary nil)
 
-  (define-key toggle-map "d" 'direnv-mode)
+  (keymap-set global-map "C-c t d" 'direnv-mode)
 
   (require 'direnv)
   (direnv-mode)
@@ -181,8 +197,8 @@ Open pass menu with =C-c a p=.
 
 ** Key bindings
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-c t e") 'eshell)
-  (global-set-key (kbd "C-c t E") 'eat)
+  (keymap-set global-map "C-c t e" 'eshell)
+  (keymap-set global-map "C-c t E" 'eat)
 #+end_src
 
 ** Eshell support
@@ -210,12 +226,22 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
 * ChatGPT
 #+begin_src emacs-lisp
   (straight-use-package '(gptel :host github :repo "karthink/gptel"))
-  (setq gptel-use-curl t)
+  (setq gptel-use-curl t
+        gptel-model "gpt-4o")
+#+end_src
+
+** Read key from pass
+
+#+begin_src emacs-lisp
+  (defun meomacs-gptel ()
+    (interactive)
+    (meomacs-load-vars-from-pass)
+    (call-interactively 'gptel))
 #+end_src
 
 ** Keybindings
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-c a g") 'gptel)
+  (keymap-set global-map "C-c a g" 'meomacs-gptel)
 
   (with-eval-after-load "gptel"
     (define-key gptel-mode-map (kbd "C-<return>") 'gptel-send)

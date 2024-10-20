@@ -2,7 +2,7 @@
 
 Configuration for writing with Emacs, specifically for Markdown and Org mode.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :exports none
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
@@ -48,7 +48,7 @@ Configuration for writing with Emacs, specifically for Markdown and Org mode.
 #+end_src
 
 *** Key bindings
-#+TBLNAME: org-roam-keymap-table
+#+tblname: org-roam-keymap-table
 | Key | Command                         |
 |-----+---------------------------------|
 | l   | org-roam-buffer-toggle          |
@@ -62,10 +62,10 @@ Configuration for writing with Emacs, specifically for Markdown and Org mode.
 | T   | org-roam-dailies-goto-tomorrow  |
 | d   | org-roam-dailies-goto-date      |
 
-#+HEADER: :var org-roam-keymap-table=org-roam-keymap-table
+#+header: :var org-roam-keymap-table=org-roam-keymap-table
 #+begin_src emacs-lisp
   (meomacs-keymap-table org-roam-keymap org-roam-keymap-table)
-  (global-set-key (kbd "C-c r") 'org-roam-keymap)
+  (keymap-set global-map "C-c r" 'org-roam-keymap)
 #+end_src
 
 *** A shortcut to create ID
@@ -104,6 +104,16 @@ Enable ~variable-pitch-mode~.
      '(org-latex-and-related ((t (:inherit 'fixed-pitch-serif))))))
 #+end_src
 
+** Turn off some eye-candy stuff
+
+#+begin_src emacs-lisp
+  (setq org-fontify-quote-and-verse-blocks nil
+        org-fontify-whole-heading-line nil
+        org-hide-leading-stars nil
+        org-hide-leading-stars-before-indent-mode nil
+        org-startup-indented nil)
+#+end_src
+
 ** Better structure indication with org-visual-outline
 
 ~org-visual-outline~ provides a better visual feedback for document structure.
@@ -133,7 +143,7 @@ Enable ~variable-pitch-mode~.
                     ("#+begin_quote" . "“")
                     ("#+end_quote" . "”")
                     ("[X]" . "⦿")
-                    ("[ ]" . "🞆")
+                    ("[ ]" . "🞅")
                     ("[-]" . "⦾")))
       (prettify-symbols-mode 1))
 
@@ -198,12 +208,12 @@ Draw graphics with unicode
 To finish draw, use =C-c C-c=.
 
 #+begin_src emacs-lisp
-  (keymap-set toggle-map "u" 'uniline-mode)
+  (keymap-set global-map "C-c t u" 'uniline-mode)
 #+end_src
 
 ** Meow integration
 
-#+TBLNAME: uniline-keymap-table
+#+tblname: uniline-keymap-table
 | Key     | Command                   |
 |---------+---------------------------|
 | C-c SPC | uniline-hydra-choose-body |
@@ -216,7 +226,7 @@ To finish draw, use =C-c C-c=.
 | =       | nil                       |
 | *       | nil                       |
 
-#+HEADER: :var uniline-keymap-table=uniline-keymap-table
+#+header: :var uniline-keymap-table=uniline-keymap-table
 #+begin_src emacs-lisp
   (with-eval-after-load "uniline"
     (meomacs-keymap-table uniline-mode-map uniline-keymap-table))

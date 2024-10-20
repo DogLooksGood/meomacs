@@ -2,7 +2,7 @@
 
 Configuration for editor basics.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :exports none
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
@@ -20,7 +20,7 @@ Straight.el is used for package management.
 
 *** Key bindings
 
-#+TBLNAME: straight-keymap-table
+#+tblname: straight-keymap-table
 | Key | Command                  |
 |-----+--------------------------|
 | c   | straight-check-package   |
@@ -31,7 +31,7 @@ Straight.el is used for package management.
 | B   | straight-rebuild-all     |
 | v   | straight-freeze-versions |
 
-#+HEADER: :var straight-keymap-table=straight-keymap-table
+#+header: :var straight-keymap-table=straight-keymap-table
 #+begin_src emacs-lisp
   (meomacs-keymap-table straight-keymap straight-keymap-table)
   (global-set-key (kbd "C-c P") 'straight-keymap)
@@ -118,20 +118,29 @@ Straight.el is used for package management.
    ;; No cursor blink in TUI
    visible-cursor nil
 
+   ;; Counter for isearch
    isearch-lazy-count t
    isearch-lazy-highlight t
 
-   compilation-scroll-output 'first-error)
+   compilation-scroll-output 'first-error
 
-  (setq show-paren-when-point-inside-paren t)
-  (show-paren-mode 1)
+   ;; Flatten imenu for easy searching
+   imenu-flatten t
+
+   ;; For scrolling performance
+   fast-but-imprecise-scrolling t
+   inhibit-compacting-font-caches t
+   scroll-step 1
+   scroll-conservatively 10000
+   auto-window-vscroll nil)
+
   (scroll-bar-mode -1)
 
   (global-subword-mode 1)
   (diminish 'subword-mode)
 
-  ;; (global-hl-line-mode t)
   (blink-cursor-mode -1)
+
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
 
@@ -145,10 +154,6 @@ Straight.el is used for package management.
 
 * Meow
 
-This configuration sticks with Meow for modal editing.
-
-Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][private]] config.
-
 #+begin_src emacs-lisp
   (straight-use-package 'meow)
 
@@ -160,16 +165,47 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
   (diminish 'meow-insert-mode)
   (diminish 'meow-keypad-mode)
   (diminish 'meow-beacon-mode)
+#+end_src
 
-  ;; custom indicator
-  (when window-system
-    (setq meow-replace-state-name-list
-          '((normal . "🅝")
-            (beacon . "🅑")
-            (insert . "🅘")
-            (motion . "🅜")
-            (keypad . "🅚"))))
+** Load key bindings
 
+Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][private.org]].
+
+#+header: :var normal-keybindings=private.org:normal-keybindings
+#+header: :var motion-keybindings=private.org:motion-keybindings
+#+header: :var leader-keybindings=private.org:leader-keybindings
+#+begin_src emacs-lisp
+  (defun meow-setup ()
+    (let ((parse-def (lambda (x)
+                       (cons (string-trim (format "%s" (car x)) "[[:space:]]" "[[:space:]]")
+                             (if (string-prefix-p "dispatch:" (cadr x))
+                                 (string-trim (substring (cadr x) 9))
+                               (intern (cadr x)))))))
+      (apply #'meow-normal-define-key (mapcar parse-def normal-keybindings))
+      (apply #'meow-motion-overwrite-define-key (mapcar parse-def motion-keybindings))
+      (apply #'meow-leader-define-key (mapcar parse-def leader-keybindings))))
+#+end_src
+
+** Use shorten indicators
+
+#+begin_src emacs-lisp
+  (setq meow-replace-state-name-list
+        '((normal . "N")
+          (beacon . "B")
+          (insert . "I")
+          (motion . "M")
+          (keypad . "K")))
+#+end_src
+
+** Allow all C-c <letter> for leader
+
+#+begin_src emacs-lisp
+  (setq meow-keypad-leader-dispatch "C-c")
+#+end_src
+
+** Basic configurations
+
+#+begin_src emacs-lisp
   ;; custom variables
   (setq meow-esc-delay 0.001)
 
@@ -178,7 +214,7 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
                      '(pair ("<") (">")))
 
   (add-to-list 'meow-char-thing-table
-               '(?a . angle))
+               '(?h . angle))
 
   (meow-setup)
 
@@ -186,13 +222,6 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
 
   (unless (bound-and-true-p meow-global-mode)
     (meow-global-mode 1))
-
-  (add-to-list 'meow-mode-state-list
-               '(cargo-process-mode . motion))
-  (add-to-list 'meow-mode-state-list
-               '(emms-playlist-mode . motion))
-
-  (setq meow-keypad-leader-dispatch "C-c")
 #+end_src
 
 ** Tree-sitter integration
@@ -225,16 +254,16 @@ Switch window by pressing the number showned in the mode line.
                 (if window-system
                     (alist-get
                      n
-                     '((0 . "⓪")
-                       (1 . "①")
-                       (2 . "②")
-                       (3 . "③")
-                       (4 . "④")
-                       (5 . "⑤")
-                       (6 . "⑥")
-                       (7 . "⑦")
-                       (8 . "⑧")
-                       (9 . "⑨")))
+                     '((0 . "0")
+                       (1 . "1")
+                       (2 . "2")
+                       (3 . "3")
+                       (4 . "4")
+                       (5 . "5")
+                       (6 . "6")
+                       (7 . "7")
+                       (8 . "8")
+                       (9 . "9")))
                   (concat "[" (number-to-string n) "] "))))))
 
   (setq window-numbering-assign-func
@@ -273,7 +302,7 @@ Switch window by pressing the number showned in the mode line.
 
   (winner-mode 1)
 
-  (defun meomacs-toggle-single-window ()
+  (defun meomacs-single-window-or-undo ()
     (interactive)
     (if (= 1 (length (window-list-1)))
         (winner-undo)
@@ -374,13 +403,14 @@ Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
     (add-hook 'smartparens-mode-hook 'smartparens-strict-mode)
 
     ;; Keybindings
-    (define-key toggle-map "s" 'smartparens-strict-mode))
+    (keymap-set prog-mode-map "C-c t s" 'smartparens-strict-mode)
+    (keymap-set conf-mode-map "C-c t s" 'smartparens-strict-mode))
 #+end_src
 
 * Line numbers with display-line-numbers-mode
 
 #+begin_src emacs-lisp
-  (define-key toggle-map "l" 'display-line-numbers-mode)
+  (keymap-set global-map "C-c t l" 'display-line-numbers-mode)
 #+end_src
 
 
@@ -545,9 +575,8 @@ To find files/buffers and apply commands on project, use builtin package ~projec
                                     (project-find-regexp "Find regexp")
                                     (project-dired "Dired")
                                     (project-eshell "Eshell")
-                                    (shell "Shell")
-                                    (magit "Magit")
-                                    (treemacs-add-and-display-current-project "Treemacs")))
+                                    (magit-project-status "Magit")
+                                    (shell "Shell")))
 
     (defalias 'project-prefix-map project-prefix-map)
 
@@ -555,8 +584,7 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 
     (with-eval-after-load "project"
       (define-key project-prefix-map "s" 'shell)
-      (define-key project-prefix-map "m" 'magit)
-      (define-key project-prefix-map "t" 'treemacs-add-and-display-current-project)))
+      (define-key project-prefix-map "m" 'magit-project-status)))
 #+end_src
 
 * Enanced completion commands

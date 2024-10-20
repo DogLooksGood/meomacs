@@ -2,7 +2,7 @@
 
 Configuration for look and feels, make UI looks better.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :exports none
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
@@ -59,8 +59,8 @@ No scroll bars in minibuffer.
 Default variables
 
 #+begin_src emacs-lisp
-  (defvar meomacs-font-size 12
-    "Current font size.")
+  (defvar meomacs-font-pixelsize 16
+    "Font size in pixels.")
 
   (defvar meomacs-fonts '((mono . "Monospace")
                           (sans . "Monospace")
@@ -68,6 +68,18 @@ Default variables
                           (cjk . "Unifont")
                           (symbol . "Unifont"))
     "Fonts to use.")
+#+end_src
+
+Load font table
+
+** Load font table
+#+begin_src emacs-lisp :var fonts=private.org:fonts
+  (setq meomacs-fonts
+        (mapcar (lambda (row)
+                  (cons
+                   (intern (car row))
+                   (cadr row)))
+                fonts))
 #+end_src
 
 Define functions for loading fonts.
@@ -80,11 +92,12 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
           (alist-get 'mono meomacs-fonts)
         font)))
 
+  (defun meomacs--format-font-name (family)
+    (format "%s:pixelsize=%s:antialias=none" family meomacs-font-pixelsize))
+
   (defun meomacs-load-default-font ()
     "Load default font configuration."
-    (let ((default-font (format "%s-%s"
-                                (meomacs--get-font-family 'mono)
-                                meomacs-font-size)))
+    (let ((default-font (meomacs--format-font-name (meomacs--get-font-family 'mono))))
       (add-to-list 'default-frame-alist (cons 'font default-font))))
 
   (defun meomacs-load-face-font ()
@@ -93,15 +106,13 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
           (mono (meomacs--get-font-family 'mono))
           (serif (meomacs--get-font-family 'serif)))
       (set-face-attribute 'variable-pitch nil :family sans)
-      (set-face-attribute 'variable-pitch-text nil :family serif)
+      (set-face-attribute 'variable-pitch-text nil :family serif :height 'unspecified)
       (set-face-attribute 'fixed-pitch nil :family mono)
       (set-face-attribute 'fixed-pitch-serif nil :family mono)))
 
   (defun meomacs-load-charset-font (&optional font)
     "Load charset font configuration."
-    (let ((default-font (or font (format "%s-%s"
-                                         (meomacs--get-font-family 'mono)
-                                         meomacs-font-size)))
+    (let ((default-font (or font (meomacs--format-font-name (meomacs--get-font-family 'mono))))
           (cjk-font (meomacs--get-font-family 'cjk))
           (symbol-font (meomacs--get-font-family 'symbol)))
       (set-frame-font default-font)
@@ -151,6 +162,17 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
 
 * Themes
 
+Load themes.
+
+#+header: :var themes=private.org:themes
+#+begin_src emacs-lisp
+  (setq meomacs-themes
+        (thread-last
+          themes
+          (cl-remove-if-not (lambda (s) (string-prefix-p "[X] " s)))
+          (mapcar (lambda (s) (intern (substring s 4))))))
+#+end_src
+
 Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes.
 
 #+begin_src emacs-lisp
@@ -173,7 +195,7 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes.
       (setq meomacs-themes (append (cdr meomacs-themes) (list (car meomacs-themes))))
       (meomacs-load-theme)))
 
-  (define-key toggle-map "t" 'meomacs-next-theme)
+  (keymap-set global-map "C-c t t" 'meomacs-next-theme)
 
   (add-hook 'desktop-after-read-hook 'meomacs-load-theme)
 #+end_src

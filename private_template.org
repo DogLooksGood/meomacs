@@ -2,24 +2,11 @@
 
 Private configuration.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :exports none
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
-* User custom keymaps                                              :required:
-
-#+begin_src emacs-lisp
-  (defvar toggle-map (make-keymap))
-  (defalias 'toggle-map toggle-map)
-
-  (defvar addon-map (make-keymap))
-  (defalias 'addon-map addon-map)
-
-  (define-key mode-specific-map "t" toggle-map)
-  (define-key mode-specific-map "a" addon-map)
-#+end_src
-
-* Modal editing key bindings                                          :modal:
+* Modal editing key bindings
 
 ** Programmer Dvorak
 
@@ -30,9 +17,9 @@ Tweaking following table for key bindings in normal state.
 | key      | command                   |
 |----------+---------------------------|
 | ?        | meow-keypad-describe-key  |
-| *        | meow-expand-0             |
-| =        | meow-expand-9             |
-| !        | meow-expand-8             |
+| *​        | meow-expand-0             |
+| ​=        | meow-expand-9             |
+| !​        | meow-expand-8             |
 | [        | meow-expand-7             |
 | ]        | meow-expand-6             |
 | {        | meow-expand-5             |
@@ -40,6 +27,16 @@ Tweaking following table for key bindings in normal state.
 | }        | meow-expand-3             |
 | )        | meow-expand-2             |
 | (        | meow-expand-1             |
+| 0        | meow-digit-argument       |
+| 1        | meow-digit-argument       |
+| 2        | meow-digit-argument       |
+| 3        | meow-digit-argument       |
+| 4        | meow-digit-argument       |
+| 5        | meow-digit-argument       |
+| 6        | meow-digit-argument       |
+| 7        | meow-digit-argument       |
+| 8        | meow-digit-argument       |
+| 9        | meow-digit-argument       |
 | -        | negative-argument         |
 | ;        | meow-reverse              |
 | ,        | meow-inner-of-thing       |
@@ -54,7 +51,6 @@ Tweaking following table for key bindings in normal state.
 | d        | meow-delete               |
 | D        | meow-backward-delete      |
 | e        | meow-line                 |
-| E        | meow-goto-line            |
 | f        | meow-find                 |
 | g        | meow-cancel-selection     |
 | G        | meow-grab                 |
@@ -73,7 +69,7 @@ Tweaking following table for key bindings in normal state.
 | O        | meow-to-block             |
 | p        | meow-prev                 |
 | P        | meow-prev-expand          |
-| q        | meow-quit                 |
+| q        | meow-goto-line            |
 | r        | meow-replace              |
 | R        | meow-swap-grab            |
 | s        | meow-search               |
@@ -88,113 +84,101 @@ Tweaking following table for key bindings in normal state.
 | X        | meow-sync-grab            |
 | y        | meow-yank                 |
 | z        | meow-pop-selection        |
-| $        | repeat                    |
-| '        | repeat                    |
+| $​        | repeat                    |
 | &        | meow-query-replace-regexp |
 | %        | meow-query-replace        |
-| /        | meow-page-up              |
-| @        | meow-page-down            |
-| ?        | scroll-down-line          |
-| ^        | scroll-up-line            |
+| K        | scroll-down-line          |
+| J        | scroll-up-line            |
 | <escape> | ignore                    |
-| C-,      | meow-pop-to-mark          |
-| C-.      | meow-unpop-to-mark        |
-#+TBLFM:
+| @        | meow-pop-to-mark          |
+| ^​        | meow-unpop-to-mark        |
 
 *** Motion
 
 Tweaking following table for key bindings in motion state.
 
 #+TBLNAME: motion-keybindings
-|      key | command         |
-|----------+-----------------|
-| <escape> | ignore          |
+| key      | command |
+|----------+---------|
+| <escape> | ignore  |
 
 *** Leader
 
 Tweaking following table for key bindings in leader keymap.
 
 #+tblname: leader-keybindings
-| key | command                 | description |
-|-----+-------------------------+-------------|
-| e   | dispatch: C-x C-e       |             |
-| s   | split-window-right      |             |
-| z   | split-window-below      |             |
-| w   | other-window            |             |
-| i   | imenu                   |             |
-| b   | switch-to-buffer        |             |
-| f   | delete-other-windows    |             |
-| o   | other-window            |             |
-| k   | kill-current-buffer     |             |
-| u   | meow-universal-argument |             |
-| q   | delete-window           |             |
-| 1   | select-window-1         |             |
-| 2   | select-window-2         |             |
-| 3   | select-window-3         |             |
-| 4   | select-window-4         |             |
-| 5   | select-window-5         |             |
-| 6   | select-window-6         |             |
-| 7   | select-window-7         |             |
-| 8   | select-window-8         |             |
-| 9   | select-window-9         |             |
-| 0   | select-window-0         |             |
-#+TBLFM:
+| key | command                       | description |
+|-----+-------------------------------+-------------|
+| e   | dispatch: C-x C-e             |             |
+| o   | other-window                  |             |
+| s   | split-window-right            |             |
+| z   | split-window-below            |             |
+| i   | imenu                         |             |
+| b   | switch-to-buffer              |             |
+| f   | meomacs-single-window-or-undo |             |
+| k   | kill-current-buffer           |             |
+| u   | meow-universal-argument       |             |
+| q   | delete-window                 |             |
+| 1   | select-window-1               |             |
+| 2   | select-window-2               |             |
+| 3   | select-window-3               |             |
+| 4   | select-window-4               |             |
+| 5   | select-window-5               |             |
+| 6   | select-window-6               |             |
+| 7   | select-window-7               |             |
+| 8   | select-window-8               |             |
+| 9   | select-window-9               |             |
+| 0   | select-window-0               |             |
 
+* Fonts
 
-* Fonts                                                            :required:
+** Modern
+
+#+begin_src emacs-lisp
+  (setq meomacs-font-pixelsize 14)
+#+end_src
 
 #+tblname: fonts
-| key           | font               | description                       |
-|---------------+--------------------+-----------------------------------|
-| default       | Latin Modern Mono  | default font for ascii characters |
-| tall          |                    |                                   |
-| wide          |                    |                                   |
-| cjk           | LXGW WenKai        | default font for cjk characters   |
-| symbol        | Symbola            | default font for unicode symbols  |
-| fixed         | Source Code Pro    | for face ~fixed-pitch~              |
-| fixed-serif   | Latin Modern Mono  | for face ~fixed-pitch-serif~        |
-| variable      | Latin Modern Sans  | for face ~variable-pitch~           |
-| variable-text | Latin Modern Roman | for face variable-text            |
+| key    | font             | description                         |
+|--------+------------------+-------------------------------------|
+| mono   | DejaVu Sans Mono | monospace font for ascii characters |
+| sans   | DejaVu Sans      | sans font for ascii characters      |
+| serif  | DejaVu Serif     | serif font for ascii characters     |
+| cjk    | Noto Sans CJK SC | default font for cjk characters     |
+| symbol | Symbola          | default font for unicode symbols    |
 
-#+begin_src emacs-lisp :var fonts=fonts
-  (setq meomacs-fonts
-        (mapcar (lambda (row)
-                  (cons
-                   (intern (car row))
-                   (cadr row)))
-                fonts))
+** COMMENT Pixel
+
+#+begin_src emacs-lisp
+  (setq meomacs-font-pixelsize 16)
 #+end_src
 
-* Themes                                                           :required:
+#+tblname: fonts
+| key    | font          | description                         |
+|--------+---------------+-------------------------------------|
+| mono   | Unifont       | monospace font for ascii characters |
+| sans   | Unifont       | sans font for ascii characters      |
+| serif  | Unifont       | serif font for ascii characters     |
+| cjk    | Unifont       | default font for cjk characters     |
+| symbol | Unifont Upper | default font for unicode symbols    |
+
+* Themes
+
+#+begin_src emacs-lisp
+  (straight-use-package '(carbon-theme :host github :repo "DogLooksGood/carbon-theme"))
+  (straight-use-package '(paperlike-theme :host github :repo "DogLooksGood/paperlike-theme"))
+
+  (require 'carbon-theme)
+  (require 'paperlike-theme)
+#+end_src
 
 #+name: themes
-- [X] modus-operandi
-- [X] modus-vivendi
+- [X] paperlike
+- [X] default
 
-#+header: :var themes=themes
-#+begin_src emacs-lisp
-  (setq meomacs-themes
-        (thread-last
-          themes
-          (cl-remove-if-not (lambda (s) (string-prefix-p "[X] " s)))
-          (mapcar (lambda (s) (intern (substring s 4))))))
-#+end_src
+* Pass table
 
-* ChatGPT
-#+begin_src emacs-lisp
-  (setq gptel-api-key "")
-#+end_src
-
-* Network settings
-
-#+begin_src emacs-lisp
-  (defvar meomacs-http-proxy-host "localhost")
-  (defvar meomacs-http-proxy-port 8889)
-  (defvar meomacs-socks5-proxy-host "localhost")
-  (defvar meomacs-socks5-proxy-port 1089)
-
-  (setq url-proxy-services
-        `(("http" . ,(format "%s:%s" meomacs-http-proxy-host  meomacs-http-proxy-port))
-          ("https" . ,(format "%s:%s" meomacs-http-proxy-host meomacs-http-proxy-port))
-          ("no_proxy" . "\\(localhost\\)")))
-#+end_src
+#+tblname: pass-table
+| Variable      | Entry in passs | Description                |
+|---------------+----------------+----------------------------|
+| gptel-api-key | chatgpt_key    | The key for openai ChatGPT |
