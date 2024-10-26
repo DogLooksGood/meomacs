@@ -113,7 +113,7 @@ Straight.el is used for package management.
    indent-tabs-mode nil
 
    ;; Don't echo multiline eldoc
-   eldoc-echo-area-use-multiline-p t
+   eldoc-echo-area-use-multiline-p nil
 
    ;; No cursor blink in TUI
    visible-cursor nil
@@ -130,8 +130,6 @@ Straight.el is used for package management.
    ;; For scrolling performance
    fast-but-imprecise-scrolling t
    inhibit-compacting-font-caches t
-   scroll-step 1
-   scroll-conservatively 10000
    auto-window-vscroll nil)
 
   (scroll-bar-mode -1)
@@ -203,34 +201,17 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
   (setq meow-keypad-leader-dispatch "C-c")
 #+end_src
 
-** Basic configurations
-
-#+begin_src emacs-lisp
-  ;; custom variables
-  (setq meow-esc-delay 0.001)
-
-  (meow-thing-register 'angle
-                     '(pair ("<") (">"))
-                     '(pair ("<") (">")))
-
-  (add-to-list 'meow-char-thing-table
-               '(?h . angle))
-
-  (meow-setup)
-
-  (meow-setup-indicator)
-
-  (unless (bound-and-true-p meow-global-mode)
-    (meow-global-mode 1))
-#+end_src
-
 ** Tree-sitter integration
 
 #+begin_src emacs-lisp
   (straight-use-package 'meow-tree-sitter)
 
   (require 'meow-tree-sitter)
-  (meow-tree-sitter-register-defaults)
+
+  (defvar meomacs--register-tree-sitter-run-once nil)
+  (unless meomacs--register-tree-sitter-run-once
+    (meow-tree-sitter-register-defaults)
+    (setq meomacs--register-tree-sitter-run-once t))
 #+end_src
 
 * Window management
@@ -290,7 +271,8 @@ Switch window by pressing the number showned in the mode line.
 #+begin_src emacs-lisp
   (straight-use-package 'ace-window)
 
-  (define-key mode-specific-map "W" 'ace-swap-window)
+  (keymap-set mode-specific-map "W" 'ace-swap-window)
+  (keymap-set mode-specific-map "Q" 'ace-delete-other-window)
 
   (autoload 'ace-swap-window "ace-window" nil t)
   (autoload 'ace-delete-other-window "ace-window" nil t)
@@ -487,15 +469,23 @@ Do "delete" instead of "kill" when pressing =M-DEL=.
 
   (autoload 'corfu-mode "corfu" nil t)
 
-  (setq corfu-cycle t
-        corfu-auto t
-        corfu-preselect 'prompt)
-
-  (with-eval-after-load 'corfu
-    (define-key corfu-map (kbd "TAB") 'corfu-next)
-    (define-key corfu-map [tab] 'corfu-next)
-    (define-key corfu-map (kbd "S-TAB") 'corfu-previous)
-    (define-key corfu-map [backtab] 'corfu-previous))
+  (with-eval-after-load "corfu"
+    (setq corfu-map (make-keymap))
+    (keymap-set corfu-map "M-n" 'corfu-next)
+    (keymap-set corfu-map "M-p" 'corfu-previous)
+    (setq corfu-auto t
+          corfu-preselect 'prompt)
+    (dolist (c (list (cons "SPC" " ")
+                     (cons "." ".")
+                     (cons "," ",")
+                     (cons ":" ":")
+                     (cons ")" ")")
+                     (cons "}" "}")
+                     (cons "]" "]")))
+      (define-key corfu-map (kbd (car c)) `(lambda ()
+                                             (interactive)
+                                             (corfu-insert)
+                                             (insert ,(cdr c))))))
 #+end_src
 
 ** Company
@@ -519,7 +509,7 @@ A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =
 
 | action                      | key |
 |-----------------------------+-----|
-| trigger completion at point | TAB |
+| trigger completion at point | M-n |
 | previous candidate          | M-p |
 | next candidate              | M-n |
 | next template placeholder   | RET |
@@ -530,20 +520,29 @@ A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =
 
     (add-hook 'company-mode-hook 'company-tng-mode)
 
-    (define-key company-mode-map (kbd "M-n") 'company-complete-common)
-
-    (define-key company-active-map (kbd "TAB") nil)
+    (keymap-set company-mode-map "M-n" 'company-complete-common)
+    (keymap-set company-active-map "TAB" nil)
     (define-key company-active-map [tab] nil)
-    (define-key company-active-map (kbd "C-n") nil)
-    (define-key company-active-map (kbd "C-p") nil)
-    (define-key company-active-map (kbd "M-n") 'company-select-next)
-    (define-key company-active-map (kbd "M-p") 'company-select-previous)
+    (keymap-set company-active-map "C-n" nil)
+    (keymap-set company-active-map "C-p" nil)
+    (keymap-set company-active-map "M-n" 'company-select-next)
+    (keymap-set company-active-map "M-p" 'company-select-previous)
 
     ;; Free SPC and RET, popup will no longer interrupt typing.
     (define-key company-active-map [escape] nil)
     (define-key company-active-map [return] nil)
-    (define-key company-active-map (kbd "RET") nil)
-    (define-key company-active-map (kbd "SPC") nil))
+    (keymap-set company-active-map "RET" nil)
+    (keymap-set company-active-map "SPC" nil))
+#+end_src
+
+** COMMENT Company with childframe
+
+#+begin_src emacs-lisp
+  (straight-use-package 'company-box)
+
+  (with-eval-after-load "company"
+    (require 'company-box)
+    (add-hook 'company-mode-hook 'company-box-mode))
 #+end_src
 
 * Templating
@@ -619,6 +618,10 @@ To find files/buffers and apply commands on project, use builtin package ~projec
   (require 'deadgrep)
 
   (define-key project-prefix-map "r" 'deadgrep)
+
+  (with-eval-after-load "deadgrep"
+    (keymap-set deadgrep-mode-map "e" 'deadgrep-edit-mode)
+    (add-hook 'deadgrep-mode-hook 'next-error-follow-minor-mode))
 #+end_src
 
 ** rg.el
@@ -629,12 +632,15 @@ To find files/buffers and apply commands on project, use builtin package ~projec
   (autoload 'rg-project "wgrep" nil t)
   (autoload 'rg-project "rg" nil t)
 
+  (with-eval-after-load "rg"
+    (rg-enable-default-bindings)
+    (rg-enable-menu))
+
   (with-eval-after-load "wgrep"
     (define-key wgrep-mode-map (kbd "C-c C-c") #'wgrep-finish-edit))
 
   (define-key project-prefix-map "r" 'rg-project)
 #+end_src
-
 
 * Wrap parentheses
 #+begin_src emacs-lisp

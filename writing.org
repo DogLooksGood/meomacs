@@ -26,7 +26,7 @@ Configuration for writing with Emacs, specifically for Markdown and Org mode.
 #+begin_src emacs-lisp
   (straight-use-package 'org-roam)
 
-  (setq org-roam-directory (expand-file-name "~/org/roam"))
+  (setq org-roam-directory (expand-file-name "~/org"))
   (setq org-roam-dailies-directory (expand-file-name "~/org/journal"))
 
   ;; Use gpg encryption for files
@@ -142,9 +142,9 @@ Enable ~variable-pitch-mode~.
                     ("#+end_example" . "❮")
                     ("#+begin_quote" . "“")
                     ("#+end_quote" . "”")
-                    ("[X]" . "⦿")
-                    ("[ ]" . "🞅")
-                    ("[-]" . "⦾")))
+                    ("[X]" . "☑")
+                    ("[ ]" . "☐")
+                    ("[-]" . "○")))
       (prettify-symbols-mode 1))
 
     (add-hook 'org-mode-hook 'meomacs--org-prettify-symbols)
