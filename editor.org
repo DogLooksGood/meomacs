@@ -184,6 +184,21 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
       (apply #'meow-leader-define-key (mapcar parse-def leader-keybindings))))
 #+end_src
 
+** Basic configurations
+#+begin_src emacs-lisp
+  ;; custom variables
+  (setq meow-esc-delay 0.001)
+  (meow-thing-register 'angle
+                     '(pair ("<") (">"))
+                     '(pair ("<") (">")))
+  (add-to-list 'meow-char-thing-table
+               '(?h . angle))
+  (meow-setup)
+  (meow-setup-indicator)
+  (unless (bound-and-true-p meow-global-mode)
+    (meow-global-mode 1))
+#+end_src
+
 ** Use shorten indicators
 
 #+begin_src emacs-lisp
@@ -535,7 +550,7 @@ A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =
     (keymap-set company-active-map "SPC" nil))
 #+end_src
 
-** COMMENT Company with childframe
+** COMMENT Company Box
 
 #+begin_src emacs-lisp
   (straight-use-package 'company-box)
@@ -543,6 +558,16 @@ A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =
   (with-eval-after-load "company"
     (require 'company-box)
     (add-hook 'company-mode-hook 'company-box-mode))
+#+end_src
+
+** COMMENT Company posframe
+
+#+begin_src emacs-lisp
+  (straight-use-package 'company-posframe)
+
+  (with-eval-after-load "company"
+    (require 'company-posframe)
+    (add-hook 'company-mode-hook 'company-posframe-mode))
 #+end_src
 
 * Templating
