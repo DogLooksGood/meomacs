@@ -54,7 +54,7 @@ Enable smerge mode with =C-c t m=.
     (with-eval-after-load "rime"
       (define-key rime-mode-map (kbd "C-`") 'rime-send-keybinding)
 
-      (dolist (k '("TAB" "C-p" "C-n" "C-v" "C-y"))
+      (dolist (k '("TAB" "C-p" "C-n" "M-v" "C-v" "C-y"))
         (define-key rime-active-mode-map (kbd k) 'rime-send-keybinding))
 
       (define-key rime-active-mode-map (kbd "C-a") 'rime-inline-ascii)))
