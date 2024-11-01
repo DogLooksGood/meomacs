@@ -225,8 +225,8 @@ Use clojure-ts-mode instead of clojure-mode.
   (setq clojure-ts-toplevel-inside-comment-form t)
 
   (with-eval-after-load "clojure-ts-mode"
-    (define-key clojure-ts-mode-map (kbd "C-c M-j") 'cider-jack-in)
-    (define-key clojure-ts-mode-map (kbd "C-c M-J") 'cider-jack-in-cljs))
+    (define-key clojure-mode-map (kbd "C-c M-j") 'cider-jack-in)
+    (define-key clojure-mode-map (kbd "C-c M-J") 'cider-jack-in-cljs))
 #+end_src
 
 ** Clojure-ts-mode
@@ -252,7 +252,8 @@ A lightweight integration to socket repl.
   (autoload 'inf-clojure "inf-clojure" t t)
   (autoload 'inf-clojure-connect "inf-clojure" t t)
 
-  (keymap-set clojure-ts-mode-map "C-c M-c" 'inf-clojure-connect)
+  (with-eval-after-load "clojure-ts-mode"
+    (keymap-set clojure-ts-mode-map "C-c M-c" 'inf-clojure-connect))
 #+end_src
 
 ** Jarchive
@@ -261,7 +262,7 @@ For opening .jar files. This is required for Eglot.
 #+begin_src emacs-lisp
   (straight-use-package 'jarchive)
 
-  (with-eval-after-load "clojure-mode"
+  (with-eval-after-load "clojure-ts-mode"
     (jarchive-mode))
 #+end_src
 
@@ -282,7 +283,7 @@ For opening .jar files. This is required for Eglot.
 #+begin_src emacs-lisp
   (straight-use-package 'flycheck-clj-kondo)
 
-  (with-eval-after-load "clojure-mode"
+  (with-eval-after-load "clojure-ts-mode"
     (require 'flycheck-clj-kondo))
 
   (add-hook 'clojure-mode-hook 'flycheck-mode)
@@ -297,8 +298,8 @@ For opening .jar files. This is required for Eglot.
 
   (autoload 'zprint "zprint" nil t)
 
-  (with-eval-after-load "clojure-mode"
-    (define-key clojure-mode-map (kbd "C-c C-f") 'zprint))
+  (with-eval-after-load "clojure-ts-mode"
+    (define-key clojure-ts-mode-map (kbd "C-c C-f") 'zprint))
 #+end_src
 
 * Svelte
