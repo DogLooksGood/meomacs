@@ -8,10 +8,6 @@ Configuration for programming and languages support.
 
 * Eldoc
 
-#+begin_src emacs-lisp
-  (setq eldoc-idle-delay 0.75)
-#+end_src
-
 ** Display in childframe
 
 #+begin_src emacs-lisp
@@ -198,7 +194,8 @@ Use eglot as LSP client.
   (autoload 'eglot "eglot" nil t)
 
   (setq eglot-ignored-server-capabilities
-        '(:documentHighlightProvider
+        '(:hoverProvider
+          :documentHighlightProvider
           :inlayHintProvider
           :workspaceSymbolProvider))
 
@@ -207,12 +204,6 @@ Use eglot as LSP client.
   (setq eglot-stay-out-of '(yasnippet))
 
   (setq eglot-send-changes-idle-time 2.0)
-
-  (add-hook 'eglot-managed-mode-hook
-            (lambda ()
-              "Make sure Eldoc will show us all of the feedback at point."
-              (setq-local eldoc-documentation-strategy
-                          #'eldoc-documentation-compose)))
 
   (with-eval-after-load "eglot"
     (define-key eglot-mode-map (kbd "<C-return>") 'eglot-code-actions))
