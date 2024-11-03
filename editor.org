@@ -264,8 +264,7 @@ Switch window by pressing the number showned in the mode line.
 
   (setq window-numbering-assign-func
         (lambda ()
-          (when (string-prefix-p " *Treemacs"
-                                 (buffer-name))
+          (when (string-prefix-p " *Treemacs" (buffer-name))
             9)))
 
   (let ((modeline-segment '(:eval (meomacs-window-numbering-modeline))))
@@ -286,11 +285,11 @@ Switch window by pressing the number showned in the mode line.
 #+begin_src emacs-lisp
   (straight-use-package 'ace-window)
 
-  (keymap-set mode-specific-map "W" 'ace-swap-window)
-  (keymap-set mode-specific-map "Q" 'ace-delete-other-window)
-
   (autoload 'ace-swap-window "ace-window" nil t)
-  (autoload 'ace-delete-other-window "ace-window" nil t)
+  (autoload 'ace-delete-other-windows "ace-window" nil t)
+
+  (keymap-set mode-specific-map "W" 'ace-swap-window)
+  (keymap-set mode-specific-map "Q" 'ace-delete-window)
 #+end_src
 
 ** winner-mode

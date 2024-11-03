@@ -182,12 +182,16 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes.
   (defvar meomacs-themes '()
     "Themes to use.")
 
+  (defvar meomacs-after-load-theme-hook nil
+    "Hooks to run when theme changed.")
+
   (defun meomacs-load-theme ()
     (when-let ((theme (car meomacs-themes)))
       (message "Load theme: %s" (car meomacs-themes))
       (mapc 'disable-theme custom-enabled-themes)
       (unless (eq theme 'default)
-        (load-theme theme t))))
+        (load-theme theme t)
+        (run-hooks 'meomacs-after-load-theme-hook))))
 
   (defun meomacs-next-theme ()
     (interactive)
@@ -216,6 +220,17 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes.
   (custom-set-faces
    '(mode-line ((t :inherit variable-pitch)))
    '(mode-line-inactive ((t :inherit variable-pitch))))
+#+end_src
+
+** Add a double width space to ensure the height
+
+#+begin_src emacs-lisp
+  (defvar meomacs-increase-mode-line-height-only-once nil)
+
+  (unless meomacs-increase-mode-line-height-only-once
+    (setq-default mode-line-format
+                  (append (list (propertize "﻿" 'face '(:height 1.2))) mode-line-format ))
+    (setq meomacs-increase-mode-line-height-only-once t))
 #+end_src
 
 ** Diminish

@@ -7,6 +7,13 @@ Configuration for programming and languages support.
 #+end_src
 
 * Eldoc
+
+#+begin_src emacs-lisp
+  (setq eldoc-idle-delay 0.75)
+#+end_src
+
+** Display in childframe
+
 #+begin_src emacs-lisp
   (straight-use-package 'eldoc-box)
 #+end_src
@@ -27,11 +34,15 @@ Configuration for programming and languages support.
   (defun meomacs-format-buffer ()
     "Format whole buffer with LSP and fallback behavior."
     (interactive)
-    (if (and
-         (bound-and-true-p lsp-mode)
-         lsp-enable-indentation)
-        (call-interactively #'lsp-format-buffer)
-      (call-interactively 'meomacs-default-format-buffer)))
+    (cond
+     ((and (bound-and-true-p lsp-mode) lsp-enable-indentation)
+      (call-interactively #'lsp-format-buffer))
+
+     ((bound-and-true-p eglot-mode)
+      (call-interactively #'eglot-format-buffer))
+
+     (t
+      (call-interactively 'meomacs-default-format-buffer))))
 
   (global-set-key (kbd "C-c C-f") 'meomacs-format-buffer)
 #+end_src
@@ -191,10 +202,31 @@ Use eglot as LSP client.
           :inlayHintProvider
           :workspaceSymbolProvider))
 
+  (setq eglot-autoshutdown t)
+
   (setq eglot-stay-out-of '(yasnippet))
+
+  (setq eglot-send-changes-idle-time 2.0)
+
+  (add-hook 'eglot-managed-mode-hook
+            (lambda ()
+              "Make sure Eldoc will show us all of the feedback at point."
+              (setq-local eldoc-documentation-strategy
+                          #'eldoc-documentation-compose)))
 
   (with-eval-after-load "eglot"
     (define-key eglot-mode-map (kbd "<C-return>") 'eglot-code-actions))
+#+end_src
+
+*** Turn off event logs
+
+#+begin_src emacs-lisp
+  (defvar jsonrpc-log-event-p nil)
+
+  (defun jsonrpc--log-event-advice (f &rest args)
+    (if jsonrpc-log-event-p (apply f args)))
+
+  (advice-add #'jsonrpc--log-event :around #'jsonrpc--log-event-advice)
 #+end_src
 
 *** Use lsp-booster
@@ -204,6 +236,8 @@ Use eglot as LSP client.
    '(eglot-booster :host github
                    :repo "jdtsmith/eglot-booster"))
 
+  (setq eglot-booster-io-only t)
+
   (add-hook 'eglot-mode-hook 'eglot-booster-mode)
 #+end_src
 
@@ -211,6 +245,17 @@ Use eglot as LSP client.
 
 #+begin_src emacs-lisp
   (keymap-set prog-mode-map "C-c L" 'eglot)
+#+end_src
+
+
+*** Flymake
+
+#+begin_src emacs-lisp
+  (setq flymake-no-changes-timeout 0.5)
+
+  (with-eval-after-load "flymake"
+    (keymap-set flymake-mode-map "C-c f n" 'flymake-goto-next-error)
+    (keymap-set flymake-mode-map "C-c f p" 'flymake-goto-prev-error))
 #+end_src
 
 * Clojure
@@ -253,6 +298,7 @@ A lightweight integration to socket repl.
   (autoload 'inf-clojure-connect "inf-clojure" t t)
 
   (with-eval-after-load "clojure-ts-mode"
+    (add-hook 'clojure-ts-mode-hook #'inf-clojure-minor-mode)
     (keymap-set clojure-ts-mode-map "C-c M-c" 'inf-clojure-connect))
 #+end_src
 
@@ -524,6 +570,10 @@ Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile
 #+end_src
 
 * Treesit-auto
+
+#+begin_src emacs-lisp
+  (setq treesit-font-lock-level 2)
+#+end_src
 
 Install tree-sitter modules automatically.
 

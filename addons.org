@@ -48,13 +48,14 @@ Enable smerge mode with =C-c t m=.
 
     (setq default-input-method "rime"
           rime-emacs-module-header-root (file-name-directory (getenv "EMACS_MODULE_HEADER"))
+          rime-show-candidate 'sidewindow
           rime-librime-root (getenv "LIBRIME_ROOT")
-          rime-share-data-dir "~/.local/share/fcitx5/rime")
+          rime-share-data-dir (expand-file-name "~/.config/rime"))
 
     (with-eval-after-load "rime"
       (define-key rime-mode-map (kbd "C-`") 'rime-send-keybinding)
 
-      (dolist (k '("TAB" "C-p" "C-n" "M-v" "C-v" "C-y"))
+      (dolist (k '("TAB" "C-p" "C-n" "M-v" "C-v" "C-y" "<escape>"))
         (define-key rime-active-mode-map (kbd k) 'rime-send-keybinding))
 
       (define-key rime-active-mode-map (kbd "C-a") 'rime-inline-ascii)))
@@ -104,6 +105,7 @@ Use Telega as Telegram client.
   (keymap-set global-map "C-c a t" 'telega)
 
   (with-eval-after-load "telega"
+    (setq telega-server-libs-prefix (getenv "TDLIB_PREFIX"))
     (set-face-attribute 'telega-entity-type-code nil :family 'unspecfied :inherit 'fixed-pitch-serif)
     (set-face-attribute 'telega-entity-type-pre nil :family 'unspecfied :inherit 'fixed-pitch-serif)
     (keymap-set telega-msg-button-map "SPC" nil))

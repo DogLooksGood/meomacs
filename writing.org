@@ -127,6 +127,21 @@ Enable ~variable-pitch-mode~.
 
   (add-hook 'org-mode-hook 'org-visual-indent-mode)
   (add-hook 'org-mode-hook 'org-dynamic-bullets-mode)
+
+  (defun meomacs-fix-org-visual-indent-face ()
+    (custom-set-faces
+                 `(org-visual-indent-pipe-face
+                   ((t (:foreground ,(face-foreground 'default)
+  		                  :background ,(face-foreground 'default)
+  		                  :height .1))))
+
+                 `(org-visual-indent-blank-pipe-face
+                   ((t (:foreground ,(face-background 'default)
+  		                  :background ,(face-background 'default)
+  		                  :height .1))))))
+
+  (with-eval-after-load "org-visual-indent"
+    (add-hook 'meomacs-after-load-theme-hook #'meomacs-fix-org-visual-indent-face))
 #+end_src
 
 ** Ricing markups
@@ -223,8 +238,8 @@ To finish draw, use =C-c C-c=.
 | C-c #   | uniline--set-brush-block  |
 | -       | nil                       |
 | +       | nil                       |
-| =       | nil                       |
-| *       | nil                       |
+| ​=       | nil                       |
+| ​*       | nil                       |
 
 #+header: :var uniline-keymap-table=uniline-keymap-table
 #+begin_src emacs-lisp
