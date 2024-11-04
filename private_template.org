@@ -102,33 +102,23 @@ Tweaking following table for key bindings in motion state.
 |----------+---------|
 | <escape> | ignore  |
 
-*** Leader
-
-Tweaking following table for key bindings in leader keymap.
-
 #+tblname: leader-keybindings
 | key | command                       | description |
 |-----+-------------------------------+-------------|
 | e   | dispatch: C-x C-e             |             |
 | o   | other-window                  |             |
-| s   | split-window-right            |             |
-| z   | split-window-below            |             |
-| i   | imenu                         |             |
 | b   | switch-to-buffer              |             |
-| f   | meomacs-single-window-or-undo |             |
+| l   | imenu                         |             |
+| z   | meomacs-single-window-or-undo |             |
 | k   | kill-current-buffer           |             |
-| u   | meow-universal-argument       |             |
-| q   | delete-window                 |             |
-| 1   | select-window-1               |             |
-| 2   | select-window-2               |             |
-| 3   | select-window-3               |             |
-| 4   | select-window-4               |             |
-| 5   | select-window-5               |             |
-| 6   | select-window-6               |             |
-| 7   | select-window-7               |             |
-| 8   | select-window-8               |             |
-| 9   | select-window-9               |             |
-| 0   | select-window-0               |             |
+| u   | meow-keypad-start             |             |
+| -   | meow-keypad-start             |             |
+| 1   | delete-other-windows          |             |
+| 2   | split-window-below            |             |
+| 3   | split-window-right            |             |
+| 4   | dispatch: C-x 4               |             |
+| 5   | dispatch: C-x 5               |             |
+| 0   | delete-window                 |             |
 
 * Fonts
 
@@ -178,7 +168,7 @@ Tweaking following table for key bindings in leader keymap.
 
 * Pass table
 
-#+tblname: pass-table
+#+tblname: var-table
 | Variable      | Entry in passs | Description                |
 |---------------+----------------+----------------------------|
 | gptel-api-key | chatgpt_key    | The key for openai ChatGPT |

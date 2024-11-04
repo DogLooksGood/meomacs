@@ -7,6 +7,14 @@ Configuration for writing with Emacs, specifically for Markdown and Org mode.
 #+end_src
 
 * Org
+
+* Indentation
+
+#+begin_src emacs-lisp
+  (with-eval-after-load "org"
+    (add-hook 'org-mode-hook 'org-indent-mode))
+#+end_src
+
 ** Toggle markup visibility with visible mode
 #+begin_src emacs-lisp
   (with-eval-after-load "org"
@@ -93,15 +101,6 @@ Enable ~variable-pitch-mode~.
 
 #+begin_src emacs-lisp
   (add-hook 'org-mode-hook 'variable-pitch-mode)
-
-  (with-eval-after-load "org"
-    ;; Use fixed pitch for table and code
-    (custom-set-faces
-     '(org-table ((t :inherit 'fixed-pitch-serif)))
-     '(org-code ((t :inherit 'fixed-pitch-serif)))
-     '(org-block ((t :inherit 'fixed-pitch-serif)))
-     '(org-checkbox ((t :inherit 'fixed-pitch :background unspecified :box nil)))
-     '(org-latex-and-related ((t (:inherit 'fixed-pitch-serif))))))
 #+end_src
 
 ** Turn off some eye-candy stuff
@@ -114,7 +113,7 @@ Enable ~variable-pitch-mode~.
         org-startup-indented nil)
 #+end_src
 
-** Better structure indication with org-visual-outline
+** COMMENT Better structure indication with org-visual-outline
 
 ~org-visual-outline~ provides a better visual feedback for document structure.
 
@@ -128,11 +127,11 @@ Enable ~variable-pitch-mode~.
   (add-hook 'org-mode-hook 'org-visual-indent-mode)
   (add-hook 'org-mode-hook 'org-dynamic-bullets-mode)
 
-  (defun meomacs-fix-org-visual-indent-face ()
+  (defun meomacs-fix-org-visual-indent-face (&rest ignored)
     (custom-set-faces
                  `(org-visual-indent-pipe-face
-                   ((t (:foreground ,(face-foreground 'default)
-  		                  :background ,(face-foreground 'default)
+                   ((t (:foreground ,(face-foreground 'shadow)
+  		                  :background ,(face-foreground 'shadow)
   		                  :height .1))))
 
                  `(org-visual-indent-blank-pipe-face
@@ -141,7 +140,7 @@ Enable ~variable-pitch-mode~.
   		                  :height .1))))))
 
   (with-eval-after-load "org-visual-indent"
-    (add-hook 'meomacs-after-load-theme-hook #'meomacs-fix-org-visual-indent-face))
+    (advice-add 'load-theme :after #'meomacs-fix-org-visual-indent-face))
 #+end_src
 
 ** Ricing markups
@@ -156,10 +155,7 @@ Enable ~variable-pitch-mode~.
                     ("#+begin_example" . "❯")
                     ("#+end_example" . "❮")
                     ("#+begin_quote" . "“")
-                    ("#+end_quote" . "”")
-                    ("[X]" . "☑")
-                    ("[ ]" . "☐")
-                    ("[-]" . "○")))
+                    ("#+end_quote" . "”")))
       (prettify-symbols-mode 1))
 
     (add-hook 'org-mode-hook 'meomacs--org-prettify-symbols)
@@ -176,7 +172,8 @@ Enable ~variable-pitch-mode~.
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((R . t)
-       (dot . t))))
+       (dot . t)
+       (shell . t))))
 
   (defun meomacs-after-babel-execute ()
     (when org-inline-image-overlays
@@ -216,6 +213,8 @@ Draw graphics with unicode
 
 #+begin_src emacs-lisp
   (straight-use-package '(uniline :host github :repo "tbanel/uniline"))
+
+  (autoload 'uniline-mode "uniline" nil t)
 #+end_src
 
 ** Trigger key
@@ -223,7 +222,7 @@ Draw graphics with unicode
 To finish draw, use =C-c C-c=.
 
 #+begin_src emacs-lisp
-  (keymap-set global-map "C-c t u" 'uniline-mode)
+  (keymap-set meomacs-addon-map "u" 'uniline-mode)
 #+end_src
 
 ** Meow integration
@@ -238,8 +237,8 @@ To finish draw, use =C-c C-c=.
 | C-c #   | uniline--set-brush-block  |
 | -       | nil                       |
 | +       | nil                       |
-| ​=       | nil                       |
-| ​*       | nil                       |
+| =       | nil                       |
+| *       | nil                       |
 
 #+header: :var uniline-keymap-table=uniline-keymap-table
 #+begin_src emacs-lisp

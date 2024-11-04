@@ -1,4 +1,4 @@
-#+title: Programming
++title: Programming
 
 Configuration for programming and languages support.
 
@@ -6,15 +6,50 @@ Configuration for programming and languages support.
   ;;; -*- lexical-binding: t -*-
 #+end_src
 
+* Treesit
+
+#+begin_src emacs-lisp
+  (setq treesit-language-source-alist
+     '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+       (cmake "https://github.com/uyha/tree-sitter-cmake")
+       (css "https://github.com/tree-sitter/tree-sitter-css")
+       (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+       (go "https://github.com/tree-sitter/tree-sitter-go")
+       (html "https://github.com/tree-sitter/tree-sitter-html")
+       (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+       (json "https://github.com/tree-sitter/tree-sitter-json")
+       (make "https://github.com/alemuller/tree-sitter-make")
+       (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+       (python "https://github.com/tree-sitter/tree-sitter-python")
+       (toml "https://github.com/tree-sitter/tree-sitter-toml")
+       (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+       (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+       (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+       (clojure "https://github.com/sogaiu/tree-sitter-clojure")
+       (rust "https://github.com/tree-sitter/tree-sitter-rust")))
+#+end_src
+
+Lower font lock level
+
+#+begin_src emacs-lisp
+  (setq treesit-font-lock-level 2)
+#+end_src
+
+* Hideshow
+
+#+begin_src emacs-lisp
+  (add-hook 'prog-mode-hook 'hs-minor-mode)
+#+end_src
+
 * Eldoc
 
-** Display in childframe
+** COMMENT Display in childframe
 
 #+begin_src emacs-lisp
   (straight-use-package 'eldoc-box)
 #+end_src
 
-** Replace the default C-h .
+** COMMENT Replace the default C-h .
 
 #+begin_src emacs-lisp
   (keymap-set global-map "C-h ."  'eldoc-box-help-at-point)
@@ -43,7 +78,7 @@ Configuration for programming and languages support.
   (global-set-key (kbd "C-c C-f") 'meomacs-format-buffer)
 #+end_src
 
-* Topsy
+* COMMENT Topsy
 
 Show current function signature in header line.
 
@@ -51,21 +86,23 @@ Show current function signature in header line.
   (straight-use-package
    '(topsy :host github :repo "alphapapa/topsy.el"))
 
-  (keymap-set prog-mode-map "C-c t s" 'topsy-mode)
+  (autoload 'topsy-mode "topsy" nil t)
+
+  (keymap-set meomacs-toggle-map "y" 'topsy-mode)
 #+end_src
 
 * Force save file
 #+begin_src emacs-lisp
-  (defun save-buffer-always ()
+  (defun meomacs-save-buffer-always ()
     "Save the buffer even if it is not modified."
     (interactive)
     (set-buffer-modified-p t)
     (save-buffer))
 
-  (global-set-key (kbd "C-c w") 'save-buffer-always)
+  (global-set-key (kbd "C-c w") 'meomacs-save-buffer-always)
 #+end_src
 
-* Flycheck
+* COMMENT Flycheck
 
 #+begin_src emacs-lisp
   (straight-use-package 'flycheck)
@@ -73,14 +110,14 @@ Show current function signature in header line.
   (setq flycheck-check-syntax-automatically '(save idle-buffer-switch mode-enabled))
 #+end_src
 
-* Lisp Parenthese
+* COMMENT Lisp Parenthese
 #+begin_src emacs-lisp
   (straight-use-package 'paredit)
 
   (require 'paredit)
 
-  (define-key emacs-lisp-mode-map (kbd "C-c )") 'paredit-forward-slurp-sexp)
-  (define-key emacs-lisp-mode-map (kbd "C-c (") 'paredit-forward-barf-sexp)
+  (add-hook 'clojure-mode-hook 'paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
 #+end_src
 
 * LSP
@@ -194,16 +231,24 @@ Use eglot as LSP client.
   (autoload 'eglot "eglot" nil t)
 
   (setq eglot-ignored-server-capabilities
-        '(:hoverProvider
-          :documentHighlightProvider
+        '(:documentHighlightProvider
           :inlayHintProvider
-          :workspaceSymbolProvider))
+          :workspaceSymbolProvider
+          :documentSymbolProvider
+          :codeLensProvider))
 
   (setq eglot-autoshutdown t)
 
   (setq eglot-stay-out-of '(yasnippet))
 
-  (setq eglot-send-changes-idle-time 2.0)
+  (setq eglot-send-changes-idle-time 0)
+
+  (defun eglot-setup-eldoc ()
+    (setq-local eldoc-documentation-functions '(flymake-eldoc-function
+                                                eglot-signature-eldoc-function
+                                                eglot-hover-eldoc-function)))
+
+  (add-hook 'eglot-mode-hook 'eglot-setup-eldoc)
 
   (with-eval-after-load "eglot"
     (define-key eglot-mode-map (kbd "<C-return>") 'eglot-code-actions))
@@ -235,9 +280,8 @@ Use eglot as LSP client.
 *** Key Binding
 
 #+begin_src emacs-lisp
-  (keymap-set prog-mode-map "C-c L" 'eglot)
+  (keymap-set meomacs-toggle-map "e" 'eglot)
 #+end_src
-
 
 *** Flymake
 
@@ -245,8 +289,28 @@ Use eglot as LSP client.
   (setq flymake-no-changes-timeout 0.5)
 
   (with-eval-after-load "flymake"
+    (keymap-set meomacs-toggle-map "f" 'flymake-mode)
+    (keymap-set flymake-mode-map "C-c f b" 'flymake-show-buffer-diagnostics)
+    (keymap-set flymake-mode-map "C-c f a" 'flymake-show-project-diagnostics)
     (keymap-set flymake-mode-map "C-c f n" 'flymake-goto-next-error)
     (keymap-set flymake-mode-map "C-c f p" 'flymake-goto-prev-error))
+#+end_src
+
+** COMMENT Lsp-copilot
+
+#+begin_src emacs-lisp
+  (straight-use-package '(lsp-copilot :repo "jadestrong/lsp-copilot"
+                                      :host github
+                                      :files ("*.el" "*.toml")))
+
+  (straight-use-package 'ht)
+
+  (straight-use-package 'projectile)
+
+  (require 'projectile)
+
+  (setq lsp-copilot--exec-file
+        (expand-file-name "~/workspace/lsp-copilot-flake/result/bin/lsp-copilot"))
 #+end_src
 
 * Clojure
@@ -272,13 +336,19 @@ Use clojure-mode for basic syntax support.
 #+begin_src emacs-lisp
   (straight-use-package 'clojure-ts-mode)
 
+  (setq clojure-ts-indent-style 'fixed)
+
+  (add-to-list 'major-mode-remap-alist '(clojure-script-mode . clojure-ts-clojurescript-mode))
+  (add-to-list 'major-mode-remap-alist '(clojure-mode . clojure-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(clojurec-mode . clojure-ts-clojurec-mode))
+
   (with-eval-after-load "clojure-ts-mode"
     (setq clojure-ts-toplevel-inside-comment-form t)
     (keymap-set clojure-ts-mode-map "C-c )" 'paredit-forward-slurp-sexp)
     (keymap-set clojure-ts-mode-map "C-c (" 'paredit-forward-barf-sexp))
 #+end_src
 
-** Inf-Clojure
+** COMMENT Inf-Clojure
 
 A lightweight integration to socket repl.
 
@@ -300,10 +370,11 @@ For opening .jar files. This is required for Eglot.
   (straight-use-package 'jarchive)
 
   (with-eval-after-load "clojure-ts-mode"
-    (jarchive-mode))
+    (jarchive-mode)
+    (diminish 'jarchive-mode))
 #+end_src
 
-** COMMENT Cider for REPL connection
+** Cider for REPL connection
 
 #+begin_src emacs-lisp
   (straight-use-package 'cider)
@@ -312,7 +383,8 @@ For opening .jar files. This is required for Eglot.
 
   (setq cider-offer-to-open-cljs-app-in-browser nil
         cider-preferred-build-tool 'shadow-cljs
-        cider-repl-type 'shadow)
+        cider-repl-type 'shadow
+        cider-use-xref nil)
 #+end_src
 
 ** COMMENT Linting with flycheck-clj-kondo
@@ -445,6 +517,9 @@ Write a command to switch between wasm32 and native target triple.
 
 #+begin_src emacs-lisp
   (straight-use-package 'nix-mode)
+
+  (autoload 'nix-mode "nix-mode" nil t)
+
   (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
 #+end_src
 
@@ -525,6 +600,11 @@ Write a command to switch between wasm32 and native target triple.
 #+begin_src emacs-lisp
   (straight-use-package 'just-mode)
 
+  (autoload 'just-mode "just-mode" nil t)
+
+  (add-to-list 'auto-mode-alist '("/[Jj]ustfile\\'" . just-mode))
+  (add-to-list 'auto-mode-alist '("\\.[Jj]ust\\(file\\)?\\'" . just-mode))
+
   (defun +just-mode-hook ()
     (modify-syntax-entry ?- "_"))
 
@@ -560,31 +640,28 @@ Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile
   (keymap-set global-map "C-c J" 'justl-execute-last-recipe)
 #+end_src
 
-* Treesit-auto
-
-#+begin_src emacs-lisp
-  (setq treesit-font-lock-level 2)
-#+end_src
-
-Install tree-sitter modules automatically.
-
-#+begin_src emacs-lisp
-  (straight-use-package 'treesit-auto)
-  (require 'treesit-auto)
-  (setq treesit-auto-install nil
-        treesit-auto-langs '(html clojure typescript tsx))
-  (global-treesit-auto-mode)
-#+end_src
-
 * YAML
 #+begin_src emacs-lisp
   (straight-use-package 'yaml-mode)
+
+  (autoload 'yaml-mode "yaml-mode" nil t)
+
+  (add-to-list 'auto-mode-alist '("\\.\\(e?ya?\\|ra\\)ml\\'" . yaml-mode))
+  (add-to-list 'magic-mode-alist '("^%YAML\\s-+[0-9]+\\.[0-9]+\\(\\s-+#\\|\\s-*$\\)" . yaml-mode))
 #+end_src
 
 * Docker
 #+begin_src emacs-lisp
   (straight-use-package 'docker)
-  (straight-use-package 'dockerfile-mode)
+  (straight-use-package 'dockerfile-ts-mode)
+
+  (add-to-list 'auto-mode-alist '("/Dockerfile\\'" . dockerfile-ts-mode))
 
   (autoload 'docker "docker" nil t)
+#+end_src
+
+* Xref configuration
+
+#+begin_src emacs-lisp
+  (setq xref-show-definitions-function 'xref-show-definitions-completing-read)
 #+end_src

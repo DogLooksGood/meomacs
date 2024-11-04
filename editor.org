@@ -12,6 +12,12 @@ Configuration for editor basics.
 
 Straight.el is used for package management.
 
+*** Disable startup check
+
+#+begin_src emacs-lisp
+  (setq straight-check-for-modifications '(check-on-save))
+#+end_src
+
 *** Disable native compilation
 
 #+begin_src emacs-lisp
@@ -34,7 +40,7 @@ Straight.el is used for package management.
 #+header: :var straight-keymap-table=straight-keymap-table
 #+begin_src emacs-lisp
   (meomacs-keymap-table straight-keymap straight-keymap-table)
-  (global-set-key (kbd "C-c P") 'straight-keymap)
+  (global-set-key (kbd "C-c S") 'straight-keymap)
 #+end_src
 
 * Better defaults
@@ -137,9 +143,27 @@ Straight.el is used for package management.
   (global-subword-mode 1)
   (diminish 'subword-mode)
 
-  (blink-cursor-mode -1)
+  (setq blink-cursor-interval 0.1
+        blink-cursor-delay 0.2
+        blink-cursor-blinks 30)
 
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+  (setq jit-lock-defer-time 0)
+#+end_src
+
+* Define some custom keymaps
+
+#+begin_src emacs-lisp
+  (defvar meomacs-toggle-map (make-keymap)
+    "A mode for minor mode switchers.")
+  (defalias 'meomacs-toggle-map meomacs-toggle-map)
+  (keymap-set mode-specific-map "t" 'meomacs-toggle-map)
+
+  (defvar meomacs-addon-map (make-keymap)
+    "A mode for addon plugin launchers.")
+  (defalias 'meomacs-addon-map meomacs-addon-map)
+  (keymap-set mode-specific-map "a" 'meomacs-addon-map)
 #+end_src
 
 * Start a emacs server
@@ -147,7 +171,7 @@ Straight.el is used for package management.
 #+begin_src emacs-lisp
   (require 'server)
   (unless (server-running-p)
-    (server-start))
+    (server-mode 1))
 #+end_src
 
 * Meow
@@ -193,6 +217,7 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
                      '(pair ("<") (">")))
   (add-to-list 'meow-char-thing-table
                '(?h . angle))
+
   (meow-setup)
   (meow-setup-indicator)
   (unless (bound-and-true-p meow-global-mode)
@@ -229,7 +254,7 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
     (setq meomacs--register-tree-sitter-run-once t))
 #+end_src
 
-* Window management
+* COMMENT Window management
 
 Switch window by pressing the number showned in the mode line.
 
@@ -238,7 +263,6 @@ Switch window by pressing the number showned in the mode line.
                           :repo "DogLooksGood/window-numbering.el"
                           :host github
                           :type git))
-
 
   (require 'window-numbering)
   (window-numbering-mode 1)
@@ -272,21 +296,12 @@ Switch window by pressing the number showned in the mode line.
       (setq-default mode-line-format (cons modeline-segment mode-line-format))))
 #+end_src
 
-** COMMENT golden-ratio
-#+begin_src emacs-lisp
-  (straight-use-package 'golden-ratio)
-
-  (define-key mode-specific-map "\\" 'golden-ratio)
-
-  (autoload 'golden-ratio "golden-ratio" nil t)
-#+end_src
-
 ** ace-window
 #+begin_src emacs-lisp
   (straight-use-package 'ace-window)
 
   (autoload 'ace-swap-window "ace-window" nil t)
-  (autoload 'ace-delete-other-windows "ace-window" nil t)
+  (autoload 'ace-delete-window "ace-window" nil t)
 
   (keymap-set mode-specific-map "W" 'ace-swap-window)
   (keymap-set mode-specific-map "Q" 'ace-delete-window)
@@ -327,7 +342,7 @@ Use tabs for workspaces.
 
 #+begin_src emacs-lisp
   ;; We could hide the window decoration
-  ;; (setq default-frame-alist '((undecorated . t)))
+  (setq default-frame-alist '((undecorated . t)))
 
   (add-hook 'after-init-hook
             (lambda ()
@@ -352,11 +367,6 @@ Use tabs for workspaces.
         tab-bar-tab-name-truncated-max 10)
 
   (tab-bar-mode 1)
-
-  (global-set-key (kbd "C-c j") 'tab-bar-switch-to-tab)
-  (global-set-key (kbd "C-<next>") 'tab-bar-switch-to-next-tab)
-  (global-set-key (kbd "C-<prior>") 'tab-bar-switch-to-prev-tab)
-  (global-set-key (kbd "C-<escape>") 'tab-bar-close-tab)
 #+end_src
 
 Add missing keybindings
@@ -391,6 +401,9 @@ Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
 
   (with-eval-after-load "smartparens"
 
+    (keymap-set smartparens-mode-map "C-)" 'sp-forward-slurp-sexp)
+    (keymap-set smartparens-mode-map "C-}" 'sp-forward-barf-sexp)
+
     ;; setup for emacs-lisp
     (sp-with-modes '(emacs-lisp-mode)
       (sp-local-pair "'" nil :actions nil))
@@ -399,16 +412,20 @@ Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
     (add-hook 'smartparens-mode-hook 'smartparens-strict-mode)
 
     ;; Keybindings
-    (keymap-set prog-mode-map "C-c t s" 'smartparens-strict-mode)
-    (keymap-set conf-mode-map "C-c t s" 'smartparens-strict-mode))
+    (keymap-set prog-mode-map "C-c t p" 'smartparens-strict-mode))
 #+end_src
 
 * Line numbers with display-line-numbers-mode
 
 #+begin_src emacs-lisp
-  (keymap-set global-map "C-c t l" 'display-line-numbers-mode)
+  (keymap-set meomacs-toggle-map "n" 'display-line-numbers-mode)
 #+end_src
 
+** Relative line number
+
+#+begin_src emacs-lisp
+  (setq display-line-numbers-type 'visual)
+#+end_src
 
 * Completion for key sequence
 
@@ -509,6 +526,7 @@ Do "delete" instead of "kill" when pressing =M-DEL=.
 
   (add-hook 'prog-mode-hook 'company-mode)
   (add-hook 'conf-mode-hook 'company-mode)
+  (add-hook 'comint-mode-hook 'company-mode)
   (autoload 'company-mode "company" nil t)
 
   (setq company-format-margin-function 'company-text-icons-margin
@@ -577,7 +595,6 @@ Expand template with =TAB=. Jump between the placeholders with =TAB= and =S-TAB=
 
 #+begin_src emacs-lisp
   (straight-use-package 'yasnippet)
-  (straight-use-package 'yasnippet-snippets)
 
   (require 'yasnippet)
 
@@ -593,43 +610,43 @@ Expand template with =TAB=. Jump between the placeholders with =TAB= and =S-TAB=
 To find files/buffers and apply commands on project, use builtin package ~project~.
 
 #+begin_src emacs-lisp
-  (when (version<= "28" emacs-version)
-    (setq project-switch-commands '((project-find-file "Find file")
-                                    (project-find-regexp "Find regexp")
-                                    (project-dired "Dired")
-                                    (project-eshell "Eshell")
-                                    (magit-project-status "Magit")
-                                    (shell "Shell")))
+  (setq project-switch-commands '((project-find-file "Find file")
+                                  (project-find-regexp "Find regexp")
+                                  (project-dired "Dired")
+                                  (project-eshell "Eshell")
+                                  (magit-project-status "Magit")
+                                  (shell "Shell")))
 
-    (defalias 'project-prefix-map project-prefix-map)
+  (defalias 'project-prefix-map project-prefix-map)
 
-    (define-key mode-specific-map "p" 'project-prefix-map)
+  (define-key mode-specific-map "p" 'project-prefix-map)
 
-    (with-eval-after-load "project"
-      (define-key project-prefix-map "s" 'shell)
-      (define-key project-prefix-map "m" 'magit-project-status)))
-#+end_src
-
-* Enanced completion commands
-
-** consult
-
-#+begin_src emacs-lisp
-  (straight-use-package 'consult)
-
-  (require 'consult)
-
-  (define-key mode-specific-map "G" 'consult-ripgrep)
+  (with-eval-after-load "project"
+    (define-key project-prefix-map "s" 'shell)
+    (define-key project-prefix-map "m" 'magit-project-status))
 #+end_src
 
 * File Navigator
 
-** treemacs
+** Dired sidebar
+
+#+begin_src emacs-lisp
+  (straight-use-package 'dired-sidebar)
+
+  (autoload 'dired-sidebar-toggle-sidebar "dired-sidebar" nil t)
+  (keymap-set meomacs-toggle-map "s" 'dired-sidebar-toggle-sidebar)
+#+end_src
+
+** COMMENT treemacs
 
 #+begin_src emacs-lisp
   (straight-use-package 'treemacs)
 
   (setq treemacs-is-never-other-window t)
+
+  (autoload 'treemacs "treemacs" nil t)
+
+  (keymap-set meomacs-toggle-map ";" 'treemacs)
 #+end_src
 
 * Text searching
@@ -658,7 +675,8 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 
   (with-eval-after-load "rg"
     (rg-enable-default-bindings)
-    (rg-enable-menu))
+    ;; (rg-enable-menu)
+    )
 
   (with-eval-after-load "wgrep"
     (define-key wgrep-mode-map (kbd "C-c C-c") #'wgrep-finish-edit))
@@ -708,4 +726,29 @@ To find files/buffers and apply commands on project, use builtin package ~projec
   (setq beframe-functions-in-frames '(project-prompt-project-dir))
 
   (define-key global-map [remap switch-to-buffer] 'beframe-switch-buffer)
+#+end_src
+
+* Load variable values from varibale table
+
+#+header: :var var-table=private.org:var-table
+#+begin_src emacs-lisp
+  (defun meomacs-read-var (key)
+     (let* ((item (alist-get key var-table nil nil 'equal))
+            (entry (cadr item))
+            (where (car item)))
+       (cond
+        ((string-equal where "pass")
+         (password-store-get entry))
+
+        ((string-equal where "env")
+         (getenv entry)))))
+#+end_src
+
+* Common settings for transient
+
+#+begin_src emacs-lisp
+  (straight-use-package 'transient)
+
+  (with-eval-after-load "transient"
+    (keymap-set transient-map "<escape>" 'transient-quit-one))
 #+end_src

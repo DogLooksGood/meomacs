@@ -15,24 +15,26 @@ To manage the git repository, use builtin package ~vc~.
   (straight-use-package 'diff-hl)
   (straight-use-package 'smerge-mode)
 
-  (autoload 'magit "magit" nil t)
+  (autoload 'magit-status "magit" nil t)
   (autoload 'diff-hl-mode "diff-hl" nil t)
   (autoload 'diff-hl-dired-mode "diff-hl-dired" nil t)
   (autoload 'smerge-mode "smerge-mode" nil t)
 #+end_src
 
+Key bindings
+
+#+begin_src emacs-lisp
+  (keymap-set meomacs-toggle-map "m" 'smerge-mode)
+  (keymap-set meomacs-addon-map "m" 'magit-status)
+#+end_src
+
+** COMMENT Diff-hl
 Enable diff-hl in based on major modes.
 
 #+begin_src emacs-lisp
   (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
   (add-hook 'prog-mode-hook 'diff-hl-mode)
   (add-hook 'conf-mode-hook 'diff-hl-mode)
-#+end_src
-
-Enable smerge mode with =C-c t m=.
-
-#+begin_src emacs-lisp
-  (keymap-set global-map "C-c t m" 'smerge-mode)
 #+end_src
 
 * Input method with emacs-rime
@@ -42,23 +44,23 @@ Enable smerge mode with =C-c t m=.
 ~emacs-rime~ is the frontend of rime built with emacs input method API.
 
 #+begin_src emacs-lisp
-  (when (and (getenv "EMACS_MODULE_HEADER")
-             (getenv "LIBRIME_ROOT"))
-    (straight-use-package 'rime)
+  (straight-use-package 'rime)
 
-    (setq default-input-method "rime"
-          rime-emacs-module-header-root (file-name-directory (getenv "EMACS_MODULE_HEADER"))
-          rime-show-candidate 'sidewindow
-          rime-librime-root (getenv "LIBRIME_ROOT")
-          rime-share-data-dir (expand-file-name "~/.config/rime"))
+  (require 'rime)
 
-    (with-eval-after-load "rime"
-      (define-key rime-mode-map (kbd "C-`") 'rime-send-keybinding)
+  (setq default-input-method "rime"
+        rime-emacs-module-header-root (file-name-directory (getenv "EMACS_MODULE_HEADER"))
+        rime-show-candidate 'sidewindow
+        rime-librime-root (meomacs-read-var "rime-librime-root")
+        rime-share-data-dir (expand-file-name "~/.config/rime"))
 
-      (dolist (k '("TAB" "C-p" "C-n" "M-v" "C-v" "C-y" "<escape>"))
-        (define-key rime-active-mode-map (kbd k) 'rime-send-keybinding))
+  (with-eval-after-load "rime"
+    (define-key rime-mode-map (kbd "C-`") 'rime-send-keybinding)
 
-      (define-key rime-active-mode-map (kbd "C-a") 'rime-inline-ascii)))
+    (dolist (k '("TAB" "C-p" "C-n" "M-v" "C-v" "C-y" "<escape>"))
+      (define-key rime-active-mode-map (kbd k) 'rime-send-keybinding))
+
+    (define-key rime-active-mode-map (kbd "C-a") 'rime-inline-ascii))
 #+end_src
 
 Auto switch to inline ascii state when after a space after a non-ascii character.
@@ -78,18 +80,18 @@ Disable input method in non-insert state.
                                   meow-beacon-mode-p))
 #+end_src
 
-* Matrix client with ement
+* COMMENT Matrix client with ement
 
 #+begin_src emacs-lisp
   (straight-use-package 'ement)
 
   (autoload 'ement-connect "ement" nil t)
 
-  (keymap-set global-map "C-c a m" 'ement-connect)
+  (keymap-set meomacs-addon-map "M" 'ement-connect)
 #+end_src
 
 
-* Telegram client with Telega
+* COMMENT Telegram client with Telega
 
 ~telegram-libtd~ is required for this feature.
 
@@ -102,7 +104,7 @@ Use Telega as Telegram client.
 
   (autoload 'telega "telega" nil t)
 
-  (keymap-set global-map "C-c a t" 'telega)
+  (keymap-set meomacs-addon-map "T" 'telega)
 
   (with-eval-after-load "telega"
     (setq telega-server-libs-prefix (getenv "TDLIB_PREFIX"))
@@ -133,7 +135,7 @@ Adding following to ~$HOME/.gnupg/gpg-agent.conf~.
   allow-loopback-pinentry
 #+end_example
 
-Open pass menu with =C-c a p=.
+Open pass menu with ~C-c a P~.
 
 #+begin_src emacs-lisp
   (straight-use-package 'pass)
@@ -142,28 +144,14 @@ Open pass menu with =C-c a p=.
   (setq pass-username-fallback-on-filename t
         pass-show-keybindings nil)
 
+  (autoload 'password-store-get "pass")
+  (autoload 'pinentry-start "pinentry")
   (autoload #'pass "pass" nil t)
 
-  (keymap-set global-map "C-c a p" 'pass)
+  (keymap-set meomacs-addon-map "p" 'pass)
 
   (with-eval-after-load "pass"
     (pinentry-start))
-#+end_src
-
-** Load variable values from pass
-
-#+header: :var pass-table=private.org:pass-table
-#+begin_src emacs-lisp
-  ;; Load only once
-  (defvar meomacs--pass-vars-loaded nil)
-
-  (defun meomacs-load-vars-from-pass (&rest ignore)
-    (unless meomacs--pass-vars-loaded
-      (dolist (row pass-table)
-        (let ((var-name (intern (car row)))
-              (entry-name (cadr row)))
-          (set var-name (password-store-get entry-name))))
-      (setq meomacs--pass-vars-loaded t)))
 #+end_src
 
 * Directory environment support with direnv
@@ -173,10 +161,27 @@ Open pass menu with =C-c a p=.
 
   (setq direnv-always-show-summary nil)
 
-  (keymap-set global-map "C-c t d" 'direnv-mode)
+  (autoload 'direnv-mode "direnv" nil t)
 
-  (require 'direnv)
-  (direnv-mode)
+  (keymap-set meomacs-toggle-map "d" 'direnv-mode)
+
+  (defun meomacs-direnv-wrapper-function (orig-fun &rest args)
+    (if (bound-and-true-p direnv-mode)
+        (apply orig-fun args)
+      (direnv-mode 1)
+      (let ((ret (apply orig-fun args)))
+        (direnv-mode -1)
+        ret)))
+
+  (defun meomacs-direnv-wrap (command)
+    "Wrap a command so direnv starts before the command and stops after the command."
+    (advice-add command :around 'meomacs-direnv-wrapper-function))
+
+  (defvar meomacs-direnv-wrap-commands
+    '(justl justl-exec-recipe-in-dir))
+
+  (dolist (cmd meomacs-direnv-wrap-commands)
+    (meomacs-direnv-wrap cmd))
 #+end_src
 
 * Pinentry
@@ -199,8 +204,7 @@ Open pass menu with =C-c a p=.
 
 ** Key bindings
 #+begin_src emacs-lisp
-  (keymap-set global-map "C-c t e" 'eshell)
-  (keymap-set global-map "C-c t E" 'eat)
+  (keymap-set meomacs-addon-map "e" 'eshell)
 #+end_src
 
 ** Eshell support
@@ -219,8 +223,6 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
     (add-hook 'meow-insert-mode-hook 'eat-char-mode nil t))
 
   (with-eval-after-load "eat"
-    (define-key eat-char-mode-map (kbd "C-y") 'eat-yank)
-    ;; Replace semi-char mode with emacs mode
     (advice-add 'eat-semi-char-mode :after 'eat-emacs-mode)
     (add-hook 'eat-mode-hook 'meomacs-eat-meow-setup))
 #+end_src
@@ -228,24 +230,53 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
 * ChatGPT
 #+begin_src emacs-lisp
   (straight-use-package '(gptel :host github :repo "karthink/gptel"))
+
+  (autoload 'gptel "gptel" nil t)
+
   (setq gptel-use-curl t
-        gptel-model "gpt-4o")
-#+end_src
+        gptel-model 'gpt-4o
+        gptel-default-mode 'org-mode
+        gptel-api-key (lambda () (meomacs-read-var "gptel-api-key")))
 
-** Read key from pass
-
-#+begin_src emacs-lisp
-  (defun meomacs-gptel ()
-    (interactive)
-    (meomacs-load-vars-from-pass)
-    (call-interactively 'gptel))
+  (with-eval-after-load "gptel"
+    (require 'gptel-curl))
 #+end_src
 
 ** Keybindings
 #+begin_src emacs-lisp
-  (keymap-set global-map "C-c a g" 'meomacs-gptel)
+  (defvar gptel-map
+    (let ((m (make-keymap)))
+      (suppress-keymap m t)
+      (keymap-set m "n" 'gptel)
+      (keymap-set m "i" 'gptel-menu)
+      (keymap-set m "a" 'gptel-add)
+      m))
+
+  (defalias 'gptel-map gptel-map)
+
+  (keymap-set global-map "C-c i" 'gptel-map)
+
 
   (with-eval-after-load "gptel"
-    (define-key gptel-mode-map (kbd "C-<return>") 'gptel-send)
-    (define-key gptel-mode-map (kbd "M-RET") 'gptel-menu))
+    (setq gptel-directives
+          '((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
+            (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt, note. Provide code without markdown syntax and triple backticks.")
+            (writing . "You are a large language model and a writing assistant. Respond concisely.")
+            (chat . "You are a large language model and a conversation partner. Respond concisely."))))
+#+end_src
+
+* Go translate
+
+#+begin_src emacs-lisp
+  (straight-use-package 'go-translate)
+
+  (require 'go-translate)
+
+  (setq gt-preset-translators
+          `((Default . ,(gt-translator
+                         :taker (gt-taker :langs '(en zh) :text 'word :prompt nil)
+                         :engines  (gt-youdao-dict-engine :if 'word)
+                         :render (gt-posframe-pop-render :if 'word :frame-params (list :height 40 :border-width 5))))))
+
+  (keymap-set global-map "<f6>" 'gt-do-translate)
 #+end_src

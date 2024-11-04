@@ -27,7 +27,7 @@ No scroll bars in minibuffer.
 * Window divider
 ** GUI
 #+begin_src emacs-lisp
-  (window-divider-mode 1)
+  (window-divider-mode 0)
 #+end_src
 
 ** TUI
@@ -93,7 +93,7 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
         font)))
 
   (defun meomacs--format-font-name (family)
-    (format "%s:pixelsize=%s:antialias=none" family meomacs-font-pixelsize))
+    (format "%s:pixelsize=%s" family meomacs-font-pixelsize))
 
   (defun meomacs-load-default-font ()
     "Load default font configuration."
@@ -173,7 +173,7 @@ Load themes.
           (mapcar (lambda (s) (intern (substring s 4))))))
 #+end_src
 
-Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes.
+Create a command ~meomacs-next-theme~ at ~C-c \~ to switch themes.
 
 #+begin_src emacs-lisp
   (require 'subr-x)
@@ -182,16 +182,12 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes.
   (defvar meomacs-themes '()
     "Themes to use.")
 
-  (defvar meomacs-after-load-theme-hook nil
-    "Hooks to run when theme changed.")
-
   (defun meomacs-load-theme ()
     (when-let ((theme (car meomacs-themes)))
       (message "Load theme: %s" (car meomacs-themes))
       (mapc 'disable-theme custom-enabled-themes)
       (unless (eq theme 'default)
-        (load-theme theme t)
-        (run-hooks 'meomacs-after-load-theme-hook))))
+        (load-theme theme t))))
 
   (defun meomacs-next-theme ()
     (interactive)
@@ -199,7 +195,7 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes.
       (setq meomacs-themes (append (cdr meomacs-themes) (list (car meomacs-themes))))
       (meomacs-load-theme)))
 
-  (keymap-set global-map "C-c t t" 'meomacs-next-theme)
+  (global-set-key (kbd "<f5>") 'meomacs-next-theme)
 
   (add-hook 'desktop-after-read-hook 'meomacs-load-theme)
 #+end_src
@@ -214,7 +210,7 @@ Create a command ~meomacs-next-theme~ at =C-c t t= to switch themes.
 
 * Modeline
 
-** Use variable font
+** COMMENT Use variable font
 
 #+begin_src emacs-lisp
   (custom-set-faces
@@ -240,14 +236,8 @@ Hide unnecessary lighters.
 
   (require 'diminish)
   (diminish 'gcmh-mode)
-  (diminish 'buffer-face-mode)
-  (diminish 'eldoc-mode)
-#+end_src
-
-** COMMENT mood-line
-#+begin_src emacs-lisp
-  (straight-use-package 'mood-line)
-
-  (require 'mood-line)
-  (mood-line-mode 1)
+  (add-hook 'eldoc-mode-hook (lambda () (diminish 'eldoc-mode)))
+  (add-hook 'hs-minor-mode-hook (lambda () (diminish 'hs-minor-mode)))
+  (add-hook 'auto-revert-mode-hook (lambda () (diminish 'auto-revert-mode)))
+  (add-hook 'eldoc-mode-hook (lambda () (diminish 'buffer-face-mode)))
 #+end_src
