@@ -8,12 +8,6 @@ Configuration for writing with Emacs, specifically for Markdown and Org mode.
 
 * Org
 
-* Indentation
-
-#+begin_src emacs-lisp
-  (with-eval-after-load "org"
-    (add-hook 'org-mode-hook 'org-indent-mode))
-#+end_src
 
 ** Toggle markup visibility with visible mode
 #+begin_src emacs-lisp
@@ -141,6 +135,13 @@ Enable ~variable-pitch-mode~.
 
   (with-eval-after-load "org-visual-indent"
     (advice-add 'load-theme :after #'meomacs-fix-org-visual-indent-face))
+#+end_src
+
+** Startup settings
+
+#+begin_src emacs-lisp
+  (setq org-startup-truncated t
+        org-startup-indented t)
 #+end_src
 
 ** Ricing markups

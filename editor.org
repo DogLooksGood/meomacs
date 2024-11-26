@@ -418,13 +418,22 @@ Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
 * Line numbers with display-line-numbers-mode
 
 #+begin_src emacs-lisp
-  (keymap-set meomacs-toggle-map "n" 'display-line-numbers-mode)
+  (keymap-set meomacs-toggle-map "n" 'toggle-display-line-number-and-hl-line)
+
+  (defun toggle-display-line-number-and-hl-line ()
+    (interactive)
+    (if (bound-and-true-p display-line-numbers-mode)
+        (progn
+          (display-line-numbers-mode -1)
+          (hl-line-mode -1))
+      (display-line-numbers-mode)
+      (hl-line-mode)))
 #+end_src
 
 ** Relative line number
 
 #+begin_src emacs-lisp
-  (setq display-line-numbers-type 'visual)
+  (setq display-line-numbers-type t)
 #+end_src
 
 * Completion for key sequence

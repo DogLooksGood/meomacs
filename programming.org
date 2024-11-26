@@ -55,29 +55,6 @@ Lower font lock level
   (keymap-set global-map "C-h ."  'eldoc-box-help-at-point)
 #+end_src
 
-* Custom format buffer function
-#+begin_src emacs-lisp
-  (defun meomacs-default-format-buffer ()
-    (interactive)
-    (save-mark-and-excursion
-      (indent-region-line-by-line (point-min) (point-max))))
-
-  (defun meomacs-format-buffer ()
-    "Format whole buffer with LSP and fallback behavior."
-    (interactive)
-    (cond
-     ((and (bound-and-true-p lsp-mode) lsp-enable-indentation)
-      (call-interactively #'lsp-format-buffer))
-
-     ((bound-and-true-p eglot-mode)
-      (call-interactively #'eglot-format-buffer))
-
-     (t
-      (call-interactively 'meomacs-default-format-buffer))))
-
-  (global-set-key (kbd "C-c C-f") 'meomacs-format-buffer)
-#+end_src
-
 * COMMENT Topsy
 
 Show current function signature in header line.
@@ -89,6 +66,14 @@ Show current function signature in header line.
   (autoload 'topsy-mode "topsy" nil t)
 
   (keymap-set meomacs-toggle-map "y" 'topsy-mode)
+#+end_src
+
+* Code Formatter
+
+#+begin_src emacs-lisp
+  (straight-use-package 'format-all)
+
+  (keymap-set prog-mode-map "C-c f" 'format-all-buffer)
 #+end_src
 
 * Force save file
@@ -110,7 +95,25 @@ Show current function signature in header line.
   (setq flycheck-check-syntax-automatically '(save idle-buffer-switch mode-enabled))
 #+end_src
 
-* COMMENT Lisp Parenthese
+* Lisp Parenthese
+
+** COMMENT Combobulate
+
+#+begin_src emacs-lisp
+  (straight-use-package 'combobulate)
+
+  (add-hook 'prog-mode-hook 'combobulate-mode)
+#+end_src
+
+** COMMENT Puni
+
+#+begin_src emacs-lisp
+  (straight-use-package 'puni)
+
+  (add-hook 'prog-mode-hook 'puni-mode)
+#+end_src
+
+** COMMENT Paredit
 #+begin_src emacs-lisp
   (straight-use-package 'paredit)
 
@@ -257,12 +260,13 @@ Use eglot as LSP client.
 *** Turn off event logs
 
 #+begin_src emacs-lisp
-  (defvar jsonrpc-log-event-p nil)
+  (with-eval-after-load "eglot"
+    (setq eglot-events-buffer-config '(:size 0 :format full))
+    (setq eglot-events-buffer-size 0))
 
-  (defun jsonrpc--log-event-advice (f &rest args)
-    (if jsonrpc-log-event-p (apply f args)))
-
-  (advice-add #'jsonrpc--log-event :around #'jsonrpc--log-event-advice)
+  (with-eval-after-load "jsonrpc"
+    (fset #'jsonrpc--log-event #'ignore)
+    (setq jsonrpc-event-hook nil))
 #+end_src
 
 *** Use lsp-booster
@@ -430,9 +434,6 @@ For opening .jar files. This is required for Eglot.
   (setq lsp-typescript-preferences-quote-style "single"
         lsp-typescript-surveys-enabled nil
         lsp-typescript-format-enable nil)
-
-  (make-variable-buffer-local 'lsp-enable-indentation)
-  (setq-default lsp-enable-indentation t)
 
   (add-hook 'tsx-ts-mode-hook
             (lambda ()
@@ -664,4 +665,10 @@ Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile
 
 #+begin_src emacs-lisp
   (setq xref-show-definitions-function 'xref-show-definitions-completing-read)
+#+end_src
+
+* A command for just one space
+
+#+begin_src emacs-lisp
+  (keymap-set prog-mode-map "C-c SPC" 'just-one-space)
 #+end_src
