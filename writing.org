@@ -8,7 +8,6 @@ Configuration for writing with Emacs, specifically for Markdown and Org mode.
 
 * Org
 
-
 ** Toggle markup visibility with visible mode
 #+begin_src emacs-lisp
   (with-eval-after-load "org"
@@ -174,7 +173,8 @@ Enable ~variable-pitch-mode~.
      'org-babel-load-languages
      '((R . t)
        (dot . t)
-       (shell . t))))
+       (shell . t)
+       (clojure . t))))
 
   (defun meomacs-after-babel-execute ()
     (when org-inline-image-overlays

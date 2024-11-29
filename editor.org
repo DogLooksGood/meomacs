@@ -312,15 +312,19 @@ Switch window by pressing the number showned in the mode line.
   (require 'winner)
 
   (winner-mode 1)
-
-  (defun meomacs-single-window-or-undo ()
-    (interactive)
-    (if (= 1 (length (window-list-1)))
-        (winner-undo)
-      (delete-other-windows)))
 #+end_src
 
 * Workspace management
+
+** COMMENT OTPP, one tab per project
+
+#+begin_src emacs-lisp
+  (straight-use-package 'otpp)
+
+  (require 'otpp)
+  (otpp-mode 1)
+  (otpp-override-mode 1)
+#+end_src
 
 ** COMMENT Using frames
 

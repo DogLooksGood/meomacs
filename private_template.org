@@ -109,8 +109,6 @@ Tweaking following table for key bindings in motion state.
 | o   | other-window                  |             |
 | b   | switch-to-buffer              |             |
 | l   | imenu                         |             |
-| z   | meomacs-single-window-or-undo |             |
-| k   | kill-current-buffer           |             |
 | u   | meow-keypad-start             |             |
 | -   | meow-keypad-start             |             |
 | 1   | delete-other-windows          |             |

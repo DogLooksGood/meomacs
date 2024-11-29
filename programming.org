@@ -64,8 +64,6 @@ Show current function signature in header line.
    '(topsy :host github :repo "alphapapa/topsy.el"))
 
   (autoload 'topsy-mode "topsy" nil t)
-
-  (keymap-set meomacs-toggle-map "y" 'topsy-mode)
 #+end_src
 
 * Code Formatter
@@ -287,6 +285,13 @@ Use eglot as LSP client.
   (keymap-set meomacs-toggle-map "e" 'eglot)
 #+end_src
 
+*** Configuration
+
+#+begin_src emacs-lisp
+  (setq-default eglot-workspace-configuration
+                '(:rust-analyzer (:hover (:memoryLayout (:enable :json-false)))))
+#+end_src
+
 *** Flymake
 
 #+begin_src emacs-lisp
@@ -294,10 +299,10 @@ Use eglot as LSP client.
 
   (with-eval-after-load "flymake"
     (keymap-set meomacs-toggle-map "f" 'flymake-mode)
-    (keymap-set flymake-mode-map "C-c f b" 'flymake-show-buffer-diagnostics)
-    (keymap-set flymake-mode-map "C-c f a" 'flymake-show-project-diagnostics)
-    (keymap-set flymake-mode-map "C-c f n" 'flymake-goto-next-error)
-    (keymap-set flymake-mode-map "C-c f p" 'flymake-goto-prev-error))
+    (keymap-set flymake-mode-map "C-c k k" 'flymake-show-buffer-diagnostics)
+    (keymap-set flymake-mode-map "C-c k a" 'flymake-show-project-diagnostics)
+    (keymap-set flymake-mode-map "C-c k n" 'flymake-goto-next-error)
+    (keymap-set flymake-mode-map "C-c k p" 'flymake-goto-prev-error))
 #+end_src
 
 ** COMMENT Lsp-copilot
@@ -388,7 +393,8 @@ For opening .jar files. This is required for Eglot.
   (setq cider-offer-to-open-cljs-app-in-browser nil
         cider-preferred-build-tool 'shadow-cljs
         cider-repl-type 'shadow
-        cider-use-xref nil)
+        cider-use-xref t
+        cider-xref-fn-depth 90)
 #+end_src
 
 ** COMMENT Linting with flycheck-clj-kondo

@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: nel
+# key: nel
+# --
+#+name: $1
+#+begin_src emacs-lisp
+  $0
+#+end_src

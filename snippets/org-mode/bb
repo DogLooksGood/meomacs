@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: bb
+# key: bb
+# --
+#+begin_src clojure :backend babashka
+  $0
+#+end_src
