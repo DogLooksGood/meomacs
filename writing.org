@@ -23,6 +23,26 @@ Configuration for writing with Emacs, specifically for Markdown and Org mode.
         org-log-into-drawer t)
 #+end_src
 
+** Org QL
+
+#+begin_src emacs-lisp
+  (straight-use-package 'org-ql)
+
+  (require 'org-ql)
+
+  (defvar org-ql-map (make-keymap))
+  (defalias 'org-ql-map org-ql-map)
+
+  (keymap-set org-ql-map "f" 'org-ql-find)
+  (keymap-set org-ql-map "s" 'org-ql-search)
+  (keymap-set org-ql-map "v" 'org-ql-view)
+  (keymap-set org-ql-map "l" 'org-ql-view-sidebar)
+  (keymap-set org-ql-map "r" 'org-ql-view-recent-items)
+  (keymap-set org-ql-map "t" 'org-ql-sparse-tree)
+
+  (keymap-set global-map "C-c q" 'org-ql-map)
+#+end_src
+
 ** Org Roam
 #+begin_src emacs-lisp
   (straight-use-package 'org-roam)

@@ -324,7 +324,7 @@ Use eglot as LSP client.
 
 * Clojure
 
-** COMMENT Clojure-mode
+** Clojure-mode
 
 Use clojure-ts-mode instead of clojure-mode.
 
@@ -338,7 +338,7 @@ Use clojure-ts-mode instead of clojure-mode.
     (define-key clojure-mode-map (kbd "C-c M-J") 'cider-jack-in-cljs))
 #+end_src
 
-** Clojure-ts-mode
+** COMMENT Clojure-ts-mode
 
 Use clojure-mode for basic syntax support.
 
@@ -431,8 +431,8 @@ For opening .jar files. This is required for Eglot.
 
 ** typescript-mode
 #+begin_src emacs-lisp
-  (setq typescript-indent-level 2
-        typescript-ts-mode-indent-offset 2)
+  (setq-default typescript-indent-level 4
+                typescript-ts-mode-indent-offset 4)
 
   (add-to-list 'auto-mode-alist (cons "\\.ts\\'" 'typescript-ts-mode))
   (add-to-list 'auto-mode-alist (cons "\\.tsx\\'" 'tsx-ts-mode))
@@ -677,4 +677,21 @@ Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile
 
 #+begin_src emacs-lisp
   (keymap-set prog-mode-map "C-c SPC" 'just-one-space)
+#+end_src
+
+* Compilation mode support
+
+#+begin_src emacs-lisp
+  (setq compile-command "")
+
+  (require 'ansi-color)
+
+  (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+#+end_src
+
+* Dumb Jump
+
+#+begin_src emacs-lisp
+  (straight-use-package 'dumb-jump)
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
 #+end_src
