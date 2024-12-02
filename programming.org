@@ -111,7 +111,7 @@ Show current function signature in header line.
   (add-hook 'prog-mode-hook 'puni-mode)
 #+end_src
 
-** COMMENT Paredit
+** Paredit
 #+begin_src emacs-lisp
   (straight-use-package 'paredit)
 
