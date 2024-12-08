@@ -238,14 +238,6 @@ Draw graphics with unicode
   (autoload 'uniline-mode "uniline" nil t)
 #+end_src
 
-** Trigger key
-
-To finish draw, use =C-c C-c=.
-
-#+begin_src emacs-lisp
-  (keymap-set meomacs-addon-map "u" 'uniline-mode)
-#+end_src
-
 ** Meow integration
 
 #+tblname: uniline-keymap-table

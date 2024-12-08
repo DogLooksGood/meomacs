@@ -102,22 +102,6 @@ Tweaking following table for key bindings in motion state.
 |----------+---------|
 | <escape> | ignore  |
 
-#+tblname: leader-keybindings
-| key | command                       | description |
-|-----+-------------------------------+-------------|
-| e   | dispatch: C-x C-e             |             |
-| o   | other-window                  |             |
-| b   | switch-to-buffer              |             |
-| l   | imenu                         |             |
-| u   | meow-keypad-start             |             |
-| -   | meow-keypad-start             |             |
-| 1   | delete-other-windows          |             |
-| 2   | split-window-below            |             |
-| 3   | split-window-right            |             |
-| 4   | dispatch: C-x 4               |             |
-| 5   | dispatch: C-x 5               |             |
-| 0   | delete-window                 |             |
-
 * Fonts
 
 ** Modern

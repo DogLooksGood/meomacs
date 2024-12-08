@@ -24,8 +24,7 @@ To manage the git repository, use builtin package ~vc~.
 Key bindings
 
 #+begin_src emacs-lisp
-  (keymap-set meomacs-toggle-map "m" 'smerge-mode)
-  (keymap-set meomacs-addon-map "m" 'magit-status)
+  (keymap-set global-map "C-x g" 'magit-status)
 #+end_src
 
 ** COMMENT Diff-hl
@@ -86,8 +85,6 @@ Disable input method in non-insert state.
   (straight-use-package 'ement)
 
   (autoload 'ement-connect "ement" nil t)
-
-  (keymap-set meomacs-addon-map "M" 'ement-connect)
 #+end_src
 
 
@@ -103,8 +100,6 @@ Use Telega as Telegram client.
                           :repo "zevlg/telega.el"))
 
   (autoload 'telega "telega" nil t)
-
-  (keymap-set meomacs-addon-map "T" 'telega)
 
   (with-eval-after-load "telega"
     (setq telega-server-libs-prefix (getenv "TDLIB_PREFIX"))
@@ -148,8 +143,6 @@ Open pass menu with ~C-c a P~.
   (autoload 'pinentry-start "pinentry")
   (autoload #'pass "pass" nil t)
 
-  (keymap-set meomacs-addon-map "p" 'pass)
-
   (with-eval-after-load "pass"
     (pinentry-start))
 #+end_src
@@ -163,25 +156,7 @@ Open pass menu with ~C-c a P~.
 
   (autoload 'direnv-mode "direnv" nil t)
 
-  (keymap-set meomacs-toggle-map "d" 'direnv-mode)
-
-  (defun meomacs-direnv-wrapper-function (orig-fun &rest args)
-    (if (bound-and-true-p direnv-mode)
-        (apply orig-fun args)
-      (direnv-mode 1)
-      (let ((ret (apply orig-fun args)))
-        (direnv-mode -1)
-        ret)))
-
-  (defun meomacs-direnv-wrap (command)
-    "Wrap a command so direnv starts before the command and stops after the command."
-    (advice-add command :around 'meomacs-direnv-wrapper-function))
-
-  (defvar meomacs-direnv-wrap-commands
-    '(justl justl-exec-recipe-in-dir))
-
-  (dolist (cmd meomacs-direnv-wrap-commands)
-    (meomacs-direnv-wrap cmd))
+  (direnv-mode 1)
 #+end_src
 
 * Pinentry
@@ -202,11 +177,6 @@ Open pass menu with ~C-c a P~.
                  (:exclude ".dir-locals.el" "*-tests.el"))))
 #+end_src
 
-** Key bindings
-#+begin_src emacs-lisp
-  (keymap-set meomacs-addon-map "e" 'eshell)
-#+end_src
-
 ** Eshell support
 #+begin_src emacs-lisp
   (add-hook 'eshell-load-hook #'eat-eshell-mode)
@@ -223,6 +193,7 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
     (add-hook 'meow-insert-mode-hook 'eat-char-mode nil t))
 
   (with-eval-after-load "eat"
+    (keymap-set eat-char-mode-map "C-S-v" 'eat-yank)
     (advice-add 'eat-semi-char-mode :after 'eat-emacs-mode)
     (add-hook 'eat-mode-hook 'meomacs-eat-meow-setup))
 #+end_src

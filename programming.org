@@ -1,4 +1,4 @@
-+title: Programming
+#+title: Programming
 
 Configuration for programming and languages support.
 
@@ -281,15 +281,28 @@ Use eglot as LSP client.
 
 *** Key Binding
 
+#+tblname: eglot-keymap-table
+| Key | Command                            |
+|-----+------------------------------------|
+| s   | eglot                              |
+| a   | eglot-code-actions                 |
+| o   | eglot-code-action-organize-imports |
+| r   | eglot-rename                       |
+| k   | eglot-shutdown                     |
+| i   | eglot-find-implementation          |
+
+#+header: :var keymap-table=eglot-keymap-table
 #+begin_src emacs-lisp
-  (keymap-set meomacs-toggle-map "e" 'eglot)
+  (meomacs-keymap-table eglot-keymap keymap-table)
+  (global-set-key (kbd "C-c C-e") 'eglot-keymap)
 #+end_src
 
 *** Configuration
 
 #+begin_src emacs-lisp
   (setq-default eglot-workspace-configuration
-                '(:rust-analyzer (:hover (:memoryLayout (:enable :json-false)))))
+                '(:rust-analyzer (:hover (:memoryLayout (:enable :json-false))
+                                  :typing (:excludeChars "([{"))))
 #+end_src
 
 *** Flymake
@@ -298,11 +311,10 @@ Use eglot as LSP client.
   (setq flymake-no-changes-timeout 0.5)
 
   (with-eval-after-load "flymake"
-    (keymap-set meomacs-toggle-map "f" 'flymake-mode)
-    (keymap-set flymake-mode-map "C-c k k" 'flymake-show-buffer-diagnostics)
-    (keymap-set flymake-mode-map "C-c k a" 'flymake-show-project-diagnostics)
-    (keymap-set flymake-mode-map "C-c k n" 'flymake-goto-next-error)
-    (keymap-set flymake-mode-map "C-c k p" 'flymake-goto-prev-error))
+    (keymap-set flymake-mode-map "C-c ! k" 'flymake-show-buffer-diagnostics)
+    (keymap-set flymake-mode-map "C-c ! a" 'flymake-show-project-diagnostics)
+    (keymap-set flymake-mode-map "C-c ! n" 'flymake-goto-next-error)
+    (keymap-set flymake-mode-map "C-c ! p" 'flymake-goto-prev-error))
 #+end_src
 
 ** COMMENT Lsp-copilot
@@ -379,6 +391,10 @@ For opening .jar files. This is required for Eglot.
   (straight-use-package 'jarchive)
 
   (with-eval-after-load "clojure-ts-mode"
+    (jarchive-mode)
+    (diminish 'jarchive-mode))
+
+  (with-eval-after-load "clojure-mode"
     (jarchive-mode)
     (diminish 'jarchive-mode))
 #+end_src
@@ -561,15 +577,15 @@ Write a command to switch between wasm32 and native target triple.
 #+begin_src emacs-lisp
   (straight-use-package 'web-mode)
   (setq web-mode-markup-indent-offset 2
-        web-mode-css-indent-offset 2)
+        web-mode-css-indent-offset 4)
 
   (add-to-list 'auto-mode-alist
                '("\\.html\\'" . web-mode))
 #+end_src
 
 #+begin_src emacs-lisp
-  (setq-default css-indent-offset 2
-                js-indent-level 2)
+  (setq-default css-indent-offset 4
+                js-indent-level 4)
 #+end_src
 
 ** Emmet
@@ -671,12 +687,6 @@ Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile
 
 #+begin_src emacs-lisp
   (setq xref-show-definitions-function 'xref-show-definitions-completing-read)
-#+end_src
-
-* A command for just one space
-
-#+begin_src emacs-lisp
-  (keymap-set prog-mode-map "C-c SPC" 'just-one-space)
 #+end_src
 
 * Compilation mode support

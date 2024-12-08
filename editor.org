@@ -48,7 +48,9 @@ Straight.el is used for package management.
 #+begin_src emacs-lisp
   (setq-default
 
-   inhibit-startup-screen t
+   ;; Disable splash screen
+   inhibit-splash-screen t
+
    ;; Don't display comp warnings
    warning-suppress-log-types '((comp))
    ;; Don't create lockfiles
@@ -152,20 +154,6 @@ Straight.el is used for package management.
   (setq jit-lock-defer-time 0)
 #+end_src
 
-* Define some custom keymaps
-
-#+begin_src emacs-lisp
-  (defvar meomacs-toggle-map (make-keymap)
-    "A mode for minor mode switchers.")
-  (defalias 'meomacs-toggle-map meomacs-toggle-map)
-  (keymap-set mode-specific-map "t" 'meomacs-toggle-map)
-
-  (defvar meomacs-addon-map (make-keymap)
-    "A mode for addon plugin launchers.")
-  (defalias 'meomacs-addon-map meomacs-addon-map)
-  (keymap-set mode-specific-map "a" 'meomacs-addon-map)
-#+end_src
-
 * Start a emacs server
 
 #+begin_src emacs-lisp
@@ -195,7 +183,6 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
 
 #+header: :var normal-keybindings=private.org:normal-keybindings
 #+header: :var motion-keybindings=private.org:motion-keybindings
-#+header: :var leader-keybindings=private.org:leader-keybindings
 #+begin_src emacs-lisp
   (defun meow-setup ()
     (let ((parse-def (lambda (x)
@@ -204,8 +191,7 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
                                  (string-trim (substring (cadr x) 9))
                                (intern (cadr x)))))))
       (apply #'meow-normal-define-key (mapcar parse-def normal-keybindings))
-      (apply #'meow-motion-overwrite-define-key (mapcar parse-def motion-keybindings))
-      (apply #'meow-leader-define-key (mapcar parse-def leader-keybindings))))
+      (apply #'meow-motion-overwrite-define-key (mapcar parse-def motion-keybindings))))
 #+end_src
 
 ** Basic configurations
@@ -238,7 +224,7 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
 ** Allow all C-c <letter> for leader
 
 #+begin_src emacs-lisp
-  (setq meow-keypad-leader-dispatch "C-c")
+  (setq meow-keypad-leader-dispatch "C-x")
 #+end_src
 
 ** Tree-sitter integration
@@ -422,7 +408,7 @@ Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
 * Line numbers with display-line-numbers-mode
 
 #+begin_src emacs-lisp
-  (keymap-set meomacs-toggle-map "n" 'toggle-display-line-number-and-hl-line)
+  (keymap-set global-map "C-x N" 'toggle-display-line-number-and-hl-line)
 
   (defun toggle-display-line-number-and-hl-line ()
     (interactive)
@@ -641,13 +627,12 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 
 * File Navigator
 
-** Dired sidebar
+** COMMENT Dired sidebar
 
 #+begin_src emacs-lisp
   (straight-use-package 'dired-sidebar)
 
   (autoload 'dired-sidebar-toggle-sidebar "dired-sidebar" nil t)
-  (keymap-set meomacs-toggle-map "s" 'dired-sidebar-toggle-sidebar)
 #+end_src
 
 ** COMMENT treemacs
@@ -658,8 +643,6 @@ To find files/buffers and apply commands on project, use builtin package ~projec
   (setq treemacs-is-never-other-window t)
 
   (autoload 'treemacs "treemacs" nil t)
-
-  (keymap-set meomacs-toggle-map ";" 'treemacs)
 #+end_src
 
 * Text searching
