@@ -70,7 +70,8 @@ Straight.el is used for package management.
    ;; Backup setups
    ;; We use temporary directory /tmp for backup files
    ;; More versions should be saved
-   backup-directory-alist `((".*" . ,temporary-file-directory))
+   backup-directory-alist `((".*" . ,temporary-file-directory)
+                            (,tramp-file-name-regexp nil))
    auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
    backup-by-copying t
    delete-old-versions t
@@ -221,7 +222,7 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
           (keypad . "K")))
 #+end_src
 
-** Allow all C-c <letter> for leader
+** Allow all C-x <letter> for leader
 
 #+begin_src emacs-lisp
   (setq meow-keypad-leader-dispatch "C-x")
@@ -282,7 +283,7 @@ Switch window by pressing the number showned in the mode line.
       (setq-default mode-line-format (cons modeline-segment mode-line-format))))
 #+end_src
 
-** ace-window
+** COMMENT ace-window
 #+begin_src emacs-lisp
   (straight-use-package 'ace-window)
 
@@ -293,7 +294,7 @@ Switch window by pressing the number showned in the mode line.
   (keymap-set mode-specific-map "Q" 'ace-delete-window)
 #+end_src
 
-** winner-mode
+** COMMENT winner-mode
 #+begin_src emacs-lisp
   (require 'winner)
 

@@ -147,7 +147,21 @@ Open pass menu with ~C-c a P~.
     (pinentry-start))
 #+end_src
 
-* Directory environment support with direnv
+
+
+* Directory environment support
+
+** Envrc
+
+#+begin_src emacs-lisp
+  (straight-use-package 'envrc)
+
+  (require 'envrc)
+
+  (add-hook 'after-init-hook 'envrc-global-mode)
+#+end_src
+
+** COMMENT Direnv Mode
 
 #+begin_src emacs-lisp
   (straight-use-package 'direnv)
@@ -219,14 +233,13 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
     (let ((m (make-keymap)))
       (suppress-keymap m t)
       (keymap-set m "n" 'gptel)
-      (keymap-set m "i" 'gptel-menu)
+      (keymap-set m "c" 'gptel-menu)
       (keymap-set m "a" 'gptel-add)
       m))
 
   (defalias 'gptel-map gptel-map)
 
-  (keymap-set global-map "C-c i" 'gptel-map)
-
+  (keymap-set global-map "C-c c" 'gptel-map)
 
   (with-eval-after-load "gptel"
     (setq gptel-directives

@@ -55,7 +55,21 @@ Lower font lock level
   (keymap-set global-map "C-h ."  'eldoc-box-help-at-point)
 #+end_src
 
-* COMMENT Topsy
+* Display Current Function
+
+** Which Function Mode
+
+Display current function name in mode-line.
+
+#+begin_src emacs-lisp
+  (require 'which-func)
+
+  (setq which-func-update-delay 0.25)
+
+  (which-function-mode 1)
+#+end_src
+
+** COMMENT Topsy
 
 Show current function signature in header line.
 
@@ -118,6 +132,7 @@ Show current function signature in header line.
   (require 'paredit)
 
   (add-hook 'clojure-mode-hook 'paredit-mode)
+  (add-hook 'clojure-ts-mode-hook 'paredit-mode)
   (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
 #+end_src
 
@@ -294,7 +309,7 @@ Use eglot as LSP client.
 #+header: :var keymap-table=eglot-keymap-table
 #+begin_src emacs-lisp
   (meomacs-keymap-table eglot-keymap keymap-table)
-  (global-set-key (kbd "C-c C-e") 'eglot-keymap)
+  (global-set-key (kbd "C-c e") 'eglot-keymap)
 #+end_src
 
 *** Configuration
@@ -341,13 +356,24 @@ Use eglot as LSP client.
 Use clojure-ts-mode instead of clojure-mode.
 
 #+begin_src emacs-lisp
-  (straight-use-package 'clojure-ts-mode)
+  (straight-use-package 'clojure-mode)
 
-  (setq clojure-ts-toplevel-inside-comment-form t)
+  (setq clojure-toplevel-inside-comment-form t)
+#+end_src
 
-  (with-eval-after-load "clojure-ts-mode"
-    (define-key clojure-mode-map (kbd "C-c M-j") 'cider-jack-in)
-    (define-key clojure-mode-map (kbd "C-c M-J") 'cider-jack-in-cljs))
+** Cider for REPL connection
+
+#+begin_src emacs-lisp
+  (straight-use-package 'cider)
+
+  (autoload 'cider-jack-in "cider" nil t)
+
+  (setq cider-offer-to-open-cljs-app-in-browser nil
+        cider-font-lock-dynamically '(macro deprecated)
+        cider-preferred-build-tool 'shadow-cljs
+        cider-repl-type 'shadow
+        cider-use-xref t
+        cider-xref-fn-depth 90)
 #+end_src
 
 ** COMMENT Clojure-ts-mode
@@ -359,14 +385,16 @@ Use clojure-mode for basic syntax support.
 
   (setq clojure-ts-indent-style 'fixed)
 
+  (add-to-list 'auto-mode-alist '("\\.clj\\'" . clojure-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.cljs\\'" . clojure-ts-clojurescript-mode))
+  (add-to-list 'auto-mode-alist '("\\.cljc\\'" . clojure-ts-clojurec-mode))
+
   (add-to-list 'major-mode-remap-alist '(clojure-script-mode . clojure-ts-clojurescript-mode))
   (add-to-list 'major-mode-remap-alist '(clojure-mode . clojure-ts-mode))
   (add-to-list 'major-mode-remap-alist '(clojurec-mode . clojure-ts-clojurec-mode))
 
   (with-eval-after-load "clojure-ts-mode"
-    (setq clojure-ts-toplevel-inside-comment-form t)
-    (keymap-set clojure-ts-mode-map "C-c )" 'paredit-forward-slurp-sexp)
-    (keymap-set clojure-ts-mode-map "C-c (" 'paredit-forward-barf-sexp))
+    (setq clojure-ts-toplevel-inside-comment-form t))
 #+end_src
 
 ** COMMENT Inf-Clojure
@@ -397,20 +425,6 @@ For opening .jar files. This is required for Eglot.
   (with-eval-after-load "clojure-mode"
     (jarchive-mode)
     (diminish 'jarchive-mode))
-#+end_src
-
-** Cider for REPL connection
-
-#+begin_src emacs-lisp
-  (straight-use-package 'cider)
-
-  (autoload 'cider-jack-in "cider" nil t)
-
-  (setq cider-offer-to-open-cljs-app-in-browser nil
-        cider-preferred-build-tool 'shadow-cljs
-        cider-repl-type 'shadow
-        cider-use-xref t
-        cider-xref-fn-depth 90)
 #+end_src
 
 ** COMMENT Linting with flycheck-clj-kondo
@@ -704,4 +718,10 @@ Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile
 #+begin_src emacs-lisp
   (straight-use-package 'dumb-jump)
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+#+end_src
+
+* C
+
+#+begin_src emacs-lisp
+  (setq-default c-basic-offset 4)
 #+end_src
