@@ -29,6 +29,25 @@ Configuration for programming and languages support.
        (rust "https://github.com/tree-sitter/tree-sitter-rust")))
 #+end_src
 
+#+RESULTS:
+| bash       | https://github.com/tree-sitter/tree-sitter-bash       |        |                |
+| cmake      | https://github.com/uyha/tree-sitter-cmake             |        |                |
+| css        | https://github.com/tree-sitter/tree-sitter-css        |        |                |
+| elisp      | https://github.com/Wilfred/tree-sitter-elisp          |        |                |
+| go         | https://github.com/tree-sitter/tree-sitter-go         |        |                |
+| html       | https://github.com/tree-sitter/tree-sitter-html       |        |                |
+| javascript | https://github.com/tree-sitter/tree-sitter-javascript | master | src            |
+| json       | https://github.com/tree-sitter/tree-sitter-json       |        |                |
+| make       | https://github.com/alemuller/tree-sitter-make         |        |                |
+| markdown   | https://github.com/ikatyang/tree-sitter-markdown      |        |                |
+| python     | https://github.com/tree-sitter/tree-sitter-python     |        |                |
+| toml       | https://github.com/tree-sitter/tree-sitter-toml       |        |                |
+| tsx        | https://github.com/tree-sitter/tree-sitter-typescript | master | tsx/src        |
+| typescript | https://github.com/tree-sitter/tree-sitter-typescript | master | typescript/src |
+| yaml       | https://github.com/ikatyang/tree-sitter-yaml          |        |                |
+| clojure    | https://github.com/sogaiu/tree-sitter-clojure         |        |                |
+| rust       | https://github.com/tree-sitter/tree-sitter-rust       |        |                |
+
 Lower font lock level
 
 #+begin_src emacs-lisp
@@ -59,14 +78,15 @@ Lower font lock level
 
 ** Which Function Mode
 
-Display current function name in mode-line.
+Display current function name in header-line.
 
 #+begin_src emacs-lisp
   (require 'which-func)
 
   (setq which-func-update-delay 0.25)
+  (setq which-func-display 'mode)
 
-  (which-function-mode 1)
+  (which-function-mode  1)
 #+end_src
 
 ** COMMENT Topsy
@@ -358,7 +378,10 @@ Use clojure-ts-mode instead of clojure-mode.
 #+begin_src emacs-lisp
   (straight-use-package 'clojure-mode)
 
-  (setq clojure-toplevel-inside-comment-form t)
+  (setq clojure-toplevel-inside-comment-form t
+        clojure-indent-style 'always-indent
+        clojure-indent-keyword-style 'always-indent
+        clojure-enable-indent-specs nil)
 #+end_src
 
 ** Cider for REPL connection
@@ -373,7 +396,9 @@ Use clojure-ts-mode instead of clojure-mode.
         cider-preferred-build-tool 'shadow-cljs
         cider-repl-type 'shadow
         cider-use-xref t
-        cider-xref-fn-depth 90)
+        cider-enhanced-cljs-completion-p nil)
+
+  (add-to-list 'meow-mode-state-list '(cider-inspector-mode . motion))
 #+end_src
 
 ** COMMENT Clojure-ts-mode
@@ -703,6 +728,7 @@ Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile
   (setq xref-show-definitions-function 'xref-show-definitions-completing-read)
 #+end_src
 
+
 * Compilation mode support
 
 #+begin_src emacs-lisp
@@ -713,15 +739,49 @@ Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile
   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 #+end_src
 
-* Dumb Jump
+* COMMENT Dumb Jump
 
 #+begin_src emacs-lisp
   (straight-use-package 'dumb-jump)
-  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+  (add-hook 'prog-mode-hook
+            (lambda ()
+              (add-hook 'xref-backend-functions #'dumb-jump-xref-activate 90 'local)))
 #+end_src
 
 * C
 
 #+begin_src emacs-lisp
   (setq-default c-basic-offset 4)
+#+end_src
+
+** COMMENT SimpleC
+
+#+begin_src emacs-lisp
+  (straight-use-package '(simpc-mode :host github :repo "rexim/simpc-mode"))
+
+  (autoload 'simpc-mode "simpc-mode" nil t)
+
+  (add-to-list 'auto-mode-alist '("\\.[ch]\\'" . simpc-mode))
+#+end_src
+
+* Scheme
+
+#+begin_src emacs-lisp
+  (straight-use-package 'geiser)
+  (straight-use-package 'geiser-guile)
+  (setq geiser-debug-jump-to-debug nil)
+#+end_src
+
+* GLSL
+
+#+begin_src emacs-lisp
+  (straight-use-package 'glsl-mode)
+#+end_src
+
+* String inflection
+
+Cycle cases for symbol
+
+#+begin_src emacs-lisp
+  (straight-use-package 'string-inflection)
 #+end_src

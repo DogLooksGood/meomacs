@@ -139,16 +139,17 @@ Straight.el is used for package management.
    ;; For scrolling performance
    fast-but-imprecise-scrolling t
    inhibit-compacting-font-caches t
-   auto-window-vscroll nil)
+   auto-window-vscroll nil
+
+   ;; Wider fill column
+   fill-column 100)
 
   (scroll-bar-mode -1)
 
   (global-subword-mode 1)
   (diminish 'subword-mode)
 
-  (setq blink-cursor-interval 0.1
-        blink-cursor-delay 0.2
-        blink-cursor-blinks 30)
+  (blink-cursor-mode -1)
 
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
@@ -192,7 +193,7 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
                                  (string-trim (substring (cadr x) 9))
                                (intern (cadr x)))))))
       (apply #'meow-normal-define-key (mapcar parse-def normal-keybindings))
-      (apply #'meow-motion-overwrite-define-key (mapcar parse-def motion-keybindings))))
+      (apply #'meow-motion-define-key (mapcar parse-def motion-keybindings))))
 #+end_src
 
 ** Basic configurations
@@ -567,6 +568,26 @@ A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =
     (keymap-set company-active-map "SPC" nil))
 #+end_src
 
+** Backends
+
+#+begin_src emacs-lisp
+  (setq-default company-backends
+        '(company-capf
+          company-files
+          company-ctags
+          company-dabbrev-code
+          company-keywords
+          company-dabbrev))
+#+end_src
+
+** Ctags
+
+#+begin_src emacs-lisp
+  (straight-use-package 'company-ctags)
+
+  (require 'company-ctags)
+#+end_src
+
 ** COMMENT Company Box
 
 #+begin_src emacs-lisp
@@ -624,6 +645,12 @@ To find files/buffers and apply commands on project, use builtin package ~projec
   (with-eval-after-load "project"
     (define-key project-prefix-map "s" 'shell)
     (define-key project-prefix-map "m" 'magit-project-status))
+#+end_src
+
+* Dired configuration
+
+#+begin_src emacs-lisp
+  (setq dired-listing-switches "-alh")
 #+end_src
 
 * File Navigator
@@ -691,6 +718,14 @@ To find files/buffers and apply commands on project, use builtin package ~projec
           map))
 #+end_src
 
+* Loccur
+
+#+begin_src emacs-lisp
+  (straight-use-package 'loccur)
+
+  (require 'loccur)
+#+end_src
+
 * TUI Copy
 #+begin_src emacs-lisp
   (defun ext-copy (text)
@@ -748,4 +783,11 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 
   (with-eval-after-load "transient"
     (keymap-set transient-map "<escape>" 'transient-quit-one))
+#+end_src
+
+
+* Don't display VC information in mode-line
+
+#+begin_src emacs-lisp
+  (setq vc-display-status 'no-backend)
 #+end_src

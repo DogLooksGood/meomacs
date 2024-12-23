@@ -93,7 +93,9 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
         font)))
 
   (defun meomacs--format-font-name (family)
-    (format "%s:pixelsize=%s" family meomacs-font-pixelsize))
+    (if meomacs-font-pixelsize
+        (format "%s:pixelsize=%s" family meomacs-font-pixelsize)
+      (format "%s" family)))
 
   (defun meomacs-load-default-font ()
     "Load default font configuration."
@@ -105,8 +107,8 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
     (let ((sans (meomacs--get-font-family 'sans))
           (mono (meomacs--get-font-family 'mono))
           (serif (meomacs--get-font-family 'serif)))
-      (set-face-attribute 'variable-pitch nil :family serif)
-      (set-face-attribute 'variable-pitch-text nil :family sans)
+      (set-face-attribute 'variable-pitch nil :family sans)
+      (set-face-attribute 'variable-pitch-text nil :family serif)
       (set-face-attribute 'fixed-pitch nil :family mono)
       (set-face-attribute 'fixed-pitch-serif nil :family mono)))
 
@@ -195,12 +197,12 @@ Create a command ~meomacs-next-theme~ at ~C-c \~ to switch themes.
       (setq meomacs-themes (append (cdr meomacs-themes) (list (car meomacs-themes))))
       (meomacs-load-theme)))
 
-  (global-set-key (kbd "<f5>") 'meomacs-next-theme)
+  (global-set-key (kbd "<f7>") 'meomacs-next-theme)
 
   (add-hook 'desktop-after-read-hook 'meomacs-load-theme)
 #+end_src
 
-* Paren face
+* Paren Face
 #+begin_src emacs-lisp
   (straight-use-package 'paren-face)
   (require 'paren-face)
@@ -218,17 +220,6 @@ Create a command ~meomacs-next-theme~ at ~C-c \~ to switch themes.
    '(mode-line-inactive ((t :inherit variable-pitch))))
 #+end_src
 
-** Add a double width space to ensure the height
-
-#+begin_src emacs-lisp
-  (defvar meomacs-increase-mode-line-height-only-once nil)
-
-  (unless meomacs-increase-mode-line-height-only-once
-    (setq-default mode-line-format
-                  (append (list (propertize "﻿" 'face '(:height 1.2))) mode-line-format ))
-    (setq meomacs-increase-mode-line-height-only-once t))
-#+end_src
-
 ** Diminish
 Hide unnecessary lighters.
 #+begin_src emacs-lisp
@@ -240,4 +231,5 @@ Hide unnecessary lighters.
   (add-hook 'hs-minor-mode-hook (lambda () (diminish 'hs-minor-mode)))
   (add-hook 'auto-revert-mode-hook (lambda () (diminish 'auto-revert-mode)))
   (add-hook 'eldoc-mode-hook (lambda () (diminish 'buffer-face-mode)))
+  (add-hook 'paredit-mode-hook (lambda () (diminish 'paredit-mode)))
 #+end_src

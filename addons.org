@@ -88,7 +88,7 @@ Disable input method in non-insert state.
 #+end_src
 
 
-* COMMENT Telegram client with Telega
+* Telegram client with Telega
 
 ~telegram-libtd~ is required for this feature.
 
@@ -157,6 +157,8 @@ Open pass menu with ~C-c a P~.
   (straight-use-package 'envrc)
 
   (require 'envrc)
+
+  (setq envrc-show-summary-in-minibuffer nil)
 
   (add-hook 'after-init-hook 'envrc-global-mode)
 #+end_src
@@ -249,6 +251,21 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
             (chat . "You are a large language model and a conversation partner. Respond concisely."))))
 #+end_src
 
+* Timezone converter
+
+#+begin_src emacs-lisp
+  (straight-use-package 'tzc)
+
+
+  (setq tzc-favourite-time-zones-alist '(("UTC+0000" "UTC")
+  				       ("Asia/Kolkata" "Kolkata")
+  				       ("America/New_York" "New York")
+  				       ("Europe/London" "London")
+  				       ("Europe/Berlin" "Berlin")
+  				       ("Asia/Shanghai" "Shanghai")
+  				       ("Asia/Tokyo" "Tokyo")))
+#+end_src
+
 * Go translate
 
 #+begin_src emacs-lisp
@@ -263,4 +280,14 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
                          :render (gt-posframe-pop-render :if 'word :frame-params (list :height 40 :border-width 5))))))
 
   (keymap-set global-map "<f6>" 'gt-do-translate)
+#+end_src
+
+
+* Firefox
+#+begin_src emacs-lisp
+  (defun firefox-refresh ()
+    (interactive)
+    (shell-command "wlrctl window focus firefox && wlrctl keyboard type R modifiers CTRL && wlrctl window focus emacs"))
+
+  (keymap-set global-map "<f5>" 'firefox-refresh)
 #+end_src
