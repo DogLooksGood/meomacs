@@ -21,7 +21,7 @@ Straight.el is used for package management.
 *** Disable native compilation
 
 #+begin_src emacs-lisp
-  (setq straight-disable-native-compile t)
+  (setq straight-disable-native-compile nil)
 #+end_src
 
 *** Key bindings
@@ -635,6 +635,7 @@ To find files/buffers and apply commands on project, use builtin package ~projec
                                   (project-find-regexp "Find regexp")
                                   (project-dired "Dired")
                                   (project-eshell "Eshell")
+                                  (eat-project-other-window "Eat")
                                   (magit-project-status "Magit")
                                   (shell "Shell")))
 
@@ -643,7 +644,7 @@ To find files/buffers and apply commands on project, use builtin package ~projec
   (define-key mode-specific-map "p" 'project-prefix-map)
 
   (with-eval-after-load "project"
-    (define-key project-prefix-map "s" 'shell)
+    (define-key project-prefix-map "s" 'eat-project-other-window)
     (define-key project-prefix-map "m" 'magit-project-status))
 #+end_src
 

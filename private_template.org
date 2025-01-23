@@ -84,7 +84,6 @@ Tweaking following table for key bindings in normal state.
 | X        | meow-sync-grab            |
 | y        | meow-yank                 |
 | z        | meow-pop-selection        |
-| $​        | repeat                    |
 | &        | meow-query-replace-regexp |
 | %        | meow-query-replace        |
 | K        | scroll-down-line          |

@@ -214,7 +214,7 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
     (add-hook 'eat-mode-hook 'meomacs-eat-meow-setup))
 #+end_src
 
-* ChatGPT
+* GPTEL
 #+begin_src emacs-lisp
   (straight-use-package '(gptel :host github :repo "karthink/gptel"))
 
@@ -224,6 +224,13 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
         gptel-model 'gpt-4o
         gptel-default-mode 'org-mode
         gptel-api-key (lambda () (meomacs-read-var "gptel-api-key")))
+
+  (gptel-make-openai "DeepSeek"
+    :host "api.deepseek.com"
+    :endpoint "/chat/completions"
+    :stream t
+    :key (lambda () (meomacs-read-var "deepseek-api-key"))
+    :models '(deepseek-chat deepseek-coder))
 
   (with-eval-after-load "gptel"
     (require 'gptel-curl))
