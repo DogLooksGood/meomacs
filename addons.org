@@ -36,7 +36,7 @@ Enable diff-hl in based on major modes.
   (add-hook 'conf-mode-hook 'diff-hl-mode)
 #+end_src
 
-* Input method with emacs-rime
+* COMMENT Input method with emacs-rime
 
 ~librime~ is required for this feature.
 
@@ -137,7 +137,8 @@ Open pass menu with ~C-c a P~.
   (straight-use-package 'pinentry)
 
   (setq pass-username-fallback-on-filename t
-        pass-show-keybindings nil)
+        pass-show-keybindings nil
+        epa-pinentry-mode 'loopback)
 
   (autoload 'password-store-get "pass")
   (autoload 'pinentry-start "pinentry")

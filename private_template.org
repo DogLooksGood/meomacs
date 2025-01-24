@@ -150,6 +150,7 @@ Tweaking following table for key bindings in motion state.
 * Pass table
 
 #+tblname: var-table
-| Variable      | Entry in passs | Description                |
-|---------------+----------------+----------------------------|
-| gptel-api-key | chatgpt_key    | The key for openai ChatGPT |
+| Variable         | Where to read | Entry in pass | Description                |
+|------------------+---------------+---------------+----------------------------|
+| gptel-api-key    | pass          | chatgpt_key   | The key for openai ChatGPT |
+| deepseek-api-key | pass          | deepseek_key  | The key for DeepSeek       |

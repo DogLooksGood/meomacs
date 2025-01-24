@@ -765,16 +765,18 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 
 #+header: :var var-table=private.org:var-table
 #+begin_src emacs-lisp
-  (defun meomacs-read-var (key)
-     (let* ((item (alist-get key var-table nil nil 'equal))
-            (entry (cadr item))
-            (where (car item)))
-       (cond
-        ((string-equal where "pass")
-         (password-store-get entry))
+    (defun meomacs-read-var (key)
+       (let* ((item (alist-get key var-table nil nil 'equal))
+              (entry (cadr item))
+              (where (car item)))
+         (message "item %s entry %s where %s"
+                  item entry where)
+         (cond
+          ((string-equal where "pass")
+           (password-store-get entry))
 
-        ((string-equal where "env")
-         (getenv entry)))))
+          ((string-equal where "env")
+           (getenv entry)))))
 #+end_src
 
 * Common settings for transient
