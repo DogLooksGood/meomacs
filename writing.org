@@ -156,6 +156,14 @@ Enable ~variable-pitch-mode~.
     (advice-add 'load-theme :after #'meomacs-fix-org-visual-indent-face))
 #+end_src
 
+** Monospace fonts for table and code block
+
+#+begin_src emacs-lisp
+  (custom-set-faces
+   '(org-table ((t :inherit 'fixed-pitch-serif)))
+   '(org-block ((t :inherit 'fixed-pitch-serif))))
+#+end_src
+
 ** Startup settings
 
 #+begin_src emacs-lisp

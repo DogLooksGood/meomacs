@@ -46,6 +46,10 @@ Straight.el is used for package management.
 * Better defaults
 
 #+begin_src emacs-lisp
+  ;;; Create for backup and autosave
+  (make-directory "~/.backups" t)
+  (make-directory "~/.autosaves" t)
+
   (setq-default
 
    ;; Disable splash screen
@@ -67,17 +71,19 @@ Straight.el is used for package management.
    ;; Add newline at bottom of file
    require-final-newline t
 
-   ;; Backup setups
-   ;; We use temporary directory /tmp for backup files
-   ;; More versions should be saved
-   backup-directory-alist `((".*" . ,temporary-file-directory)
-                            (,tramp-file-name-regexp nil))
-   auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
+   ;; Set backup directory
+   backup-directory-alist `(("." . ,(expand-file-name "~/.backups")))
+   auto-save-file-name-transforms
+   `((".*" ,(expand-file-name "~/.autosaves/") t))
+
    backup-by-copying t
    delete-old-versions t
    kept-new-versions 6
    kept-old-versions 2
    version-control t
+
+   tramp-backup-directory-alist backup-directory-alist
+   tramp-auto-save-directory (expand-file-name "~/.autosaves/")
 
    ;; Skip prompt for xref find definition
    xref-prompt-for-identifier nil
