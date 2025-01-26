@@ -150,7 +150,8 @@ Straight.el is used for package management.
    ;; Wider fill column
    fill-column 100)
 
-  (scroll-bar-mode -1)
+  (when window-system
+    (scroll-bar-mode -1))
 
   (global-subword-mode 1)
   (diminish 'subword-mode)
