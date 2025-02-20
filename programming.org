@@ -10,23 +10,23 @@ Configuration for programming and languages support.
 
 #+begin_src emacs-lisp
   (setq treesit-language-source-alist
-     '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-       (cmake "https://github.com/uyha/tree-sitter-cmake")
-       (css "https://github.com/tree-sitter/tree-sitter-css")
-       (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-       (go "https://github.com/tree-sitter/tree-sitter-go")
-       (html "https://github.com/tree-sitter/tree-sitter-html")
-       (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-       (json "https://github.com/tree-sitter/tree-sitter-json")
-       (make "https://github.com/alemuller/tree-sitter-make")
-       (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-       (python "https://github.com/tree-sitter/tree-sitter-python")
-       (toml "https://github.com/tree-sitter/tree-sitter-toml")
-       (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-       (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-       (yaml "https://github.com/ikatyang/tree-sitter-yaml")
-       (clojure "https://github.com/sogaiu/tree-sitter-clojure")
-       (rust "https://github.com/tree-sitter/tree-sitter-rust")))
+        '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+          (cmake "https://github.com/uyha/tree-sitter-cmake")
+          (css "https://github.com/tree-sitter/tree-sitter-css")
+          (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+          (go "https://github.com/tree-sitter/tree-sitter-go")
+          (html "https://github.com/tree-sitter/tree-sitter-html")
+          (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+          (json "https://github.com/tree-sitter/tree-sitter-json")
+          (make "https://github.com/alemuller/tree-sitter-make")
+          (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+          (python "https://github.com/tree-sitter/tree-sitter-python")
+          (toml "https://github.com/tree-sitter/tree-sitter-toml")
+          (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+          (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+          (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+          (clojure "https://github.com/sogaiu/tree-sitter-clojure")
+          (rust "https://github.com/tree-sitter/tree-sitter-rust")))
 #+end_src
 
 #+RESULTS:
@@ -325,6 +325,9 @@ Use eglot as LSP client.
 | r   | eglot-rename                       |
 | k   | eglot-shutdown                     |
 | i   | eglot-find-implementation          |
+| t   | eglot-find-typeDefinition          |
+| d   | eglot-find-declaration             |
+| f   | eglot-format                       |
 
 #+header: :var keymap-table=eglot-keymap-table
 #+begin_src emacs-lisp
@@ -784,4 +787,12 @@ Cycle cases for symbol
 
 #+begin_src emacs-lisp
   (straight-use-package 'string-inflection)
+#+end_src
+
+* Format all
+
+#+begin_src emacs-lisp
+  (straight-use-package 'format-all)
+
+  (define-key prog-mode-map (kbd "<f8>") 'format-all-buffer)
 #+end_src

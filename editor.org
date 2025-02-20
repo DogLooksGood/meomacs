@@ -638,6 +638,9 @@ Expand template with =TAB=. Jump between the placeholders with =TAB= and =S-TAB=
 To find files/buffers and apply commands on project, use builtin package ~project~.
 
 #+begin_src emacs-lisp
+  (straight-use-package 'project)
+  (require 'project)
+
   (setq project-switch-commands '((project-find-file "Find file")
                                   (project-find-regexp "Find regexp")
                                   (project-dired "Dired")

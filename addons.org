@@ -291,11 +291,26 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
 #+end_src
 
 
-* Firefox
+* Browsers
+
+** Refresh Firefox
+
+It works with wlrctl
+
 #+begin_src emacs-lisp
   (defun firefox-refresh ()
     (interactive)
     (shell-command "wlrctl window focus firefox && wlrctl keyboard type R modifiers CTRL && wlrctl window focus emacs"))
 
   (keymap-set global-map "<f5>" 'firefox-refresh)
+#+end_src
+
+
+** Open firefox window with temporary profile and without decoration and menu
+
+#+begin_src emacs-lisp
+  (defun webapp-open (url)
+    (interactive "sURL: ")
+    (async-shell-command (format "chromium --user-data-dir=$(mktemp -d) --app=%s" url)
+                         (generate-new-buffer "Chromium App")))
 #+end_src

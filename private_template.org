@@ -154,3 +154,9 @@ Tweaking following table for key bindings in motion state.
 |------------------+---------------+---------------+----------------------------|
 | gptel-api-key    | pass          | chatgpt_key   | The key for openai ChatGPT |
 | deepseek-api-key | pass          | deepseek_key  | The key for DeepSeek       |
+
+
+* GPG Key
+#+begin_src emacs-lisp
+  (setq epa-file-encrypt-to '())
+#+end_src
