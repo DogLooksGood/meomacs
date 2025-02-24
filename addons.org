@@ -287,7 +287,7 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
                          :engines  (gt-youdao-dict-engine :if 'word)
                          :render (gt-posframe-pop-render :if 'word :frame-params (list :height 40 :border-width 5))))))
 
-  (keymap-set global-map "<f6>" 'gt-do-translate)
+  (keymap-set global-map "C-x T" 'gt-do-translate)
 #+end_src
 
 
@@ -302,15 +302,16 @@ It works with wlrctl
     (interactive)
     (shell-command "wlrctl window focus firefox && wlrctl keyboard type R modifiers CTRL && wlrctl window focus emacs"))
 
-  (keymap-set global-map "<f5>" 'firefox-refresh)
+  (keymap-set global-map "C-x R" 'firefox-refresh)
 #+end_src
-
 
 ** Open firefox window with temporary profile and without decoration and menu
 
 #+begin_src emacs-lisp
   (defun webapp-open (url)
     (interactive "sURL: ")
-    (async-shell-command (format "chromium --user-data-dir=$(mktemp -d) --app=%s" url)
+    (async-shell-command (format "chromium --ozone-platform=wayland --user-data-dir=$(mktemp -d) --app=%s" url)
                          (generate-new-buffer "Chromium App")))
+
+  (keymap-set global-map "C-x A" 'webapp-open)
 #+end_src
