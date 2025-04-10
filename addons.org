@@ -245,6 +245,7 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
       (keymap-set m "n" 'gptel)
       (keymap-set m "c" 'gptel-menu)
       (keymap-set m "a" 'gptel-add)
+      (keymap-set m "f" 'gptel-add-file)
       m))
 
   (defalias 'gptel-map gptel-map)
@@ -259,19 +260,33 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
             (chat . "You are a large language model and a conversation partner. Respond concisely."))))
 #+end_src
 
+
+* COMMENT AIDER
+
+#+begin_src emacs-lisp
+  (use-package aider
+    :straight (:host github :repo "tninja/aider.el" :files ("aider.el" "aider-core.el" "aider-file.el" "aider-code-change.el" "aider-discussion.el" "aider-prompt-mode.el"))
+    :config
+    (setq aider-args `("--config" ,(expand-file-name "~/.aider.conf.yml")))
+    (global-set-key (kbd "C-c a") 'aider-transient-menu))
+#+end_src
+
 * Timezone converter
 
 #+begin_src emacs-lisp
   (straight-use-package 'tzc)
 
-
   (setq tzc-favourite-time-zones-alist '(("UTC+0000" "UTC")
-  				       ("Asia/Kolkata" "Kolkata")
-  				       ("America/New_York" "New York")
-  				       ("Europe/London" "London")
-  				       ("Europe/Berlin" "Berlin")
   				       ("Asia/Shanghai" "Shanghai")
-  				       ("Asia/Tokyo" "Tokyo")))
+  				       ("Europe/London" "London")
+  				       ("Europe/Paris" "Paris")
+  				       ("Asia/Tokyo" "Tokyo")
+  				       ("Asia/Singapore" "Singapore")
+                                         ("Europe/Moscow" "Moscow")
+                                         ("Australia/Sydney" "Sydney")
+                                         ("America/New_York" "New_York")
+                                         ("America/Los_Angeles" "Los_Angeles")
+                                         ("America/Sao_Paulo" "Sao_Paulo")))
 #+end_src
 
 * Go translate
@@ -310,8 +325,9 @@ It works with wlrctl
 #+begin_src emacs-lisp
   (defun webapp-open (url)
     (interactive "sURL: ")
-    (async-shell-command (format "chromium --ozone-platform=wayland --user-data-dir=$(mktemp -d) --app=%s" url)
-                         (generate-new-buffer "Chromium App")))
+    (dotimes (_ (prefix-numeric-value current-prefix-arg))
+      (async-shell-command (format "chromium --ozone-platform=wayland --user-data-dir=$(mktemp -d) --app=%s" url)
+                           (generate-new-buffer "Chromium App"))))
 
   (keymap-set global-map "C-x A" 'webapp-open)
 #+end_src
