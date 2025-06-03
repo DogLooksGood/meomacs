@@ -401,7 +401,8 @@ Use clojure-ts-mode instead of clojure-mode.
         cider-use-xref t
         cider-enhanced-cljs-completion-p nil)
 
-  (add-to-list 'meow-mode-state-list '(cider-inspector-mode . motion))
+  (with-eval-after-load "meow"
+    (add-to-list 'meow-mode-state-list '(cider-inspector-mode . motion)))
 #+end_src
 
 ** COMMENT Clojure-ts-mode
