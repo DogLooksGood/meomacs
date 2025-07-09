@@ -157,6 +157,7 @@ Straight.el is used for package management.
   (diminish 'subword-mode)
 
   (blink-cursor-mode -1)
+  (savehist-mode)
 
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
