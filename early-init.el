@@ -1,5 +1,4 @@
-;; Disable GC during initialization(for the case, early-init.el is not used)
-(setq gc-cons-threshold most-positive-fixnum)
+;; -*- lexical-binding: t -*-
 
 ;; Ensure we have correct user-emacs-directory
 ;; The folder of meomacs can be placed anywhere, and started with
@@ -47,11 +46,6 @@ If FORCE-TANGLE is non-nil, always tangle before load."
 
 ;; Straight configs
 (setq straight-vc-git-default-clone-depth 1)
-
-;; Use GCMH as GC config.
-(straight-use-package 'gcmh)
-(require 'gcmh)
-(gcmh-mode 1)
 
 ;; Dump flag
 (defvar meomacs-dump nil)
