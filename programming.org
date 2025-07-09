@@ -286,6 +286,9 @@ Use eglot as LSP client.
 
   (add-hook 'eglot-mode-hook 'eglot-setup-eldoc)
 
+  (setq eglot-workspace-configuration
+          '((:rust-analyzer . (:completion (:addCallArgumentSnippets nil :addCallParenthesis nil)))))
+
   (with-eval-after-load "eglot"
     (define-key eglot-mode-map (kbd "<C-return>") 'eglot-code-actions))
 #+end_src
