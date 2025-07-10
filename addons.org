@@ -164,18 +164,6 @@ Open pass menu with ~C-c a P~.
   (add-hook 'after-init-hook 'envrc-global-mode)
 #+end_src
 
-** COMMENT Direnv Mode
-
-#+begin_src emacs-lisp
-  (straight-use-package 'direnv)
-
-  (setq direnv-always-show-summary nil)
-
-  (autoload 'direnv-mode "direnv" nil t)
-
-  (direnv-mode 1)
-#+end_src
-
 * Pinentry
 #+begin_src emacs-lisp
   (setq epa-pinentry-mode 'loopback)
@@ -232,6 +220,11 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
     :stream t
     :key (lambda () (meomacs-read-var "deepseek-api-key"))
     :models '(deepseek-chat deepseek-coder))
+
+  (gptel-make-ollama "Ollama"
+    :host "localhost:11434"
+    :stream t
+    :models '(deepseek-r1:32b gemma3:27b devstral:24b))
 
   (with-eval-after-load "gptel"
     (require 'gptel-curl))

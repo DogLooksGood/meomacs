@@ -7,6 +7,7 @@ straight/build
 straight/build-cache.el
 straight/modified
 projects
+projects.eld
 transient
 org-roam.db
 rime
