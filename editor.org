@@ -185,6 +185,10 @@ Straight.el is used for package management.
   (diminish 'meow-insert-mode)
   (diminish 'meow-keypad-mode)
   (diminish 'meow-beacon-mode)
+
+  ;; Use <escape> to start keypad
+  (keymap-unset meow-normal-state-keymap "SPC")
+  (keymap-unset meow-motion-state-keymap "SPC")
 #+end_src
 
 ** Load key bindings
