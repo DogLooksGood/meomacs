@@ -197,10 +197,11 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
     (add-hook 'meow-normal-mode-hook 'eat-emacs-mode nil t)
     (add-hook 'meow-insert-mode-hook 'eat-char-mode nil t))
 
-  (with-eval-after-load "eat"
-    (keymap-set eat-char-mode-map "C-S-v" 'eat-yank)
-    (advice-add 'eat-semi-char-mode :after 'eat-emacs-mode)
-    (add-hook 'eat-mode-hook 'meomacs-eat-meow-setup))
+  (with-eval-after-load "meow"
+    (with-eval-after-load "eat"
+      (keymap-set eat-char-mode-map "C-S-v" 'eat-yank)
+      (advice-add 'eat-semi-char-mode :after 'eat-emacs-mode)
+      (add-hook 'eat-mode-hook 'meomacs-eat-meow-setup)))
 #+end_src
 
 * GPTEL
@@ -222,7 +223,7 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
     :models '(deepseek-chat deepseek-coder))
 
   (gptel-make-ollama "Ollama"
-    :host "localhost:11434"
+    :host "192.168.31.11:11434"
     :stream t
     :models '(deepseek-r1:32b gemma3:27b devstral:24b))
 
