@@ -150,6 +150,7 @@ Show current function signature in header line.
   (straight-use-package 'paredit)
 
   (require 'paredit)
+  (keymap-unset paredit-mode-map "M-s")
 
   (add-hook 'clojure-mode-hook 'paredit-mode)
   (add-hook 'clojure-ts-mode-hook 'paredit-mode)
