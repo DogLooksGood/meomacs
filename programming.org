@@ -760,6 +760,7 @@ Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile
 
 #+begin_src emacs-lisp
   (setq-default c-basic-offset 4)
+  (setq-default c-default-style "k&r")
 #+end_src
 
 ** COMMENT SimpleC
