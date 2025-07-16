@@ -218,8 +218,6 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
   (add-to-list 'meow-char-thing-table
                '(?h . angle))
   (setq meow-select-on-change nil)
-  (add-to-list 'meow-selection-command-fallback
-               '(meow-save . kill-ring-save))
 
   (meow-setup)
   (meow-setup-indicator)
