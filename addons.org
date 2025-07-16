@@ -204,6 +204,14 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
       (add-hook 'eat-mode-hook 'meomacs-eat-meow-setup)))
 #+end_src
 
+* Devdocs
+#+begin_src emacs-lisp
+  (straight-use-package 'devdocs)
+
+  (autoload 'devdocs-lookup "devdocs" nil t)
+  (global-set-key (kbd "C-h d") 'devdocs-lookup)
+#+end_src
+
 * GPTEL
 #+begin_src emacs-lisp
   (straight-use-package '(gptel :host github :repo "karthink/gptel"))
