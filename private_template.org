@@ -88,7 +88,7 @@ Tweaking following table for key bindings in normal state.
 | %        | meow-query-replace        |
 | K        | scroll-down-line          |
 | J        | scroll-up-line            |
-| <escape> | ignore                    |
+| <escape> | meow-keypad |
 | @        | meow-pop-to-mark          |
 | ^​        | meow-unpop-to-mark        |
 
@@ -97,9 +97,9 @@ Tweaking following table for key bindings in normal state.
 Tweaking following table for key bindings in motion state.
 
 #+TBLNAME: motion-keybindings
-| key      | command |
-|----------+---------|
-| <escape> | ignore  |
+| key      | command     |
+|----------+-------------|
+| <escape> | meow-keypad |
 
 * Fonts
 
