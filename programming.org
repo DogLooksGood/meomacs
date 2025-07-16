@@ -460,30 +460,6 @@ For opening .jar files. This is required for Eglot.
     (diminish 'jarchive-mode))
 #+end_src
 
-** COMMENT Linting with flycheck-clj-kondo
-
-#+begin_src emacs-lisp
-  (straight-use-package 'flycheck-clj-kondo)
-
-  (with-eval-after-load "clojure-ts-mode"
-    (require 'flycheck-clj-kondo))
-
-  (add-hook 'clojure-mode-hook 'flycheck-mode)
-#+end_src
-
-** COMMENT Format code with zprint
-
-#+begin_src emacs-lisp
-  (straight-use-package '(zprint :type git
-                                 :host github
-                                 :repo "DogLooksGood/zprint.el"))
-
-  (autoload 'zprint "zprint" nil t)
-
-  (with-eval-after-load "clojure-ts-mode"
-    (define-key clojure-ts-mode-map (kbd "C-c C-f") 'zprint))
-#+end_src
-
 * Svelte
 ** svelte-mode
 #+begin_src emacs-lisp
