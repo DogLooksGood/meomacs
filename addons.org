@@ -255,7 +255,7 @@ Set ~meomacs-ollama-host~ in [[file:private.org]].
   (gptel-make-ollama "Ollama"
       :host meomacs-ollama-host
       :stream t
-      :models '(deepseek-r1:32b gemma3:27b devstral:24b))
+      :models '(deepseek-r1:32b gemma3:27b devstral:24b magistral:24b))
 #+end_src
 
 ** Keybindings
