@@ -400,7 +400,6 @@ Use clojure-ts-mode instead of clojure-mode.
 
   (setq cider-offer-to-open-cljs-app-in-browser nil
         cider-font-lock-dynamically '(macro deprecated)
-        cider-preferred-build-tool 'shadow-cljs
         cider-repl-type 'shadow
         cider-use-xref t
         cider-enhanced-cljs-completion-p nil)
