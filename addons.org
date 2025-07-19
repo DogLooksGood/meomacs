@@ -310,23 +310,6 @@ Set ~meomacs-ollama-host~ in [[file:private.org]].
                                          ("America/Sao_Paulo" "Sao_Paulo")))
 #+end_src
 
-* Go translate
-
-#+begin_src emacs-lisp
-  (straight-use-package 'go-translate)
-
-  (require 'go-translate)
-
-  (setq gt-preset-translators
-          `((Default . ,(gt-translator
-                         :taker (gt-taker :langs '(en zh) :text 'word :prompt nil)
-                         :engines  (gt-youdao-dict-engine :if 'word)
-                         :render (gt-posframe-pop-render :if 'word :frame-params (list :height 40 :border-width 5))))))
-
-  (keymap-set global-map "C-x T" 'gt-do-translate)
-#+end_src
-
-
 * Browsers
 
 ** Refresh Firefox
