@@ -129,22 +129,6 @@ Show current function signature in header line.
 
 * Lisp Parenthese
 
-** COMMENT Combobulate
-
-#+begin_src emacs-lisp
-  (straight-use-package 'combobulate)
-
-  (add-hook 'prog-mode-hook 'combobulate-mode)
-#+end_src
-
-** COMMENT Puni
-
-#+begin_src emacs-lisp
-  (straight-use-package 'puni)
-
-  (add-hook 'prog-mode-hook 'puni-mode)
-#+end_src
-
 ** Paredit
 #+begin_src emacs-lisp
   (straight-use-package 'paredit)
@@ -158,107 +142,6 @@ Show current function signature in header line.
 #+end_src
 
 * LSP
-
-** COMMENT lspce
-
-Use lspce as LSP client.
-
-#+begin_src emacs-lisp
-  (straight-use-package '(lspce :host github
-                                :repo "zbelial/lspce"
-                                :files (:defaults "lspce-module.so")
-                                :pre-build (("cargo" "build" "--release")
-                                            ("cp" "./target/release/liblspce_module.so" "./lspce-module.so"))))
-
-  (autoload 'lspce-mode "lspce" nil t)
-
-  (with-eval-after-load "lspce"
-    (define-key lspce-mode-map (kbd "C-c l r") 'lspce-rename)
-    (define-key lspce-mode-map (kbd "C-c l a") 'lspce-code-actions)
-    (define-key lspce-mode-map (kbd "C-c l h") 'lspce-help-at-point))
-#+end_src
-
-*** Key binding
-
-#+begin_src emacs-lisp
-  (keymap-set prog-mode-map "C-c L" 'lspce-mode)
-#+end_src
-
-** COMMENT Lsp-mode
-
-Use lsp-mode as LSP client.
-
-#+begin_src emacs-lisp
-  (setenv "LSP_USE_PLISTS" "true")
-
-  (straight-use-package 'lsp-mode)
-
-  (setq lsp-keymap-prefix "C-c l"
-        lsp-enable-symbol-highlighting nil
-        lsp-enable-dap-auto-configure nil
-        lsp-lens-enable nil
-        lsp-headerline-breadcrumb-enable nil
-        lsp-signature-doc-lines 3
-        lsp-auto-execute-action nil
-        lsp-enable-on-type-formatting nil)
-
-  (setq lsp-disabled-clients '(tfls clangd rls rnix-lsp semgrep-ls deno-ls))
-
-  (setq-default lsp-rust-analyzer-cargo-watch-command "check"
-                lsp-eldoc-render-all t)
-
-  (autoload 'lsp "lsp-mode" nil t)
-
-  (with-eval-after-load "lsp-mode"
-    (keymap-set lsp-mode-map "M-RET" 'lsp-execute-code-action))
-#+end_src
-
-*** Key binding
-
-#+begin_src emacs-lisp
-  (keymap-set prog-mode-map "C-c L" 'lsp)
-#+end_src
-
-*** Lsp Booster
-#+begin_src emacs-lisp
-  (defun lsp-booster--advice-json-parse (old-fn &rest args)
-    "Try to parse bytecode instead of json."
-    (or
-     (when (equal (following-char) ?#)
-       (let ((bytecode (read (current-buffer))))
-         (when (byte-code-function-p bytecode)
-           (funcall bytecode))))
-     (apply old-fn args)))
-  (advice-add (if (progn (require 'json)
-                         (fboundp 'json-parse-buffer))
-                  'json-parse-buffer
-                'json-read)
-              :around
-              #'lsp-booster--advice-json-parse)
-
-  (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
-    "Prepend emacs-lsp-booster command to lsp CMD."
-    (let ((orig-result (funcall old-fn cmd test?)))
-      (if (and (not test?)                             ;; for check lsp-server-present?
-               (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
-               lsp-use-plists
-               (not (functionp 'json-rpc-connection))  ;; native json-rpc
-               (executable-find "emacs-lsp-booster"))
-          (progn
-            (message "Using emacs-lsp-booster for %s!" orig-result)
-            (cons "emacs-lsp-booster" orig-result))
-        orig-result)))
-
-  (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
-#+end_src
-
-*** COMMENT Lsp-ui
-
-#+begin_src emacs-lisp
-  (straight-use-package 'lsp-ui)
-
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-#+end_src
 
 ** Eglot
 
@@ -357,23 +240,6 @@ Use eglot as LSP client.
     (keymap-set flymake-mode-map "C-c ! a" 'flymake-show-project-diagnostics)
     (keymap-set flymake-mode-map "C-c ! n" 'flymake-goto-next-error)
     (keymap-set flymake-mode-map "C-c ! p" 'flymake-goto-prev-error))
-#+end_src
-
-** COMMENT Lsp-copilot
-
-#+begin_src emacs-lisp
-  (straight-use-package '(lsp-copilot :repo "jadestrong/lsp-copilot"
-                                      :host github
-                                      :files ("*.el" "*.toml")))
-
-  (straight-use-package 'ht)
-
-  (straight-use-package 'projectile)
-
-  (require 'projectile)
-
-  (setq lsp-copilot--exec-file
-        (expand-file-name "~/workspace/lsp-copilot-flake/result/bin/lsp-copilot"))
 #+end_src
 
 * Clojure
