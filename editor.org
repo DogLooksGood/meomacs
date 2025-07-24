@@ -147,6 +147,9 @@ Straight.el is used for package management.
    inhibit-compacting-font-caches t
    auto-window-vscroll nil
 
+   ;; preserve scrolling position
+   scroll-preserve-screen-position 'always
+
    ;; Wider fill column
    fill-column 100)
 
