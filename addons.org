@@ -231,7 +231,6 @@ switching to ~INSERT~ state, move the cursor to the end of buffer.
 ** ChatGPT
 #+begin_src emacs-lisp
   (setq gptel-use-curl t
-        gptel-model 'gpt-4o
         gptel-default-mode 'org-mode
         gptel-api-key (lambda () (meomacs-read-var "gptel-api-key")))
 #+end_src
@@ -255,7 +254,13 @@ Set ~meomacs-ollama-host~ in [[file:private.org]].
   (gptel-make-ollama "Ollama"
       :host meomacs-ollama-host
       :stream t
-      :models '(deepseek-r1:32b gemma3:27b devstral:24b magistral:24b))
+      :models '(deepseek-r1:32b gemma3:27b-it-q8_0 devstral:24b magistral:24b))
+#+end_src
+
+** Set default backend & model
+#+begin_src emacs-lisp
+  (setq gptel-backend (gptel-get-backend "Ollama")
+        gptel-model 'gemma3:27b-it-q8_0)
 #+end_src
 
 ** Keybindings
