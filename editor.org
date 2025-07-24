@@ -807,9 +807,19 @@ To find files/buffers and apply commands on project, use builtin package ~projec
     (keymap-set transient-map "<escape>" 'transient-quit-one))
 #+end_src
 
-
 * Don't display VC information in mode-line
 
 #+begin_src emacs-lisp
   (setq vc-display-status 'no-backend)
+#+end_src
+
+* Enable repeat-mode
+
+#+begin_src emacs-lisp
+  (repeat-mode 1)
+
+  (with-eval-after-load "dired"
+    (keymap-unset dired-jump-map "j" t))
+  (keymap-unset next-error-repeat-map "n" t)
+  (keymap-unset next-error-repeat-map "p" t)
 #+end_src
