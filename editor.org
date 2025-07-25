@@ -148,7 +148,7 @@ Straight.el is used for package management.
    auto-window-vscroll nil
 
    ;; preserve scrolling position
-   scroll-preserve-screen-position 'always
+   scroll-preserve-screen-position t
 
    ;; Wider fill column
    fill-column 100)
@@ -175,7 +175,7 @@ Straight.el is used for package management.
     (server-mode 1))
 #+end_src
 
-* Meow
+* COMMENT Meow
 
 #+begin_src emacs-lisp
   (straight-use-package 'meow)
@@ -765,19 +765,6 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 
   (unless window-system
     (setq interprogram-cut-function 'ext-copy))
-#+end_src
-
-* COMMENT Frame associated buffers
-
-#+begin_src emacs-lisp
-  (straight-use-package 'beframe)
-
-  (require 'beframe)
-  (beframe-mode 1)
-
-  (setq beframe-functions-in-frames '(project-prompt-project-dir))
-
-  (define-key global-map [remap switch-to-buffer] 'beframe-switch-buffer)
 #+end_src
 
 * Load variable values from varibale table
