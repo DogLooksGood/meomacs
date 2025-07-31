@@ -1,0 +1,28 @@
+# -*- mode: snippet -*-
+# name: fhs
+# key: fhs
+# --
+{
+  description = "Flake description";
+
+  inputs = {
+    # Use one of following
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+  };
+
+  outputs = inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" ];
+
+      perSystem = { config, self', inputs', pkgs, system, ... }:
+        {
+          devShells.default = (pkgs.buildFHSEnv {
+            targetPkgs = pkgs: with pkgs; [
+            ];
+            runScript = ''env SHELL=/usr/bin/bash bash'';
+          }).env;
+        };
+    };
+}

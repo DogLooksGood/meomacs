@@ -1,0 +1,27 @@
+# -*- mode: snippet -*-
+# name: shell
+# key: shell
+# --
+{
+  description = "Flake description";
+
+  inputs = {
+    # Use one of following
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+  };
+
+  outputs = inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" ];
+
+      perSystem = { config, self', inputs', pkgs, system, ... }:
+        {
+          devShell = pkgs.mkShell {
+            buildInputs = with pkgs; [
+            ];
+          };
+        };
+    };
+}
