@@ -141,6 +141,18 @@ Show current function signature in header line.
   (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
 #+end_src
 
+* TAGS
+
+** gtags
+
+#+begin_src emacs-lisp
+  (straight-use-package 'gtags-mode)
+
+  (require 'gtags-mode)
+
+  (gtags-mode 1)
+#+end_src
+
 * LSP
 
 ** Eglot
