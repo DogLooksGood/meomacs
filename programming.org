@@ -620,6 +620,9 @@ Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile
   (straight-use-package 'geiser)
   (straight-use-package 'geiser-guile)
   (setq geiser-debug-jump-to-debug nil)
+
+  (with-eval-after-load "paredit"
+    (add-hook 'scheme-mode-hook 'paredit-mode))
 #+end_src
 
 * GLSL
