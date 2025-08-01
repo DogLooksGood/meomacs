@@ -373,7 +373,7 @@ For opening .jar files. This is required for Eglot.
                                 :repo "DogLooksGood/cargo.el"))
 
   (autoload 'cargo-minor-mode "cargo" nil t)
-  (add-hook 'rust-ts-mode-hook 'cargo-minor-mode)
+  (add-hook 'rust-mode-hook 'cargo-minor-mode)
 
   (setq cargo-process--custom-path-to-bin nil
         cargo-process--rustc-cmd nil)
@@ -384,37 +384,15 @@ For opening .jar files. This is required for Eglot.
     (define-key cargo-process-mode-map (kbd "\\") 'toggle-truncate-lines))
 #+end_src
 
-** rust-ts-mode
+** Rust-mode
 #+begin_src emacs-lisp
   (straight-use-package 'rust-mode)
-  (straight-use-package 'rust-ts-mode)
 
-  (add-hook 'rust-ts-mode-hook
-            (lambda ()
-              (require 'rust-mode)
-              (require 'rust-compile)))
-
-  (add-to-list 'auto-mode-alist (cons "\\.rs\\'" 'rust-ts-mode))
+  (add-to-list 'auto-mode-alist (cons "\\.rs\\'" 'rust-mode))
 
   (setq lsp-rust-analyzer-completion-add-call-parenthesis nil
         lsp-rust-analyzer-proc-macro-enable t
         lsp-rust-analyzer-server-format-inlay-hints nil)
-#+end_src
-
-Write a command to switch between wasm32 and native target triple.
-
-#+begin_src emacs-lisp
-  (defun rust-toggle-lsp-target ()
-    (interactive)
-    (require 'lsp-rust)
-    (when
-        (y-or-n-p (format "Current target is [%s], switch?"
-                             (or lsp-rust-analyzer-cargo-target "default")))
-      (if lsp-rust-analyzer-cargo-target
-          (setq lsp-rust-analyzer-cargo-target nil
-                cargo-process--command-check "check")
-        (setq lsp-rust-analyzer-cargo-target "wasm32-unknown-unknown"
-              cargo-process--command-check "check --target wasm32-unknown-unknown"))))
 #+end_src
 
 * Nix
