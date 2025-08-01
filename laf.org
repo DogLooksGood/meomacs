@@ -94,7 +94,7 @@ Font families are specified in [[file:private.org::Fonts][private]] config.
 
   (defun meomacs--format-font-name (family)
     (if meomacs-font-pixelsize
-        (format "%s:pixelsize=%s" family meomacs-font-pixelsize)
+        (format "%s:pixelsize=%s:antialias=none" family meomacs-font-pixelsize)
       (format "%s" family)))
 
   (defun meomacs-load-default-font ()
