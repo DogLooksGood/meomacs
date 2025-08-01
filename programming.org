@@ -89,17 +89,6 @@ Display current function name in header-line.
   (which-function-mode  1)
 #+end_src
 
-** COMMENT Topsy
-
-Show current function signature in header line.
-
-#+begin_src emacs-lisp
-  (straight-use-package
-   '(topsy :host github :repo "alphapapa/topsy.el"))
-
-  (autoload 'topsy-mode "topsy" nil t)
-#+end_src
-
 * Code Formatter
 
 #+begin_src emacs-lisp
@@ -117,14 +106,6 @@ Show current function signature in header line.
     (save-buffer))
 
   (global-set-key (kbd "C-c w") 'meomacs-save-buffer-always)
-#+end_src
-
-* COMMENT Flycheck
-
-#+begin_src emacs-lisp
-  (straight-use-package 'flycheck)
-
-  (setq flycheck-check-syntax-automatically '(save idle-buffer-switch mode-enabled))
 #+end_src
 
 * Lisp Parenthese
