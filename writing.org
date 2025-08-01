@@ -203,7 +203,8 @@ Enable ~variable-pitch-mode~.
        (dot . t)
        (shell . t)
        (clojure . t)
-       (python . t))))
+       (python . t)
+       (scheme . t))))
 
   (defun meomacs-after-babel-execute ()
     (when org-inline-image-overlays
