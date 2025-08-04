@@ -814,10 +814,16 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 * Duplicate lines
 #+begin_src emacs-lisp
   (keymap-set global-map "C-c d" 'duplicate-dwim)
-#+end_src
 
+  (defvar-keymap duplicate-dwim-repeat-map
+    :doc "Keymap to repeat `duplicate-dwim'.  Used in `repeat-mode'."
+    :repeat t
+    "d"   #'duplicate-dwim)
+#+end_src
 
 * BEdit
 #+begin_src emacs-lisp
-  (load-file (expand-file-name "bedit.el" user-emacs-directory))
+  (load (expand-file-name "bedit.el" user-emacs-directory))
+
+  (keymap-set global-map "C-M-g" bedit-prefix-map)
 #+end_src
