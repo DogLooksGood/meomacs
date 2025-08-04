@@ -19,6 +19,7 @@
       perSystem = { config, self', inputs', pkgs, system, ... }:
         {
           devShells.default = (pkgs.buildFHSEnv {
+            name = "";
             targetPkgs = pkgs: with pkgs; [
             ];
             runScript = ''env SHELL=/usr/bin/bash bash'';

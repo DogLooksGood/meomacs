@@ -569,7 +569,6 @@ A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =
 
     (add-hook 'company-mode-hook 'company-tng-mode)
 
-    (keymap-set company-mode-map "M-n" 'company-complete-common)
     (keymap-set company-active-map "TAB" nil)
     (define-key company-active-map [tab] nil)
     (keymap-set company-active-map "C-n" nil)
@@ -810,4 +809,15 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 
   (keymap-unset next-error-repeat-map "n")
   (keymap-unset next-error-repeat-map "p")
+#+end_src
+
+* Duplicate lines
+#+begin_src emacs-lisp
+  (keymap-set global-map "C-c d" 'duplicate-dwim)
+#+end_src
+
+
+* BEdit
+#+begin_src emacs-lisp
+  (load-file (expand-file-name "bedit.el" user-emacs-directory))
 #+end_src
