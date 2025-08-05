@@ -74,9 +74,6 @@
 (defvar bedit--editing-search-offset nil
   "The offset between after-search position and the original position.")
 
-(defvar bedit--editing-post-macro nil
-  "The command to run after each macro iteration.")
-
 (defvar bedit--editing-buffer nil
   "The buffer name we are editing.")
 
@@ -101,6 +98,11 @@
     (define-key m (kbd "c")     #'bedit-start-with-chars-like-this)
     m)
   "The keymap for commands to use with BEdit")
+
+(defun bedit--editing-reset ()
+  (setq bedit--editing-buffer nil
+        bedit--editing-search nil
+        bedit--editing-search-offset 0))
 
 (defun bedit--extend-secondary-selection ()
   (let ((beg (overlay-start mouse-secondary-overlay))
@@ -240,9 +242,7 @@
         (bedit--create-recording-buffer)
         (setq bedit--editing-search
               (lambda (bound)
-                (search-forward-regexp search bound t))
-              bedit--editing-post-macro
-              nil)
+                (search-forward-regexp search bound t)))
         (setq bedit--editing-search-offset
               (save-mark-and-excursion
                 (let ((p (point)))
@@ -254,21 +254,27 @@
 
 (defun bedit-start-with-lines (n)
   (interactive "P")
+  (bedit--editing-reset)
   (bedit--create-recording-buffer)
-  (setq bedit--editing-search (lambda (bound) (search-forward-regexp "^" bound t n))
-        bedit--editing-post-macro
-        (lambda ()
-          (goto-char (line-end-position))
-          (= (point) (point-max)))
-        bedit--editing-search-offset (- (point) (line-beginning-position)))
+  (let ((offset (- (point) (line-beginning-position)))
+        inited)
+    (setq bedit--editing-search
+          (lambda (bound)
+            (let ((line-move-visual nil))
+              (ignore-errors
+                (if inited (next-line n) (setq inited t))
+                (when (< (point) bound)
+                  (goto-char (min bound
+                                  (+ (line-beginning-position) offset)
+                                  (line-end-position)))
+                  t))))))
   (bedit--start-macro))
 
 (defun bedit-start-with-search-like-this (beg end)
   (interactive "r")
   (let ((search (buffer-substring-no-properties beg end)))
     (bedit--create-recording-buffer)
-    (setq bedit--editing-search (lambda (bound) (search-forward search bound t))
-          bedit--editing-post-macro nil)
+    (setq bedit--editing-search (lambda (bound) (search-forward search bound t)))
     (setq bedit--editing-search-offset (if (= (point) beg) (- beg end) 0))
     (bedit--start-macro)))
 
@@ -277,7 +283,6 @@
   (let ((c (char-after)))
     (bedit--create-recording-buffer)
     (setq bedit--editing-search (lambda (bound) (search-forward (char-to-string c) bound t))
-          bedit--editing-post-macro nil
           bedit--editing-search-offset -1)
     (bedit--start-macro)))
 
@@ -295,30 +300,26 @@
   (or (overlay-end mouse-secondary-overlay)
       (point-max)))
 
-(defun bedit--finish-recording ()
+(defun bedit--finish-recording (arg)
   "This is an internal command, do not bind to your keymap."
-  (interactive)
+  (interactive "P")
   (end-kbd-macro)
   (kill-buffer (current-buffer))
   (switch-to-buffer bedit--editing-buffer)
   (let ((start (bedit--scope-start))
         (m (make-marker))
-        (case-fold-search nil)
-        break)
+        (case-fold-search nil))
     (set-marker m (point))
     (goto-char start)
+    (kmacro-set-counter (or arg 0))
     (dolist (m bedit-inhibit-modes)
       (funcall m -1))
     (unwind-protect
         (bedit--wrap-collapse-undo
-          (while (and (not break)
-                      (funcall bedit--editing-search (bedit--scope-end)))
+          (while (funcall bedit--editing-search (bedit--scope-end))
             (save-mark-and-excursion
               (forward-char bedit--editing-search-offset)
-              (call-interactively #'kmacro-call-macro))
-            (when bedit--editing-post-macro
-              (when (funcall bedit--editing-post-macro)
-                (setq break t)))))
+              (kmacro-call-macro nil))))
       (progn
         (dolist (m bedit-inhibit-modes)
           (funcall m 1))
@@ -335,5 +336,3 @@
     (kill-buffer buf))
   (when defining-kbd-macro
     (keyboard-quit)))
-
-(provide 'bedit)
