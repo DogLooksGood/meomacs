@@ -573,6 +573,10 @@ Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile
 #+begin_src emacs-lisp
   (setq-default c-basic-offset 4)
   (setq-default c-default-style "k&r")
+
+  (with-eval-after-load "cc-mode"
+    (keymap-set c-mode-map "C-c C-c" 'ff-find-other-file)
+    (keymap-set c-mode-map "C-c C-o" 'ff-find-other-file-other-window))
 #+end_src
 
 ** COMMENT SimpleC
@@ -596,6 +600,8 @@ Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile
     (add-hook 'scheme-mode-hook 'paredit-mode))
 #+end_src
 
+
+
 * GLSL
 
 #+begin_src emacs-lisp
@@ -605,7 +611,7 @@ Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile
 * String inflection
 
 Cycle cases for symbol
-
+p
 #+begin_src emacs-lisp
   (straight-use-package 'string-inflection)
 #+end_src
