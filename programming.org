@@ -537,7 +537,7 @@ Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile
   (straight-use-package 'docker)
   (straight-use-package 'dockerfile-ts-mode)
 
-  (add-to-list 'auto-mode-alist '("/Dockerfile\\'" . dockerfile-ts-mode))
+  (add-to-list 'auto-mode-alist '(".*Dockerfile\\'" . dockerfile-ts-mode))
 
   (autoload 'docker "docker" nil t)
 #+end_src
