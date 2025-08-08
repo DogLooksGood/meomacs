@@ -172,14 +172,6 @@ Straight.el is used for package management.
   (setq jit-lock-defer-time 0)
 #+end_src
 
-* Start a emacs server
-
-#+begin_src emacs-lisp
-  (require 'server)
-  (unless (server-running-p)
-    (server-mode 1))
-#+end_src
-
 * COMMENT Meow
 
 #+begin_src emacs-lisp
