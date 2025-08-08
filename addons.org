@@ -148,11 +148,9 @@ Open pass menu with ~C-c a P~.
     (pinentry-start))
 #+end_src
 
-
-
 * Directory environment support
 
-** Envrc
+** COMMENT Envrc
 
 #+begin_src emacs-lisp
   (straight-use-package 'envrc)

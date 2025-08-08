@@ -151,7 +151,11 @@ Straight.el is used for package management.
    scroll-preserve-screen-position t
 
    ;; Wider fill column
-   fill-column 100)
+   fill-column 100
+
+   show-paren-style 'mixed
+
+   mode-line-compact t)
 
   (when window-system
     (scroll-bar-mode -1))
@@ -160,6 +164,7 @@ Straight.el is used for package management.
   (diminish 'subword-mode)
 
   (blink-cursor-mode -1)
+
   (savehist-mode)
 
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -182,16 +187,14 @@ Straight.el is used for package management.
 
   (require 'meow)
 
+  (setq meow-keypad-describe-keymap-function nil)
+
   ;; hide lighters
   (diminish 'meow-normal-mode)
   (diminish 'meow-motion-mode)
   (diminish 'meow-insert-mode)
   (diminish 'meow-keypad-mode)
   (diminish 'meow-beacon-mode)
-
-  ;; Use <escape> to start keypad
-  (keymap-unset meow-normal-state-keymap "SPC")
-  (keymap-unset meow-motion-state-keymap "SPC")
 #+end_src
 
 ** Load key bindings
@@ -220,7 +223,9 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
                      '(pair ("<") (">")))
   (add-to-list 'meow-char-thing-table
                '(?h . angle))
-  (setq meow-select-on-change nil)
+
+  (setq meow-select-on-change nil
+        meow-beacon-auto-deactivate t)
 
   (meow-setup)
   (meow-setup-indicator)
@@ -258,130 +263,8 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
     (setq meomacs--register-tree-sitter-run-once t))
 #+end_src
 
-* COMMENT Window management
-
-Switch window by pressing the number showned in the mode line.
-
-#+begin_src emacs-lisp
-  (straight-use-package '(window-numbering
-                          :repo "DogLooksGood/window-numbering.el"
-                          :host github
-                          :type git))
-
-  (require 'window-numbering)
-  (window-numbering-mode 1)
-
-  (defun meomacs-window-numbering-modeline ()
-    (concat " "
-            (let ((n (window-numbering-get-number)))
-              (when (numberp n)
-                (if window-system
-                    (alist-get
-                     n
-                     '((0 . "0")
-                       (1 . "1")
-                       (2 . "2")
-                       (3 . "3")
-                       (4 . "4")
-                       (5 . "5")
-                       (6 . "6")
-                       (7 . "7")
-                       (8 . "8")
-                       (9 . "9")))
-                  (concat "[" (number-to-string n) "] "))))))
-
-  (setq window-numbering-assign-func
-        (lambda ()
-          (when (string-prefix-p " *Treemacs" (buffer-name))
-            9)))
-
-  (let ((modeline-segment '(:eval (meomacs-window-numbering-modeline))))
-    (unless (member modeline-segment mode-line-format)
-      (setq-default mode-line-format (cons modeline-segment mode-line-format))))
-#+end_src
-
-** COMMENT ace-window
-#+begin_src emacs-lisp
-  (straight-use-package 'ace-window)
-
-  (autoload 'ace-swap-window "ace-window" nil t)
-  (autoload 'ace-delete-window "ace-window" nil t)
-
-  (keymap-set mode-specific-map "W" 'ace-swap-window)
-  (keymap-set mode-specific-map "Q" 'ace-delete-window)
-#+end_src
-
-** COMMENT winner-mode
-#+begin_src emacs-lisp
-  (require 'winner)
-
-  (winner-mode 1)
-#+end_src
-
 * Workspace management
 
-** COMMENT OTPP, one tab per project
-
-#+begin_src emacs-lisp
-  (straight-use-package 'otpp)
-
-  (require 'otpp)
-  (otpp-mode 1)
-  (otpp-override-mode 1)
-#+end_src
-
-** COMMENT Using frames
-
-Use frames for workspaces.
-
-#+begin_src emacs-lisp
-  (global-set-key (kbd "C-c j") 'select-frame-by-name)
-
-  ;; Better to have title name with project name
-  (setq-default frame-title-format
-                '((:eval
-                   (or (cdr (project-current))
-                       (buffer-name)))))
-#+end_src
-
-** COMMENT Using tab-bar-mode
-
-Use tabs for workspaces.
-
-#+begin_src emacs-lisp
-  ;; We could hide the window decoration
-  (setq default-frame-alist '((undecorated . t)))
-
-  (add-hook 'after-init-hook
-            (lambda ()
-              (tab-rename "*Emacs*")))
-
-  (defun meomacs-format-tab (tab i)
-    (let ((current-p (eq (car tab) 'current-tab)))
-      (concat
-       (propertize (concat
-                    " "
-                    (alist-get 'name tab)
-                    " ")
-                   'face
-                   (funcall tab-bar-tab-face-function tab))
-       " ")))
-
-  (setq tab-bar-border nil
-        tab-bar-close-button nil
-        tab-bar-new-button (propertize " 🞤 " 'display '(:height 2.0))
-        tab-bar-back-button nil
-        tab-bar-tab-name-format-function 'meomacs-format-tab
-        tab-bar-tab-name-truncated-max 10)
-
-  (tab-bar-mode 1)
-#+end_src
-
-Add missing keybindings
-
-#+begin_src emacs-lisp
-  (global-set-key (kbd "C-x t .") 'tab-bar-rename-tab)
-#+end_src
 
 * Auto pairs
 
@@ -392,50 +275,10 @@ Add missing keybindings
   (add-hook 'conf-mode-hook 'electric-pair-local-mode)
 #+end_src
 
-** COMMENT Smartparens
-
-Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
-
-#+begin_src emacs-lisp
-  (straight-use-package 'smartparens)
-
-  (require 'smartparens)
-
-  (add-hook 'prog-mode-hook 'smartparens-mode)
-  (add-hook 'conf-mode-hook 'smartparens-mode)
-
-  (setq sp-highlight-pair-overlay nil
-        sp-highlight-wrap-overlay nil)
-
-  (with-eval-after-load "smartparens"
-
-    (keymap-set smartparens-mode-map "C-)" 'sp-forward-slurp-sexp)
-    (keymap-set smartparens-mode-map "C-}" 'sp-forward-barf-sexp)
-
-    ;; setup for emacs-lisp
-    (sp-with-modes '(emacs-lisp-mode)
-      (sp-local-pair "'" nil :actions nil))
-
-    ;; Use strict-mode by default
-    (add-hook 'smartparens-mode-hook 'smartparens-strict-mode)
-
-    ;; Keybindings
-    (keymap-set prog-mode-map "C-c t p" 'smartparens-strict-mode))
-#+end_src
-
 * Line numbers with display-line-numbers-mode
 
 #+begin_src emacs-lisp
-  (keymap-set global-map "C-x N" 'toggle-display-line-number-and-hl-line)
-
-  (defun toggle-display-line-number-and-hl-line ()
-    (interactive)
-    (if (bound-and-true-p display-line-numbers-mode)
-        (progn
-          (display-line-numbers-mode -1)
-          (hl-line-mode -1))
-      (display-line-numbers-mode)
-      (hl-line-mode)))
+  (keymap-set global-map "C-x N" 'display-line-numbers-mode)
 #+end_src
 
 ** Relative line number
@@ -444,97 +287,18 @@ Use smartparens for auto pairs, toggle strict mode with =C-c t s=.
   (setq display-line-numbers-type t)
 #+end_src
 
-* Completion for key sequence
-
-** Which-key
-#+begin_src emacs-lisp
-  (straight-use-package 'which-key)
-  (which-key-mode 1)
-
-  (with-eval-after-load "which-key"
-    (diminish 'which-key-mode))
-#+end_src
-
 * Minibuffer completion reading
-** Vertico & Precient
-
-- Vertico provides a better UX for completion reading.
-- Use prescient to support fuzzy search
+** IComplete
 
 #+begin_src emacs-lisp
-  (straight-use-package '(vertico :files (:defaults "extensions/*")))
-  (straight-use-package 'prescient)
-  (straight-use-package 'vertico-prescient)
+  (require 'icomplete)
+  (fido-mode 1)
 
-  (require 'vertico)
-  (require 'vertico-prescient)
-
-  (vertico-mode 1)
-  (vertico-prescient-mode 1)
-  (prescient-persist-mode 1)
-#+end_src
-
-** COMMENT Selectrum & Precient
-
-#+begin_src emacs-lisp
-  (straight-use-package 'selectrum)
-  (straight-use-package 'selectrum-prescient)
-
-  (selectrum-mode 1)
-  (selectrum-prescient-mode 1)
-  (prescient-persist-mode 1)
-#+end_src
-
-** Fix M-DEL in minibuffer
-
-Do "delete" instead of "kill" when pressing =M-DEL=.
-
-#+begin_src emacs-lisp
-  (defun meomacs-backward-delete-sexp ()
-    "Backward delete sexp.
-
-  Used in minibuffer, replace the the default kill behavior with M-DEL."
-    (interactive)
-    (save-restriction
-      (narrow-to-region (minibuffer-prompt-end) (point-max))
-      (delete-region
-       (save-mark-and-excursion
-         (backward-sexp)
-         (point))
-       (point))))
-
-  (define-key minibuffer-local-map (kbd "M-DEL") #'meomacs-backward-delete-sexp)
+  (keymap-set icomplete-minibuffer-map "RET" 'icomplete-force-complete-and-exit)
+  (keymap-set icomplete-minibuffer-map "TAB" 'icomplete-force-complete)
 #+end_src
 
 * Completion at point
-
-** COMMENT Corfu
-#+begin_src emacs-lisp
-  (straight-use-package 'corfu)
-
-  (add-hook 'prog-mode-hook 'corfu-mode)
-  (add-hook 'conf-mode-hook 'corfu-mode)
-
-  (autoload 'corfu-mode "corfu" nil t)
-
-  (with-eval-after-load "corfu"
-    (setq corfu-map (make-keymap))
-    (keymap-set corfu-map "M-n" 'corfu-next)
-    (keymap-set corfu-map "M-p" 'corfu-previous)
-    (setq corfu-auto t
-          corfu-preselect 'prompt)
-    (dolist (c (list (cons "SPC" " ")
-                     (cons "." ".")
-                     (cons "," ",")
-                     (cons ":" ":")
-                     (cons ")" ")")
-                     (cons "}" "}")
-                     (cons "]" "]")))
-      (define-key corfu-map (kbd (car c)) `(lambda ()
-                                             (interactive)
-                                             (corfu-insert)
-                                             (insert ,(cdr c))))))
-#+end_src
 
 ** Company
 
@@ -603,26 +367,6 @@ A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =
   (require 'company-ctags)
 #+end_src
 
-** COMMENT Company Box
-
-#+begin_src emacs-lisp
-  (straight-use-package 'company-box)
-
-  (with-eval-after-load "company"
-    (require 'company-box)
-    (add-hook 'company-mode-hook 'company-box-mode))
-#+end_src
-
-** COMMENT Company posframe
-
-#+begin_src emacs-lisp
-  (straight-use-package 'company-posframe)
-
-  (with-eval-after-load "company"
-    (require 'company-posframe)
-    (add-hook 'company-mode-hook 'company-posframe-mode))
-#+end_src
-
 * Templating
 
 ** yasnippet
@@ -662,6 +406,7 @@ To find files/buffers and apply commands on project, use builtin package ~projec
   (define-key mode-specific-map "p" 'project-prefix-map)
 
   (with-eval-after-load "project"
+    (define-key project-prefix-map "d" 'project-dired)
     (define-key project-prefix-map "s" 'eat-project-other-window)
     (define-key project-prefix-map "m" 'magit-project-status))
 #+end_src
@@ -672,41 +417,7 @@ To find files/buffers and apply commands on project, use builtin package ~projec
   (setq dired-listing-switches "-alh")
 #+end_src
 
-* File Navigator
-
-** COMMENT Dired sidebar
-
-#+begin_src emacs-lisp
-  (straight-use-package 'dired-sidebar)
-
-  (autoload 'dired-sidebar-toggle-sidebar "dired-sidebar" nil t)
-#+end_src
-
-** COMMENT treemacs
-
-#+begin_src emacs-lisp
-  (straight-use-package 'treemacs)
-
-  (setq treemacs-is-never-other-window t)
-
-  (autoload 'treemacs "treemacs" nil t)
-#+end_src
-
 * Text searching
-
-** COMMENT deadgrep
-
-#+begin_src emacs-lisp
-  (straight-use-package 'deadgrep)
-
-  (require 'deadgrep)
-
-  (define-key project-prefix-map "r" 'deadgrep)
-
-  (with-eval-after-load "deadgrep"
-    (keymap-set deadgrep-mode-map "e" 'deadgrep-edit-mode)
-    (add-hook 'deadgrep-mode-hook 'next-error-follow-minor-mode))
-#+end_src
 
 ** rg.el
 
@@ -737,14 +448,6 @@ To find files/buffers and apply commands on project, use builtin package ~projec
           map))
 #+end_src
 
-* Loccur
-
-#+begin_src emacs-lisp
-  (straight-use-package 'loccur)
-
-  (require 'loccur)
-#+end_src
-
 * TUI Copy
 #+begin_src emacs-lisp
   (defun ext-copy (text)
@@ -770,18 +473,18 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 
 #+header: :var var-table=private.org:var-table
 #+begin_src emacs-lisp
-    (defun meomacs-read-var (key)
-       (let* ((item (alist-get key var-table nil nil 'equal))
-              (entry (cadr item))
-              (where (car item)))
-         (message "item %s entry %s where %s"
-                  item entry where)
-         (cond
-          ((string-equal where "pass")
-           (password-store-get entry))
+  (defun meomacs-read-var (key)
+     (let* ((item (alist-get key var-table nil nil 'equal))
+            (entry (cadr item))
+            (where (car item)))
+       (message "item %s entry %s where %s"
+                item entry where)
+       (cond
+        ((string-equal where "pass")
+         (password-store-get entry))
 
-          ((string-equal where "env")
-           (getenv entry)))))
+        ((string-equal where "env")
+         (getenv entry)))))
 #+end_src
 
 * Common settings for transient
@@ -823,7 +526,11 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 
 * BEdit
 #+begin_src emacs-lisp
-  (load (expand-file-name "bedit.el" user-emacs-directory))
+
+  (straight-use-package '(bedit :host github
+                                :repo "DogLooksGood/bedit"))
+
+  (require 'bedit)
 
   (keymap-set global-map "C-M-g" bedit-prefix-map)
 #+end_src
