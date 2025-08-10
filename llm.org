@@ -1,0 +1,81 @@
+#+title: Editor Basics
+
+LLM related configurations.
+
+#+begin_src emacs-lisp :exports none
+  ;;; -*- lexical-binding: t -*-
+#+end_src
+
+* GPTEL
+#+begin_src emacs-lisp
+  (straight-use-package '(gptel :host github :repo "karthink/gptel"))
+
+  (autoload 'gptel "gptel" nil t)
+
+  (with-eval-after-load "gptel"
+    (require 'gptel-curl))
+#+end_src
+
+** Prompt prefix
+#+begin_src emacs-lisp
+  (setq gptel-prompt-prefix-alist
+        '((org-mode . "* ")))
+#+end_src
+
+** ChatGPT
+#+begin_src emacs-lisp
+  (setq gptel-use-curl t
+        gptel-default-mode 'org-mode
+        gptel-api-key (lambda () (meomacs-read-var "gptel-api-key")))
+#+end_src
+
+** DeepSeek backend
+#+begin_src emacs-lisp
+  (gptel-make-openai "DeepSeek"
+      :host "api.deepseek.com"
+      :endpoint "/chat/completions"
+      :stream t
+      :key (lambda () (meomacs-read-var "deepseek-api-key"))
+      :models '(deepseek-chat deepseek-coder))
+#+end_src
+
+** Ollama backend
+Set ~meomacs-ollama-host~ in [[file:private.org]].
+
+#+begin_src emacs-lisp
+  (defvar meomacs-ollama-host "localhost:11434")
+
+  (gptel-make-ollama "Ollama"
+      :host meomacs-ollama-host
+      :stream t
+      :models '(deepseek-r1:32b gemma3:27b-it-q8_0 devstral:24b magistral:24b gpt-oss:20b))
+#+end_src
+
+** Set default backend & model
+#+begin_src emacs-lisp
+  (setq gptel-backend (gptel-get-backend "Ollama")
+        gptel-model 'gemma3:27b-it-q8_0)
+#+end_src
+
+** Keybindings
+#+begin_src emacs-lisp
+  (defvar gptel-map
+    (let ((m (make-keymap)))
+      (suppress-keymap m t)
+      (keymap-set m "n" 'gptel)
+      (keymap-set m "c" 'gptel-menu)
+      (keymap-set m "a" 'gptel-add)
+      (keymap-set m "f" 'gptel-add-file)
+      m))
+
+  (defalias 'gptel-map gptel-map)
+
+  (keymap-set global-map "C-c c" 'gptel-map)
+
+  (with-eval-after-load "gptel"
+    (setq gptel-directives
+          '((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
+            (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt, note. Provide code without markdown syntax and triple backticks. Provide code without including any of the reference code provided, unless it's a rewriting. ")
+            (writing . "You are a large language model and a writing assistant. Respond concisely.")
+            (chat . "You are a large language model and a conversation partner. Respond concisely."))))
+#+end_src

@@ -15,7 +15,8 @@
   (meomacs-load-config "editor" t)
   (meomacs-load-config "writing" t)
   (meomacs-load-config "programming" t)
-  (meomacs-load-config "addons" t))
+  (meomacs-load-config "addons" t)
+  (meomacs-load-config "llm" t))
 
 ;; Define helper command for open configuration file.
 (defun meomacs-open-configuration ()
@@ -27,7 +28,8 @@
 				   "editor"
 				   "writing"
 				   "programming"
-				   "addons")
+				   "addons"
+                                   "llm")
 				 nil
 				 t)))
     (find-file (expand-file-name (format "%s.org" config) user-emacs-directory))))
@@ -50,3 +52,4 @@
 (meomacs-load-config "writing")
 (meomacs-load-config "programming")
 (meomacs-load-config "addons" t)
+(meomacs-load-config "llm" t)
