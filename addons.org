@@ -180,6 +180,23 @@ Open pass menu with ~C-c a P~.
                  (:exclude ".dir-locals.el" "*-tests.el"))))
 #+end_src
 
+** Buffer window rules
+
+#+begin_src emacs-lisp
+  (add-to-list 'display-buffer-alist
+               '("\\*eat\\*"
+                 (display-buffer-in-side-window)
+                 (window-height . 0.25)
+                 (side . bottom)
+                 (slot . -1)))
+#+end_src
+
+** Q to quit after process exit
+
+#+begin_src emacs-lisp
+  (add-hook 'eat-exit-hook 'view-mode)
+#+end_src
+
 ** Eshell support
 #+begin_src emacs-lisp
   (add-hook 'eshell-load-hook #'eat-eshell-mode)

@@ -172,6 +172,43 @@ Straight.el is used for package management.
   (setq jit-lock-defer-time 0)
 #+end_src
 
+* Server
+
+** Make server-start command avaliable
+
+#+begin_src emacs-lisp
+  (autoload 'server-start "server" nil t)
+#+end_src
+
+* Buffer window rules
+
+** Toggle side windows
+
+#+begin_src emacs-lisp
+  (keymap-set global-map "<f6>" 'window-toggle-side-windows)
+#+end_src
+
+** Rules for builtin modes
+
+#+begin_src emacs-lisp
+  (setq display-buffer-alist
+        '(("\\*[Hh]elp\\*"
+           (display-buffer-in-side-window)
+           (window-width . 70)
+           (side . right)
+           (slot . 0))
+          ("\\*Compilation\\*"
+           (display-buffer-in-side-window)
+           (window-height . 0.25)
+           (side . bottom)
+           (slot . 0))
+          ("\\*Completions\\*"
+           (display-buffer-in-side-window)
+           (window-height . 0.25)
+           (side . bottom)
+           (slot . 1))))
+#+end_src
+
 * COMMENT Meow
 
 #+begin_src emacs-lisp
@@ -255,16 +292,23 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
     (setq meomacs--register-tree-sitter-run-once t))
 #+end_src
 
-* Workspace management
-
-
-* Auto pairs
+* Parenthesis
 
 ** Builtin electric pair
 
 #+begin_src emacs-lisp
   (add-hook 'prog-mode-hook 'electric-pair-local-mode)
   (add-hook 'conf-mode-hook 'electric-pair-local-mode)
+#+end_src
+
+** Wrap parentheses
+#+begin_src emacs-lisp
+  (setq meomacs-wrap-keymap
+        (let ((map (make-keymap)))
+          (suppress-keymap map)
+          (dolist (k '("(" "[" "{" "<"))
+            (define-key map k #'insert-pair))
+          map))
 #+end_src
 
 * Line numbers with display-line-numbers-mode
@@ -280,83 +324,46 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
 #+end_src
 
 * Minibuffer completion reading
+
 ** IComplete
 
 #+begin_src emacs-lisp
   (require 'icomplete)
-  (fido-mode 1)
+  (icomplete-mode 1)
+
+  (setq completion-styles '(initials partial-completion substring flex)
+        icomplete-delay-completions-threshold nil
+        icomplete-max-delay-chars 0
+        icomplete-compute-delay 0
+        icomplete-hide-common-prefix nil
+        icomplete-show-matches-on-no-input t)
 
   (keymap-set icomplete-minibuffer-map "RET" 'icomplete-force-complete-and-exit)
   (keymap-set icomplete-minibuffer-map "TAB" 'icomplete-force-complete)
+  (keymap-set icomplete-minibuffer-map "C-s" 'icomplete-forward-completions)
+  (keymap-set icomplete-minibuffer-map "C-r" 'icomplete-backward-completions)
+  (keymap-set icomplete-minibuffer-map "DEL" 'icomplete-fido-backward-updir)
 #+end_src
 
 * Completion at point
 
-** Company
+** Completion Preview Mode
 
 #+begin_src emacs-lisp
-  (straight-use-package 'company)
+  (global-completion-preview-mode 1)
 
-  (add-hook 'prog-mode-hook 'company-mode)
-  (add-hook 'conf-mode-hook 'company-mode)
-  (add-hook 'comint-mode-hook 'company-mode)
-  (autoload 'company-mode "company" nil t)
+  (defun completion-at-point-and-switch ()
+    (interactive)
+    (completion-help-at-point)
+    (switch-to-completions))
 
-  (setq company-format-margin-function 'company-text-icons-margin
-        company-dabbrev-downcase nil
-        company-idle-delay 0.1)
-
-  (with-eval-after-load 'company
-    (diminish 'company-mode))
-#+end_src
-
-A setup for vim-like behavior.  Completion will popup automatically, =SPC= and =RET= will do insertion even though the popup is available.
-
-| action                      | key |
-|-----------------------------+-----|
-| trigger completion at point | M-n |
-| previous candidate          | M-p |
-| next candidate              | M-n |
-| next template placeholder   | RET |
-
-#+begin_src emacs-lisp
-  (with-eval-after-load "company"
-    (require 'company-tng)
-
-    (add-hook 'company-mode-hook 'company-tng-mode)
-
-    (keymap-set company-active-map "TAB" nil)
-    (define-key company-active-map [tab] nil)
-    (keymap-set company-active-map "C-n" nil)
-    (keymap-set company-active-map "C-p" nil)
-    (keymap-set company-active-map "M-n" 'company-select-next)
-    (keymap-set company-active-map "M-p" 'company-select-previous)
-
-    ;; Free SPC and RET, popup will no longer interrupt typing.
-    (define-key company-active-map [escape] nil)
-    (define-key company-active-map [return] nil)
-    (keymap-set company-active-map "RET" nil)
-    (keymap-set company-active-map "SPC" nil))
-#+end_src
-
-** Backends
-
-#+begin_src emacs-lisp
-  (setq-default company-backends
-        '(company-capf
-          company-files
-          company-ctags
-          company-dabbrev-code
-          company-keywords
-          company-dabbrev))
-#+end_src
-
-** Ctags
-
-#+begin_src emacs-lisp
-  (straight-use-package 'company-ctags)
-
-  (require 'company-ctags)
+  (keymap-set global-map "M-i" 'complete-symbol)
+  (keymap-set completion-preview-active-mode-map "M-n" 'completion-preview-next-candidate)
+  (keymap-set completion-preview-active-mode-map "M-p" 'completion-preview-prev-candidate)
+  (keymap-set completion-in-region-mode-map "M-v" 'switch-to-completions)
+  (keymap-set completion-in-region-mode-map "M-g M-c" 'switch-to-completions)
+  (keymap-set completion-in-region-mode-map "M-n" 'minibuffer-next-completion)
+  (keymap-set completion-in-region-mode-map "M-p" 'minibuffer-previous-completion)
 #+end_src
 
 * Templating
@@ -407,37 +414,6 @@ To find files/buffers and apply commands on project, use builtin package ~projec
 
 #+begin_src emacs-lisp
   (setq dired-listing-switches "-alh")
-#+end_src
-
-* Text searching
-
-** rg.el
-
-#+begin_src emacs-lisp
-  (straight-use-package 'rg)
-
-  (autoload 'rg-project "wgrep" nil t)
-  (autoload 'rg-project "rg" nil t)
-
-  (with-eval-after-load "rg"
-    (rg-enable-default-bindings)
-    ;; (rg-enable-menu)
-    )
-
-  (with-eval-after-load "wgrep"
-    (define-key wgrep-mode-map (kbd "C-c C-c") #'wgrep-finish-edit))
-
-  (define-key project-prefix-map "r" 'rg-project)
-#+end_src
-
-* Wrap parentheses
-#+begin_src emacs-lisp
-  (setq meomacs-wrap-keymap
-        (let ((map (make-keymap)))
-          (suppress-keymap map)
-          (dolist (k '("(" "[" "{" "<"))
-            (define-key map k #'insert-pair))
-          map))
 #+end_src
 
 * TUI Copy

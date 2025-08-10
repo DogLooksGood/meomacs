@@ -623,3 +623,9 @@ p
 
   (define-key prog-mode-map (kbd "<f8>") 'format-all-buffer)
 #+end_src
+
+* GDB
+
+#+begin_src emacs-lisp
+  (setq gdb-many-windows t)
+#+end_src
