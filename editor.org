@@ -332,7 +332,7 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
   (icomplete-mode 1)
 
   (setq completion-styles '(initials partial-completion substring flex)
-        icomplete-delay-completions-threshold nil
+        icomplete-delay-completions-threshold 0
         icomplete-max-delay-chars 0
         icomplete-compute-delay 0
         icomplete-hide-common-prefix nil
@@ -351,11 +351,6 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
 
 #+begin_src emacs-lisp
   (global-completion-preview-mode 1)
-
-  (defun completion-at-point-and-switch ()
-    (interactive)
-    (completion-help-at-point)
-    (switch-to-completions))
 
   (keymap-set global-map "M-i" 'complete-symbol)
   (keymap-set completion-preview-active-mode-map "M-n" 'completion-preview-next-candidate)
