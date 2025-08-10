@@ -325,24 +325,24 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
 
 * Minibuffer completion reading
 
-** IComplete
+** Vertico
 
 #+begin_src emacs-lisp
-  (require 'icomplete)
-  (icomplete-mode 1)
+  (straight-use-package 'vertico)
 
-  (setq completion-styles '(initials partial-completion substring flex)
-        icomplete-delay-completions-threshold 0
-        icomplete-max-delay-chars 0
-        icomplete-compute-delay 0
-        icomplete-hide-common-prefix nil
-        icomplete-show-matches-on-no-input t)
+  (setq completion-styles '(partial-completion substring initials flex))
 
-  (keymap-set icomplete-minibuffer-map "RET" 'icomplete-force-complete-and-exit)
-  (keymap-set icomplete-minibuffer-map "TAB" 'icomplete-force-complete)
-  (keymap-set icomplete-minibuffer-map "C-s" 'icomplete-forward-completions)
-  (keymap-set icomplete-minibuffer-map "C-r" 'icomplete-backward-completions)
-  (keymap-set icomplete-minibuffer-map "DEL" 'icomplete-fido-backward-updir)
+  (require 'vertico)
+  (require 'vertico-directory)
+  (require 'vertico-flat)
+
+  (vertico-mode)
+  (vertico-flat-mode 1)
+
+  (keymap-set vertico-map "RET" #'vertico-directory-enter)
+  (keymap-set vertico-map "DEL" #'vertico-directory-delete-char)
+  (keymap-set vertico-map "M-DEL" #'vertico-directory-delete-word)
+  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
 #+end_src
 
 * Completion at point
