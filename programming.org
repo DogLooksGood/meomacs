@@ -122,18 +122,6 @@ Display current function name in header-line.
   (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
 #+end_src
 
-* TAGS
-
-** gtags
-
-#+begin_src emacs-lisp
-  (straight-use-package 'gtags-mode)
-
-  (require 'gtags-mode)
-
-  (gtags-mode 1)
-#+end_src
-
 * LSP
 
 ** Eglot
@@ -570,6 +558,7 @@ Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile
 
 * C
 
+** CC Mode
 #+begin_src emacs-lisp
   (setq-default c-basic-offset 4)
   (setq-default c-default-style "k&r")
@@ -579,7 +568,7 @@ Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile
     (keymap-set c-mode-map "C-c C-o" 'ff-find-other-file-other-window))
 #+end_src
 
-** COMMENT SimpleC
+** SimpleC
 
 #+begin_src emacs-lisp
   (straight-use-package '(simpc-mode :host github :repo "rexim/simpc-mode"))
@@ -587,6 +576,11 @@ Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile
   (autoload 'simpc-mode "simpc-mode" nil t)
 
   (add-to-list 'auto-mode-alist '("\\.[ch]\\'" . simpc-mode))
+
+
+  (with-eval-after-load "simpc-mode"
+    (keymap-set simpc-mode-map "C-c C-c" 'ff-find-other-file)
+    (keymap-set simpc-mode-map "C-c C-o" 'ff-find-other-file-other-window))
 #+end_src
 
 * Scheme
@@ -599,8 +593,6 @@ Execute the last recipe by finding the =*just*= buffer and call ~justl-recompile
   (with-eval-after-load "paredit"
     (add-hook 'scheme-mode-hook 'paredit-mode))
 #+end_src
-
-
 
 * GLSL
 

@@ -330,7 +330,7 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
 #+begin_src emacs-lisp
   (straight-use-package 'vertico)
 
-  (setq completion-styles '(partial-completion substring initials flex))
+  (setq completion-styles '(emacs22 partial-completion substring initials flex))
 
   (require 'vertico)
   (require 'vertico-directory)
@@ -339,6 +339,8 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
   (vertico-mode)
   (vertico-flat-mode 1)
 
+  (keymap-set vertico-map "C-s" #'vertico-next)
+  (keymap-set vertico-map "C-r" #'vertico-previous)
   (keymap-set vertico-map "RET" #'vertico-directory-enter)
   (keymap-set vertico-map "DEL" #'vertico-directory-delete-char)
   (keymap-set vertico-map "M-DEL" #'vertico-directory-delete-word)
