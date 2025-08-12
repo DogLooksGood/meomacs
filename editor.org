@@ -337,7 +337,6 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
   (require 'vertico-flat)
 
   (vertico-mode)
-  (vertico-flat-mode 1)
 
   (keymap-set vertico-map "C-s" #'vertico-next)
   (keymap-set vertico-map "C-r" #'vertico-previous)
@@ -355,6 +354,7 @@ Key bindings are defined in [[file:private.org::#Modal Editing Key Binding][priv
   (global-completion-preview-mode 1)
 
   (keymap-set global-map "M-i" 'complete-symbol)
+  (keymap-set global-map "M-n" 'completion-preview-complete)
   (keymap-set completion-preview-active-mode-map "M-n" 'completion-preview-next-candidate)
   (keymap-set completion-preview-active-mode-map "M-p" 'completion-preview-prev-candidate)
   (keymap-set completion-in-region-mode-map "M-v" 'switch-to-completions)
